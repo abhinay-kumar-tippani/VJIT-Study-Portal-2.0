@@ -120,72 +120,74 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const genAI = new GoogleGenerativeAI(activeKey);
-    
-    let modelName = 'gemini-1.5-flash';
-    let result;
+    // ─── Format Validation ──────────────────────────────────────────
+    if (!activeKey.startsWith('AIzaSy') || activeKey.length < 30) {
+      return NextResponse.json(
+        {
+          error: `⚠️ Invalid API Key Format!
+
+The API key being used does not match the Google Gemini format. A valid Gemini API key must start with "AIzaSy" and be at least 30 characters long.
+
+Pasted Pattern: "${activeKey ? activeKey.slice(0, 6) + '...' : 'empty'}" (Length: ${activeKey.length})
+
+Please:
+1️⃣ Go to Google AI Studio: https://aistudio.google.com
+2️⃣ Click "Get API Key" and copy the key (starts with "AIzaSy").
+3️⃣ Paste it into the Settings ⚙️ panel in the chat window and click Save!`,
+        },
+        { status: 400 }
+      );
+    }
+
+    let modelName = 'gemini-2.5-flash-lite';
+    let textResponse = '';
 
     try {
-      const model = genAI.getGenerativeModel({ 
-        model: modelName,
-        systemInstruction: VJIT_SYSTEM_INSTRUCTION 
+      console.log(`[AI REST] Calling Gemini 2.5 Flash Lite REST API...`);
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${activeKey}`;
+      
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          system_instruction: { parts: [{ text: VJIT_SYSTEM_INSTRUCTION }] },
+          contents: [{ role: "user", parts: [{ text: prompt }] }],
+          generationConfig: { temperature: 0.7, maxOutputTokens: 2048 }
+        })
       });
-      result = await model.generateContent(prompt);
-    } catch (firstErr: any) {
-      const errMsg = String(firstErr.message || '').toLowerCase();
-      // Catch model 404 or unsupported method errors
-      if (
-        errMsg.includes('not found') || 
-        errMsg.includes('unsupported') || 
-        errMsg.includes('404') ||
-        errMsg.includes('model')
-      ) {
-        try {
-          console.warn(`[AI Proxy] Model ${modelName} returned 404/unsupported. Falling back to gemini-pro...`);
-          modelName = 'gemini-pro';
-          
-          // gemini-pro (Gemini 1.0) does NOT support systemInstruction parameter!
-          // We pass only the model name, and prepend instructions directly to the prompt.
-          const fallbackModel = genAI.getGenerativeModel({ 
-            model: modelName
-          });
-          
-          const combinedPrompt = `${VJIT_SYSTEM_INSTRUCTION}\n\n[System Instructions Applied]\n\nStudent question: ${prompt}`;
-          result = await fallbackModel.generateContent(combinedPrompt);
-        } catch (secondErr: any) {
-          const secondMsg = String(secondErr.message || '').toLowerCase();
-          if (
-            secondMsg.includes('not found') || 
-            secondMsg.includes('unsupported') || 
-            secondMsg.includes('404') ||
-            secondMsg.includes('api key')
-          ) {
-            return NextResponse.json(
-              {
-                error: `⚠️ Invalid or Restricted API Key!
 
-Your API key returned a 404 error for both Gemini models. This means the key you provided is invalid, restricted, or expired.
+      if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.error?.message || "API error");
+      }
+
+      const data = await response.json();
+      textResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || "No response.";
+      if (!textResponse || textResponse === "No response.") {
+        throw new Error('Empty response from Gemini 2.5 Flash Lite API');
+      }
+    } catch (err: any) {
+      console.error(`[AI REST] Gemini 2.5 Flash Lite API call failed: ${err.message}`);
+      return NextResponse.json(
+        {
+          error: `⚠️ Invalid or Restricted API Key!
+
+Your API key returned an error from the Gemini 2.5 Flash Lite API. This means the key you provided is invalid, restricted, or expired.
+
+🔍 Raw Error (gemini-2.5-flash-lite):
+${err.message || err}
 
 To fix this immediately:
 1️⃣ Go to Google AI Studio: https://aistudio.google.com
 2️⃣ Click "Get API Key" and generate a free API Key in a new project.
 3️⃣ Copy the key EXACTLY (it starts with "AIzaSy...") without copying any extra spaces.
 4️⃣ Paste it in the Study Assistant Settings panel ⚙️ in the bottom right corner and click Save!`,
-              },
-              { status: 400 }
-            );
-          }
-          throw secondErr;
-        }
-      } else {
-        throw firstErr;
-      }
+        },
+        { status: 400 }
+      );
     }
 
-    const response = await result.response;
-    const responseText = response.text();
-
-    return NextResponse.json({ text: responseText });
+    return NextResponse.json({ text: textResponse });
   } catch (err: any) {
     console.error('[server-ai-chat-error]', err);
     return NextResponse.json(

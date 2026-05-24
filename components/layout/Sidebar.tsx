@@ -21,7 +21,7 @@ interface Session {
 const NAV_ITEMS = [
   { href: '/dashboard', label: 'Dashboard',   icon: LayoutDashboard },
   { href: '/branch',    label: 'My Subjects',  icon: BookOpen        },
-  { href: '/community', label: 'Community',    icon: Users           },
+  { href: '/contribute', label: 'Contribute',   icon: Users           },
   { href: '/ai',        label: 'AI Assistant', icon: Bot             },
   { href: '/admin',     label: 'Admin Panel',  icon: ShieldCheck, adminOnly: true },
 ];

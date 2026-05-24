@@ -232,8 +232,8 @@ export default function DashboardPage() {
             </motion.div>
           </Link>
 
-          {/* Student Community */}
-          <Link href="/community">
+          {/* Contribute Resources */}
+          <Link href="/contribute">
             <motion.div
               whileHover={{ y: -3 }}
               className="card-hover p-6 cursor-pointer flex items-start gap-4"
@@ -242,9 +242,9 @@ export default function DashboardPage() {
                 <Users className="w-5 h-5" />
               </div>
               <div className="space-y-1">
-                <h3 className="font-bold text-sm text-primary">Peers Community</h3>
+                <h3 className="font-bold text-sm text-primary">Contribute Resources</h3>
                 <p className="text-xs text-secondary leading-normal">
-                  Discuss syllabus queries, share notes directly, and view real-time group chat posts by other students.
+                  Upload & share study materials, syllabus, notes, or previous question papers directly with your batch.
                 </p>
               </div>
             </motion.div>

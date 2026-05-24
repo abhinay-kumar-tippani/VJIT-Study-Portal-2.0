@@ -1,12 +1,13 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Upload, CloudUpload, CheckCircle2, AlertCircle,
   FileText, FileImage, FileType2, X, Loader2
 } from 'lucide-react';
+import { SEM4_SUBJECTS } from '@/lib/subjects';
 
 const BRANCHES = ['CSE', 'CSE-AIML', 'CSE-DS', 'IT'];
 const TYPES = [
@@ -37,12 +38,57 @@ function getFileType(mimeType: string): 'pdf' | 'image' | 'docx' | 'other' {
   return 'other';
 }
 
-export default function CommunityPage() {
+export default function ContributePage() {
   const [form, setForm] = useState({ branch: '', semester: '', subject: '', type: 'notes', youtubeUrl: '' });
   const [files, setFiles] = useState<UploadedFile[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [error, setError] = useState('');
+
+  // Automatically fetch current student's branch and semester on load
+  useEffect(() => {
+    fetch('/api/auth/me')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (data) {
+          setForm((f) => ({
+            ...f,
+            branch: data.branch || 'CSE-AIML',
+            semester: String(data.semester || '4'),
+          }));
+        }
+      })
+      .catch((err) => console.error('[Contribute Auth Fetch]', err));
+  }, []);
+
+  const getSubjectsList = (branch: string, semStr: string) => {
+    const sem = Number(semStr);
+    if (sem === 4 && branch && SEM4_SUBJECTS[branch]) {
+      const data = SEM4_SUBJECTS[branch];
+      return [...data.theory, ...(data.lab || [])];
+    }
+    // Fallback default subjects for other semesters
+    return [
+      { id: 'M1', label: 'Mathematics I', short: 'M1' },
+      { id: 'EP', label: 'Engineering Physics', short: 'EP' },
+      { id: 'EC', label: 'Engineering Chemistry', short: 'EC' },
+      { id: 'PPS', label: 'Programming for Problem Solving', short: 'PPS' },
+      { id: 'DS', label: 'Data Structures', short: 'DS' },
+      { id: 'COA', label: 'Computer Organization & Architecture', short: 'COA' },
+      { id: 'OS', label: 'Operating Systems', short: 'OS' },
+      { id: 'DBMS', label: 'Database Management Systems', short: 'DBMS' },
+    ];
+  };
+
+  const activeSubjects = getSubjectsList(form.branch, form.semester);
+
+  // Clear subject if no longer valid when branch/sem updates
+  useEffect(() => {
+    const validLabels = activeSubjects.map((s) => s.label);
+    if (form.subject && !validLabels.includes(form.subject)) {
+      setForm((f) => ({ ...f, subject: '' }));
+    }
+  }, [form.branch, form.semester, activeSubjects]);
 
   const onDrop = useCallback((accepted: File[]) => {
     setFiles((prev) => [
@@ -66,11 +112,11 @@ export default function CommunityPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.branch || !form.semester || !form.subject) {
-      setError('Please fill all required fields');
+      setError('Please select a branch, semester, and subject');
       return;
     }
     if (form.type !== 'youtube' && files.length === 0) {
-      setError('Please select at least one file');
+      setError('Please select at least one file to upload');
       return;
     }
 
@@ -167,8 +213,8 @@ export default function CommunityPage() {
   return (
     <div className="px-8 py-10 max-w-3xl">
       <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
-        <h1 className="text-3xl font-bold text-primary">Community Uploads</h1>
-        <p className="text-secondary mt-1">Share study resources with your fellow students</p>
+        <h1 className="text-3xl font-bold text-primary">Contribute Resources</h1>
+        <p className="text-secondary mt-1">Upload & share study materials with your batch</p>
       </motion.div>
 
       <motion.form
@@ -179,7 +225,7 @@ export default function CommunityPage() {
         className="space-y-6"
       >
         {/* Metadata */}
-        <div className="card p-6 space-y-4">
+        <div className="card p-6 space-y-5">
           <h2 className="font-semibold text-primary">Resource Details</h2>
 
           <div className="grid grid-cols-3 gap-3">
@@ -207,14 +253,44 @@ export default function CommunityPage() {
 
           <div>
             <label className="text-xs font-semibold text-secondary uppercase tracking-wider mb-1.5 block">Subject *</label>
-            <input
-              type="text"
+            
+            {/* Styled Dropdown */}
+            <select
               value={form.subject}
               onChange={(e) => setForm((f) => ({ ...f, subject: e.target.value }))}
-              placeholder="e.g. Data Structures"
               required
-              className={inputClass}
-            />
+              className={`${inputClass} cursor-pointer mb-4`}
+            >
+              <option value="">Select a Subject...</option>
+              {activeSubjects.map((sub) => (
+                <option key={sub.id} value={sub.label}>
+                  {sub.label} ({sub.short})
+                </option>
+              ))}
+            </select>
+
+            {/* Smart Clickable Toggle Chips Grid */}
+            <div className="flex flex-wrap gap-2.5 mt-2">
+              {activeSubjects.map((sub) => {
+                const isSelected = form.subject === sub.label;
+                return (
+                  <button
+                    key={sub.id}
+                    type="button"
+                    onClick={() => setForm((f) => ({ ...f, subject: sub.label }))}
+                    className={`
+                      px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-200 cursor-pointer
+                      ${isSelected
+                        ? 'gradient-accent text-white shadow-lg glow-accent border border-transparent'
+                        : 'bg-card-custom border border-custom text-secondary hover:text-primary hover:border-indigo-500/50'
+                      }
+                    `}
+                  >
+                    {sub.label}
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           {form.type === 'youtube' && (
@@ -335,7 +411,7 @@ export default function CommunityPage() {
           disabled={submitting}
           whileHover={{ scale: 1.01 }}
           whileTap={{ scale: 0.99 }}
-          className="w-full py-3 rounded-xl gradient-accent text-white font-semibold flex items-center justify-center gap-2 glow-accent disabled:opacity-60"
+          className="w-full py-3 rounded-xl gradient-accent text-white font-semibold flex items-center justify-center gap-2 glow-accent disabled:opacity-60 cursor-pointer"
         >
           {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
           {submitting ? 'Uploading...' : 'Submit Upload'}

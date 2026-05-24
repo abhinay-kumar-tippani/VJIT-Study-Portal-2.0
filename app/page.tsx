@@ -69,15 +69,14 @@ export default function HomePage() {
       >
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass border border-custom text-xs font-medium text-secondary mb-6">
           <Sparkles className="w-3 h-3 text-indigo-400" />
-          VJIT Study Portal 2.0 — Academic Resource Hub
+          Academic Resource Hub
         </div>
         <h1 className="text-5xl font-bold text-primary mb-4 leading-tight">
-          Your Branch,{' '}
-          <span className="gradient-text">Your Resources</span>
+          VJIT Study Portal 2.0 —{' '}
+          <span className="gradient-text">all the resources at one place</span>
         </h1>
         <p className="text-secondary text-lg">
-          Notes, PYQs, Question Banks, and AI-powered study assistance — all in one place.
-          Select your branch to get started.
+          Notes, PYQs, Question Banks, and AI-powered study assistance.
         </p>
         <div className="mt-6 flex gap-3 justify-center">
           <Link href="/login">
