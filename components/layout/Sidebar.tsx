@@ -15,6 +15,7 @@ interface Session {
   name: string;
   isAdmin: boolean;
   isSuperAdmin: boolean;
+  branch?: string;
 }
 
 const NAV_ITEMS = [
@@ -29,12 +30,24 @@ export function Sidebar() {
   const pathname = usePathname();
   const router   = useRouter();
   const [session, setSession] = useState<Session | null>(null);
+  const [isOpenMobile, setIsOpenMobile] = useState(false);
 
   useEffect(() => {
     fetch('/api/auth/me')
       .then((r) => r.ok ? r.json() : null)
       .then(setSession)
       .catch(() => setSession(null));
+  }, [pathname]);
+
+  useEffect(() => {
+    const handleToggle = () => setIsOpenMobile((open) => !open);
+    window.addEventListener('toggle-sidebar', handleToggle);
+    return () => window.removeEventListener('toggle-sidebar', handleToggle);
+  }, []);
+
+  // Close sidebar on mobile when navigating
+  useEffect(() => {
+    setIsOpenMobile(false);
   }, [pathname]);
 
   const handleLogout = async () => {
@@ -46,7 +59,20 @@ export function Sidebar() {
   if (pathname === '/' || pathname === '/login' || pathname === '/signup') return null;
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-64 glass-strong flex flex-col z-50 border-r border-custom">
+    <>
+      {/* Backdrop for mobile */}
+      {isOpenMobile && (
+        <div
+          onClick={() => setIsOpenMobile(false)}
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden animate-fade-in"
+        />
+      )}
+
+      <aside className={`
+        fixed left-0 top-0 h-screen w-64 glass-strong flex flex-col z-50 border-r border-custom
+        transition-transform duration-300 ease-out
+        ${isOpenMobile ? 'translate-x-0 shadow-2xl shadow-indigo-500/5' : '-translate-x-full md:translate-x-0'}
+      `}>
       {/* Logo */}
       <div className="px-6 py-5 border-b border-custom">
         <Link href="/dashboard" className="flex items-center gap-3">
@@ -63,9 +89,10 @@ export function Sidebar() {
       {/* Nav */}
       <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
         {NAV_ITEMS.filter((item) => !item.adminOnly || session?.isAdmin).map((item) => {
-          const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+          const finalHref = item.href === '/branch' ? `/branch/${session?.branch ?? 'CSE-AIML'}/semester/4` : item.href;
+          const isActive = pathname === finalHref || pathname.startsWith(finalHref + '/');
           return (
-            <Link key={item.href} href={item.href}>
+            <Link key={item.href} href={finalHref}>
               <motion.div
                 whileHover={{ x: 2 }} whileTap={{ scale: 0.98 }}
                 className={`
@@ -126,5 +153,6 @@ export function Sidebar() {
         )}
       </div>
     </aside>
+    </>
   );
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, Suspense } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -80,8 +80,8 @@ function SkeletonCard() {
   );
 }
 
-// ─── Page ─────────────────────────────────────────────────────────
-export default function SubjectPage() {
+// ─── Page Content ──────────────────────────────────────────────────
+function SubjectPageContent() {
   const { subjectId } = useParams<{ subjectId: string }>();
   const searchParams  = useSearchParams();
   const branch   = searchParams.get('branch')   ?? 'CSE-AIML';
@@ -131,7 +131,8 @@ export default function SubjectPage() {
 
   useEffect(() => { loadFiles(); }, [loadFiles]);
 
-  const proxyUrl = (fileId: string) => `/api/proxy/file?id=${fileId}`;
+  const previewUrl = (fileId: string) => `/api/proxy/file/preview?id=${fileId}`;
+  const downloadUrl = (fileId: string) => `/api/proxy/file?id=${fileId}`;
 
   return (
     <div className="px-8 py-10">
@@ -275,36 +276,38 @@ export default function SubjectPage() {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.04 }}
-                      className="card-hover p-4 flex items-center gap-4 group"
+                      className="card-hover p-4 flex flex-col sm:flex-row sm:items-center gap-4 group"
                     >
-                      <div className="w-10 h-10 rounded-xl bg-card-custom border border-custom flex items-center justify-center flex-shrink-0">
-                        <Icon className="w-4 h-4 text-indigo-400" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="font-medium text-sm text-primary truncate">{file.name}</div>
-                        <div className="text-xs text-muted-custom mt-0.5 flex items-center gap-2">
-                          <span className={`uppercase font-mono font-semibold ${labelColor}`}>{fileLabel}</span>
-                          {file.size && <span>{formatSize(file.size)}</span>}
-                          {file.modifiedTime && (
-                            <span>{new Date(file.modifiedTime).toLocaleDateString('en-IN')}</span>
-                          )}
+                      <div className="flex items-center gap-3 w-full sm:w-auto">
+                        <div className="w-10 h-10 rounded-xl bg-card-custom border border-custom flex items-center justify-center flex-shrink-0">
+                          <Icon className="w-4 h-4 text-indigo-400" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="font-medium text-sm text-primary truncate">{file.name}</div>
+                          <div className="text-xs text-muted-custom mt-0.5 flex items-center gap-2 flex-wrap">
+                            <span className={`uppercase font-mono font-semibold ${labelColor}`}>{fileLabel}</span>
+                            {file.size && <span>{formatSize(file.size)}</span>}
+                            {file.modifiedTime && (
+                              <span>{new Date(file.modifiedTime).toLocaleDateString('en-IN')}</span>
+                            )}
+                          </div>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2 flex-shrink-0">
+                      <div className="flex items-center gap-2 flex-shrink-0 sm:w-auto w-full">
                         {/* Preview — opens in a new browser tab */}
                         <a
-                          href={proxyUrl(file.id)}
+                          href={previewUrl(file.id)}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="px-3 py-1.5 rounded-lg text-xs font-medium glass border border-custom text-secondary hover:text-primary transition-all flex items-center gap-1.5"
+                          className="flex-1 sm:flex-none px-3 py-1.5 rounded-lg text-xs font-medium glass border border-custom text-secondary hover:text-primary transition-all flex items-center justify-center gap-1.5"
                         >
                           <Eye className="w-3.5 h-3.5" /> Preview
                         </a>
                         {/* Download — forces save-as */}
                         <a
-                          href={proxyUrl(file.id)}
+                          href={downloadUrl(file.id)}
                           download={file.name}
-                          className="px-3 py-1.5 rounded-lg text-xs font-medium gradient-accent text-white flex items-center gap-1.5"
+                          className="flex-1 sm:flex-none px-3 py-1.5 rounded-lg text-xs font-medium gradient-accent text-white flex items-center justify-center gap-1.5"
                         >
                           <Download className="w-3.5 h-3.5" /> Download
                         </a>
@@ -320,5 +323,26 @@ export default function SubjectPage() {
 
       {/* No modal — preview opens in a new browser tab */}
     </div>
+  );
+}
+
+export default function SubjectPage() {
+  return (
+    <Suspense fallback={
+      <div className="px-8 py-10 space-y-8 animate-pulse">
+        <div className="space-y-3">
+          <div className="skeleton h-4 w-32 rounded" />
+          <div className="skeleton h-8 w-64 rounded-xl" />
+        </div>
+        <div className="skeleton h-12 w-96 rounded-2xl" />
+        <div className="space-y-3">
+          <div className="skeleton h-14 rounded-xl" />
+          <div className="skeleton h-14 rounded-xl" />
+          <div className="skeleton h-14 rounded-xl" />
+        </div>
+      </div>
+    }>
+      <SubjectPageContent />
+    </Suspense>
   );
 }

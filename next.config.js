@@ -7,6 +7,8 @@ const nextConfig = {
   },
   experimental: {
     serverComponentsExternalPackages: ['mongoose', 'googleapis'],
+    workerThreads: false,
+    cpus: 1,
   },
   eslint: {
     ignoreDuringBuilds: true,

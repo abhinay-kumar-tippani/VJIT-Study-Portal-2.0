@@ -37,7 +37,7 @@ export function AIChatPanel() {
   };
 
   const sendMessage = async () => {
-    if (!input.trim() || !savedKey || loading) return;
+    if (!input.trim() || loading) return;
 
     const userMessage: Message = { role: 'user', content: input };
     setMessages((prev) => [...prev, userMessage]);
@@ -60,34 +60,34 @@ export function AIChatPanel() {
             .join('\n\n')}`
         : '';
 
-      const genAI = new GoogleGenerativeAI(savedKey);
-      const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-
       const prompt = contextText
         ? `You are an academic study assistant for VJIT engineering students.\n\n${contextText}\n\nStudent question: ${currentInput}`
         : `You are an academic study assistant for VJIT engineering students. Answer helpfully and concisely.\n\nStudent question: ${currentInput}`;
 
-      const result = await model.generateContentStream(prompt);
+      // Call our secure server-side AI chat proxy
+      const chatRes = await fetch('/api/ai/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt,
+          apiKey: savedKey,
+        }),
+      });
 
-      let assistantContent = '';
-      const assistantMsg: Message = { role: 'assistant', content: '' };
-      setMessages((prev) => [...prev, assistantMsg]);
-
-      for await (const chunk of result.stream) {
-        const text = chunk.text();
-        assistantContent += text;
-        setMessages((prev) =>
-          prev.map((m, i) =>
-            i === prev.length - 1 ? { ...m, content: assistantContent } : m
-          )
-        );
+      const chatData = await chatRes.json();
+      if (!chatRes.ok) {
+        throw new Error(chatData.error ?? 'AI Assistant failed to respond');
       }
-    } catch (err) {
+
+      const assistantMsg: Message = { role: 'assistant', content: chatData.text };
+      setMessages((prev) => [...prev, assistantMsg]);
+    } catch (err: any) {
+      console.error('[AIChatPanel]', err);
       setMessages((prev) => [
         ...prev,
         {
           role: 'assistant',
-          content: '⚠️ Error: Check your Gemini API key in settings.',
+          content: `⚠️ Error: ${err.message || 'Failed to generate response. Check your Gemini API key in settings.'}`,
         },
       ]);
     } finally {
@@ -126,7 +126,7 @@ export function AIChatPanel() {
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, x: 24, scale: 0.95 }}
             transition={{ type: 'spring', bounce: 0.2, duration: 0.35 }}
-            className="fixed bottom-24 right-6 w-96 h-[520px] glass-strong rounded-2xl shadow-2xl z-50 flex flex-col overflow-hidden"
+            className="fixed bottom-20 md:bottom-24 right-4 md:right-6 w-[calc(100vw-2rem)] sm:w-96 h-[480px] sm:h-[520px] glass-strong rounded-2xl shadow-2xl z-50 flex flex-col overflow-hidden"
           >
             {/* Header */}
             <div className="flex items-center justify-between px-4 py-3 border-b border-custom">
@@ -243,14 +243,13 @@ export function AIChatPanel() {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && sendMessage()}
-                  placeholder={savedKey ? 'Ask a question...' : 'Set API key first ⚙️'}
-                  disabled={!savedKey}
-                  className="flex-1 px-3 py-2 text-xs rounded-xl bg-card-custom border border-custom text-primary placeholder:text-muted-custom focus:outline-none focus:border-indigo-500 disabled:opacity-50 transition-colors"
+                  placeholder="Ask a question..."
+                  className="flex-1 px-3 py-2 text-xs rounded-xl bg-card-custom border border-custom text-primary placeholder:text-muted-custom focus:outline-none focus:border-indigo-500 transition-colors"
                 />
                 <motion.button
                   whileTap={{ scale: 0.9 }}
                   onClick={sendMessage}
-                  disabled={!input.trim() || !savedKey || loading}
+                  disabled={!input.trim() || loading}
                   className="p-2 rounded-xl gradient-accent text-white disabled:opacity-40 disabled:cursor-not-allowed transition-opacity"
                 >
                   {loading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
