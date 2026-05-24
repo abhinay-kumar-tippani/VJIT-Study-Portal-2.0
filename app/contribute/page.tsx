@@ -252,25 +252,10 @@ export default function ContributePage() {
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-secondary uppercase tracking-wider mb-1.5 block">Subject *</label>
-            
-            {/* Styled Dropdown */}
-            <select
-              value={form.subject}
-              onChange={(e) => setForm((f) => ({ ...f, subject: e.target.value }))}
-              required
-              className={`${inputClass} cursor-pointer mb-4`}
-            >
-              <option value="">Select a Subject...</option>
-              {activeSubjects.map((sub) => (
-                <option key={sub.id} value={sub.label}>
-                  {sub.label} ({sub.short})
-                </option>
-              ))}
-            </select>
+            <label className="text-xs font-semibold text-secondary uppercase tracking-wider mb-2 block">Subject *</label>
 
             {/* Smart Clickable Toggle Chips Grid */}
-            <div className="flex flex-wrap gap-2.5 mt-2">
+            <div className="flex flex-wrap gap-2.5">
               {activeSubjects.map((sub) => {
                 const isSelected = form.subject === sub.label;
                 return (
