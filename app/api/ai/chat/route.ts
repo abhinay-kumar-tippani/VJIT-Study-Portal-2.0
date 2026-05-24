@@ -95,11 +95,23 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Missing prompt' }, { status: 400 });
     }
 
-    // ─── Key Prioritization ──────────────────────────────────────────
+    // ─── Key Prioritization & Logging ─────────────────────────────────
     // Prioritize client-supplied override (explicitly entered in Settings UI) first.
     // If empty, fall back to server-side env variables (GEMINI_API_KEY / GOOGLE_API_KEY).
     const rawKey = apiKey || process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
     const activeKey = (rawKey ?? '').trim();
+
+    let keySource = 'None';
+    if (apiKey) keySource = 'Client settings UI';
+    else if (process.env.GEMINI_API_KEY) keySource = 'Server env (GEMINI_API_KEY)';
+    else if (process.env.GOOGLE_API_KEY) keySource = 'Server env (GOOGLE_API_KEY)';
+
+    const keyMask = activeKey 
+      ? `${activeKey.slice(0, 6)}...${activeKey.slice(-4)} (len: ${activeKey.length})` 
+      : 'empty';
+
+    console.log(`[AI Chat] Active Key Source: ${keySource}`);
+    console.log(`[AI Chat] Active Key Pattern: ${keyMask}`);
 
     if (!activeKey) {
       return NextResponse.json(
@@ -131,11 +143,15 @@ export async function POST(req: NextRequest) {
         try {
           console.warn(`[AI Proxy] Model ${modelName} returned 404/unsupported. Falling back to gemini-pro...`);
           modelName = 'gemini-pro';
+          
+          // gemini-pro (Gemini 1.0) does NOT support systemInstruction parameter!
+          // We pass only the model name, and prepend instructions directly to the prompt.
           const fallbackModel = genAI.getGenerativeModel({ 
-            model: modelName,
-            systemInstruction: VJIT_SYSTEM_INSTRUCTION 
+            model: modelName
           });
-          result = await fallbackModel.generateContent(prompt);
+          
+          const combinedPrompt = `${VJIT_SYSTEM_INSTRUCTION}\n\n[System Instructions Applied]\n\nStudent question: ${prompt}`;
+          result = await fallbackModel.generateContent(combinedPrompt);
         } catch (secondErr: any) {
           const secondMsg = String(secondErr.message || '').toLowerCase();
           if (
