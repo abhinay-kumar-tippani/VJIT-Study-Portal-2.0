@@ -3,6 +3,7 @@ import './globals.css';
 import { ThemeProvider } from '@/components/layout/ThemeProvider';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { MobileHeader } from '@/components/layout/MobileHeader';
+import { MainWrapper } from '@/components/layout/MainWrapper';
 import { AIChatPanel } from '@/components/layout/AIChatPanel';
 import { Toaster } from '@/components/ui/toaster';
 
@@ -23,9 +24,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="flex flex-col md:flex-row min-h-screen">
             <MobileHeader />
             <Sidebar />
-            <main className="flex-1 ml-0 md:ml-64 min-h-screen pt-16 md:pt-0 overflow-x-hidden">
+            <MainWrapper>
               {children}
-            </main>
+            </MainWrapper>
             <AIChatPanel />
           </div>
           <Toaster />
