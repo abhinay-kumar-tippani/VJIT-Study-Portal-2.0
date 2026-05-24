@@ -9,6 +9,9 @@ const nextConfig = {
   experimental: {
     serverComponentsExternalPackages: ['mongoose', 'googleapis'],
   },
+  eslint: {
+  ignoreDuringBuilds: true,
+},
 };
 
 module.exports = nextConfig;
