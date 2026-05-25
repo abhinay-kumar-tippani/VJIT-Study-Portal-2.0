@@ -16,8 +16,17 @@ export async function POST(req: NextRequest) {
 
     const roll = rollNumber.trim().toUpperCase();
 
-    if (roll.length < 4) {
-      return NextResponse.json({ error: 'Invalid roll number' }, { status: 400 });
+    const isValidRoll = roll.startsWith('24911A66') ||
+                        roll.startsWith('24911A05') ||
+                        roll.startsWith('24911A12') ||
+                        roll.startsWith('24911A67') ||
+                        roll.startsWith('25912A66') ||
+                        roll.startsWith('25912A05') ||
+                        roll.startsWith('25912A12') ||
+                        roll.startsWith('25912A67');
+
+    if (!isValidRoll) {
+      return NextResponse.json({ error: 'Enter valid roll no' }, { status: 400 });
     }
     if (password.length < 6) {
       return NextResponse.json({ error: 'Password must be at least 6 characters' }, { status: 400 });

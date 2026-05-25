@@ -17,6 +17,19 @@ export default function SignupPage() {
     e.preventDefault();
     setError('');
 
+    const roll = form.rollNumber.trim().toUpperCase();
+    const isValidRoll = roll.startsWith('24911A66') ||
+                        roll.startsWith('24911A05') ||
+                        roll.startsWith('24911A12') ||
+                        roll.startsWith('24911A67') ||
+                        roll.startsWith('25912A66') ||
+                        roll.startsWith('25912A05') ||
+                        roll.startsWith('25912A12') ||
+                        roll.startsWith('25912A67');
+
+    if (!isValidRoll) {
+      setError('Enter valid roll no'); return;
+    }
     if (form.password !== form.confirm) {
       setError("Passwords don't match"); return;
     }
