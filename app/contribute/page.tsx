@@ -230,18 +230,16 @@ export default function ContributePage() {
 
           <div className="grid grid-cols-3 gap-3">
             <div>
-              <label className="text-xs font-semibold text-secondary uppercase tracking-wider mb-1.5 block">Branch *</label>
-              <select value={form.branch} onChange={(e) => setForm((f) => ({ ...f, branch: e.target.value }))} required className={`${inputClass} cursor-pointer`}>
-                <option value="">Select...</option>
-                {BRANCHES.map((b) => <option key={b} value={b}>{b}</option>)}
-              </select>
+              <label className="text-xs font-semibold text-secondary uppercase tracking-wider mb-1.5 block">Branch</label>
+              <div className={`${inputClass} bg-card-custom/50 cursor-not-allowed select-none flex items-center`}>
+                {form.branch || 'Loading...'}
+              </div>
             </div>
             <div>
-              <label className="text-xs font-semibold text-secondary uppercase tracking-wider mb-1.5 block">Semester *</label>
-              <select value={form.semester} onChange={(e) => setForm((f) => ({ ...f, semester: e.target.value }))} required className={`${inputClass} cursor-pointer`}>
-                <option value="">Select...</option>
-                {Array.from({ length: 8 }, (_, i) => i + 1).map((s) => <option key={s} value={s}>Sem {s}</option>)}
-              </select>
+              <label className="text-xs font-semibold text-secondary uppercase tracking-wider mb-1.5 block">Semester</label>
+              <div className={`${inputClass} bg-card-custom/50 cursor-not-allowed select-none flex items-center`}>
+                Sem {form.semester || 'Loading...'}
+              </div>
             </div>
             <div>
               <label className="text-xs font-semibold text-secondary uppercase tracking-wider mb-1.5 block">Type *</label>

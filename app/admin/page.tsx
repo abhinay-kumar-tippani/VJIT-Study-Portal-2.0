@@ -472,14 +472,17 @@ export default function AdminPage() {
           >
             {/* Toolbar equivalent */}
             <div className="flex items-center gap-3 mb-6">
-              <button
-                onClick={fetchPending}
-                className="p-2.5 rounded-xl glass border border-custom text-secondary hover:text-primary transition-all"
-              >
-                <RefreshCw className={`w-4 h-4 ${pendingLoading ? 'animate-spin' : ''}`} />
-              </button>
-              <div className="text-xs text-muted-custom">
-                {pendingList.length} pending material{pendingList.length !== 1 ? 's' : ''} awaiting review
+              <div className="text-xs text-muted-custom flex items-center gap-2">
+                <span>{pendingList.length} pending material{pendingList.length !== 1 ? 's' : ''} awaiting review</span>
+                <button
+                  type="button"
+                  onClick={fetchPending}
+                  disabled={pendingLoading}
+                  className="p-1.5 rounded-lg border border-custom hover:bg-card-custom hover:text-primary text-secondary transition-all cursor-pointer flex items-center justify-center"
+                  title="Refresh pending approvals"
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 ${pendingLoading ? 'animate-spin' : ''}`} />
+                </button>
               </div>
             </div>
 

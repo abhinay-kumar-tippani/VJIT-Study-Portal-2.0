@@ -50,7 +50,7 @@ const ResourceSchema = new Schema<IResourceDoc>(
     embedding: { type: [Number], select: false }, // Vector — excluded by default
     textContent: { type: String, select: false },  // Raw text for RAG
   },
-  { timestamps: true }
+  { timestamps: true, collection: 'resources' }
 );
 
 // Index for vector search (Atlas Search handles the actual knn index)
@@ -59,6 +59,6 @@ ResourceSchema.index({ status: 1 });
 
 const Resource: Model<IResourceDoc> =
   mongoose.models.Resource ??
-  mongoose.model<IResourceDoc>('Resource', ResourceSchema);
+  mongoose.model<IResourceDoc>('Resource', ResourceSchema, 'resources');
 
 export default Resource;
