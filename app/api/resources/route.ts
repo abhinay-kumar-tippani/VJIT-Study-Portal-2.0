@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '@/lib/db';
-import { verifyToken } from '@/lib/auth';
+import { verifyToken, COOKIE_NAME } from '@/lib/auth';
 import Resource from '@/models/Resource';
 
 // GET /api/resources?branch=CSE&semester=3&subject=xyz&type=notes
@@ -14,11 +14,24 @@ export async function GET(req: NextRequest) {
   const db = await connectDB();
   if (!db) return NextResponse.json({ error: 'Database unavailable' }, { status: 503 });
 
-  const filter: Record<string, unknown> = { status: 'approved' };
+  // Get current session if logged in to allow them to see their own pending/rejected contributions
+  const token = req.cookies.get(COOKIE_NAME)?.value || req.cookies.get('__session')?.value;
+  const session = token ? await verifyToken(token) : null;
+
+  const filter: Record<string, any> = {};
   if (branch) filter.branch = branch;
   if (semester) filter.semester = Number(semester);
   if (subject) filter.subject = subject;
   if (type) filter.type = type;
+
+  if (session) {
+    filter.$or = [
+      { status: 'approved' },
+      { uploadedBy: session.rollNumber }
+    ];
+  } else {
+    filter.status = 'approved';
+  }
 
   const resources = await Resource.find(filter)
     .select('-embedding -textContent')
@@ -30,7 +43,7 @@ export async function GET(req: NextRequest) {
 
 // POST /api/resources — create resource metadata (after GCS upload)
 export async function POST(req: NextRequest) {
-  const token = req.cookies.get('__session')?.value;
+  const token = req.cookies.get(COOKIE_NAME)?.value || req.cookies.get('__session')?.value;
   if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const session = await verifyToken(token);

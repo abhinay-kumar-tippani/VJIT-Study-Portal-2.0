@@ -89,10 +89,10 @@ Sound like a knowledgeable, patient friend who has all the notes and genuinely w
 
 export async function POST(req: NextRequest) {
   try {
-    const { prompt, apiKey } = await req.json();
+    const { prompt, apiKey, contents } = await req.json();
 
-    if (!prompt) {
-      return NextResponse.json({ error: 'Missing prompt' }, { status: 400 });
+    if (!prompt && !contents) {
+      return NextResponse.json({ error: 'Missing prompt or contents' }, { status: 400 });
     }
 
     // ─── Key Prioritization & Logging ─────────────────────────────────
@@ -146,12 +146,14 @@ Please:
       console.log(`[AI REST] Calling Gemini 2.5 Flash Lite REST API...`);
       const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${activeKey}`;
       
+      const requestContents = contents || [{ role: "user", parts: [{ text: prompt }] }];
+
       const response = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           system_instruction: { parts: [{ text: VJIT_SYSTEM_INSTRUCTION }] },
-          contents: [{ role: "user", parts: [{ text: prompt }] }],
+          contents: requestContents,
           generationConfig: { temperature: 0.7, maxOutputTokens: 2048 }
         })
       });

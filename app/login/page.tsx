@@ -47,7 +47,7 @@ export default function LoginPage() {
   `;
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4">
+    <div className="flex-grow flex items-center justify-center px-4 py-8">
       <motion.div
         initial={{ opacity: 0, y: 24, scale: 0.97 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}

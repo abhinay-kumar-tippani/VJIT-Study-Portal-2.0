@@ -10,6 +10,7 @@ export interface IResourceDoc extends Document {
   fileType: 'pdf' | 'image' | 'docx' | 'youtube' | 'other';
   uploadedBy: string; // rollNumber
   status: 'pending' | 'approved' | 'rejected';
+  rejectionReason?: string;
   embedding?: number[];
   textContent?: string;
   createdAt: Date;
@@ -41,6 +42,10 @@ const ResourceSchema = new Schema<IResourceDoc>(
       type: String,
       enum: ['pending', 'approved', 'rejected'],
       default: 'pending',
+    },
+    rejectionReason: {
+      type: String,
+      default: '',
     },
     embedding: { type: [Number], select: false }, // Vector — excluded by default
     textContent: { type: String, select: false },  // Raw text for RAG

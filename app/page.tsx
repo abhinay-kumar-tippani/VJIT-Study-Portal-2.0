@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Code2, Brain, BarChart3, Monitor, ArrowRight, Sparkles } from 'lucide-react';
@@ -13,17 +14,17 @@ const BRANCHES = [
     color: 'from-indigo-500 to-violet-600',
     glow: 'rgba(99,102,241,0.25)',
     desc: 'Core CS — DS, Algorithms, OS, Networks, DBMS',
-    students: '480+',
+    students: '240+',
   },
   {
     id: 'CSE-AIML',
-    label: 'AI & Machine Learning',
+    label: 'Artificial Intelligence & Machine Learning',
     short: 'CSE-AIML',
     icon: Brain,
     color: 'from-emerald-500 to-teal-600',
     glow: 'rgba(16,185,129,0.25)',
     desc: 'ML, Deep Learning, NLP, Computer Vision',
-    students: '240+',
+    students: '180+',
   },
   {
     id: 'CSE-DS',
@@ -33,7 +34,7 @@ const BRANCHES = [
     color: 'from-orange-500 to-amber-600',
     glow: 'rgba(249,115,22,0.25)',
     desc: 'Statistics, Big Data, Analytics, Visualization',
-    students: '180+',
+    students: '120+',
   },
   {
     id: 'IT',
@@ -43,7 +44,7 @@ const BRANCHES = [
     color: 'from-sky-500 to-blue-600',
     glow: 'rgba(14,165,233,0.25)',
     desc: 'Web Tech, Networking, Cloud, Security',
-    students: '320+',
+    students: '180+',
   },
 ];
 
@@ -58,8 +59,26 @@ const item = {
 };
 
 export default function HomePage() {
+  const [userCount, setUserCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    const fetchStats = () => {
+      fetch('/api/stats')
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (data) setUserCount(data.totalUsers);
+        })
+        .catch((err) => console.error('[Stats fetch error]', err));
+    };
+
+    fetchStats();
+    // Poll every 10 seconds for real time updates
+    const interval = setInterval(fetchStats, 10000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <div className="min-h-screen px-8 py-12 bg-grid-pattern">
+    <div className="flex-1 px-8 py-12 bg-grid-pattern flex flex-col justify-center">
       {/* Hero */}
       <motion.div
         initial={{ opacity: 0, y: -16 }}
@@ -78,6 +97,21 @@ export default function HomePage() {
         <p className="text-secondary text-lg">
           Notes, PYQs, Question Banks, and AI-powered study assistance.
         </p>
+
+        {/* Real-time User Joined Counter */}
+        {userCount !== null && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="inline-flex items-center gap-2 mt-4 px-4 py-1.5 rounded-full glass border border-indigo-500/20 bg-indigo-500/5 text-indigo-400 text-xs font-semibold shadow-inner"
+          >
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span>{userCount} students joined the portal</span>
+          </motion.div>
+        )}
         <div className="mt-6 flex gap-3 justify-center">
           <Link href="/login">
             <motion.button

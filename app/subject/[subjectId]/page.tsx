@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   ChevronRight, FileText, HelpCircle, Clock, BookOpen,
   Youtube, Library, ExternalLink, Eye, Loader2,
-  FileImage, FileType2, Download, AlertCircle, Play,
+  FileImage, FileType2, Download, AlertCircle, Play, X
 } from 'lucide-react';
 
 // ─── Types ────────────────────────────────────────────────────────
@@ -30,6 +30,15 @@ const TABS = [
 ] as const;
 
 type TabId = typeof TABS[number]['id'];
+
+// Map tab label to database resource type
+const tabToTypeMap: Record<string, string> = {
+  'Notes': 'notes',
+  'Question Banks': 'qbank',
+  'PYQs': 'pyq',
+  'Syllabus': 'syllabus',
+  'YouTube': 'youtube',
+};
 
 // ─── Drive folder cache (branch→sem→subject→type = folderId) ──────
 const folderCache: Map<string, string | null> = new Map();
@@ -55,6 +64,14 @@ function getFileIcon(mimeType: string) {
   if (mimeType.includes('pdf'))   return FileText;
   if (mimeType.includes('image')) return FileImage;
   if (mimeType.includes('word') || mimeType.includes('document')) return FileType2;
+  return FileText;
+}
+
+function getFileIconForContributed(fileType: string) {
+  if (fileType === 'pdf') return FileText;
+  if (fileType === 'image') return FileImage;
+  if (fileType === 'docx') return FileType2;
+  if (fileType === 'youtube') return Youtube;
   return FileText;
 }
 
@@ -94,14 +111,31 @@ function SubjectPageContent() {
   const [error,     setError]     = useState('');
   const [ytLink,    setYtLink]    = useState('');
 
+  // Contributed resources
+  const [contributedResources, setContributedResources] = useState<any[]>([]);
+  const [currentUser, setCurrentUser] = useState<{ rollNumber: string } | null>(null);
+  const [approvalNotification, setApprovalNotification] = useState<string | null>(null);
+
+  // Fetch current user details on mount
+  useEffect(() => {
+    fetch('/api/auth/me')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (data) setCurrentUser(data);
+      })
+      .catch((err) => console.error('[Subject Auth Fetch]', err));
+  }, []);
+
   // ── ONE request → server traverses entire Drive tree ──────────────
   const loadFiles = useCallback(async () => {
     setLoading(true);
     setError('');
     setFiles([]);
     setYtLink('');
+    setContributedResources([]);
 
     try {
+      // 1. Fetch Google Drive files
       const params = new URLSearchParams({
         branch,
         semester,
@@ -111,15 +145,30 @@ function SubjectPageContent() {
       const res  = await fetch(`/api/drive/files?${params}`);
       const data = await res.json();
 
-      if (!res.ok) {
-        setError(data.error ?? 'Could not load files');
-        return;
+      if (res.ok) {
+        if (data.ytLink) {
+          setYtLink(data.ytLink);
+        } else {
+          setFiles(data.files ?? []);
+        }
+      } else {
+        // We log Drive errors but don't hard block, as database files can still be loaded
+        console.warn('Drive fetching warning:', data.error);
+        setError(data.error ?? 'Drive resources not fully loaded');
       }
 
-      if (data.ytLink) {
-        setYtLink(data.ytLink);
-      } else {
-        setFiles(data.files ?? []);
+      // 2. Fetch database contributed resources
+      const type = tabToTypeMap[activeTab];
+      if (type) {
+        const dbRes = await fetch(
+          `/api/resources?branch=${branch}&semester=${semester}&subject=${encodeURIComponent(
+            decodeURIComponent(subjectId)
+          )}&type=${type}`
+        );
+        if (dbRes.ok) {
+          const dbData = await dbRes.json();
+          setContributedResources(dbData.resources ?? []);
+        }
       }
     } catch (err: any) {
       console.error(err);
@@ -130,6 +179,30 @@ function SubjectPageContent() {
   }, [activeTab, branch, semester, subjectId]);
 
   useEffect(() => { loadFiles(); }, [loadFiles]);
+
+  // Handle Dynamic approval notification banners
+  useEffect(() => {
+    if (!currentUser || contributedResources.length === 0) return;
+
+    // Find all approved contributions by the current user
+    const userApproved = contributedResources.filter(
+      (r) => r.uploadedBy === currentUser.rollNumber && r.status === 'approved'
+    );
+
+    if (userApproved.length > 0) {
+      const seenApproved = JSON.parse(localStorage.getItem('seen_approved_resources') || '[]');
+      const unseen = userApproved.filter((r) => !seenApproved.includes(r._id));
+
+      if (unseen.length > 0) {
+        // Show notification banner for first unseen item
+        setApprovalNotification(`🎉 Your contribution "${unseen[0].title}" has been approved by the admin!`);
+        
+        // Save resource IDs as seen
+        const nextSeen = [...seenApproved, ...unseen.map((r) => r._id)];
+        localStorage.setItem('seen_approved_resources', JSON.stringify(nextSeen));
+      }
+    }
+  }, [currentUser, contributedResources]);
 
   const previewUrl = (fileId: string) => `/api/proxy/file/preview?id=${fileId}`;
   const downloadUrl = (fileId: string) => `/api/proxy/file?id=${fileId}`;
@@ -150,6 +223,26 @@ function SubjectPageContent() {
         <ChevronRight className="w-3 h-3" />
         <span className="text-primary font-medium">{label}</span>
       </motion.div>
+
+      {/* Dynamic Approval Notification Banner */}
+      {approvalNotification && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex items-center justify-between p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-sm mb-6"
+        >
+          <div className="flex items-center gap-2">
+            <span role="img" aria-label="celebrate">🎉</span>
+            <span>{approvalNotification}</span>
+          </div>
+          <button
+            onClick={() => setApprovalNotification(null)}
+            className="p-1 rounded hover:bg-emerald-500/20 text-emerald-400 transition-colors"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </motion.div>
+      )}
 
       {/* Header */}
       <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
@@ -193,7 +286,7 @@ function SubjectPageContent() {
           transition={{ duration: 0.2 }}
         >
           {/* Error */}
-          {error && !loading && (
+          {error && !loading && files.length === 0 && contributedResources.length === 0 && (
             <div className="flex items-center gap-2 p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 text-sm mb-4">
               <AlertCircle className="w-4 h-4 flex-shrink-0" />
               {error} — Make sure the Drive folder structure is set up correctly.
@@ -209,8 +302,8 @@ function SubjectPageContent() {
 
           {/* ── YouTube Tab ── */}
           {!loading && activeTab === 'YouTube' && (
-            ytLink ? (
-              <div className="space-y-6">
+            <div className="space-y-6">
+              {ytLink ? (
                 <div className="card p-5">
                   <div className="flex items-center gap-2 mb-4">
                     <Youtube className="w-5 h-5 text-red-400" />
@@ -239,30 +332,89 @@ function SubjectPageContent() {
                     Open in YouTube
                   </a>
                 </div>
-              </div>
-            ) : !error ? (
-              <div className="card p-12 text-center">
-                <Youtube className="w-10 h-10 text-muted-custom mx-auto mb-3" />
-                <p className="text-secondary font-medium">No playlist added yet</p>
-                <p className="text-xs text-muted-custom mt-1">
-                  Add a <code className="bg-card-custom px-1 rounded">YouTube/playlist.txt</code> file in Drive for this subject.
-                </p>
-              </div>
-            ) : null
+              ) : (!error && contributedResources.length === 0) ? (
+                <div className="card p-12 text-center">
+                  <Youtube className="w-10 h-10 text-muted-custom mx-auto mb-3" />
+                  <p className="text-secondary font-medium">No playlist added yet</p>
+                  <p className="text-xs text-muted-custom mt-1">
+                    Add a <code className="bg-card-custom px-1 rounded">YouTube/playlist.txt</code> file in Drive for this subject.
+                  </p>
+                </div>
+              ) : null}
+
+              {/* Student Contributed YouTube Videos */}
+              {contributedResources.length > 0 && (
+                <div className="space-y-4 pt-4">
+                  <h3 className="text-base font-bold text-primary flex items-center gap-2">
+                    <Youtube className="w-5 h-5 text-rose-400" />
+                    Student Contributed Resources
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {contributedResources.map((res) => {
+                      const isPending = res.status === 'pending';
+                      const isRejected = res.status === 'rejected';
+
+                      return (
+                        <div
+                          key={res._id}
+                          className="card p-5 flex flex-col justify-between border border-custom bg-card-custom hover:border-indigo-500/20 transition-all duration-200"
+                        >
+                          <div>
+                            <div className="flex items-center justify-between mb-2.5">
+                              <span className="text-xs text-muted-custom">
+                                Submitted by {res.uploadedBy}
+                              </span>
+                              {isPending && (
+                                <span className="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 text-[10px] font-bold">
+                                  ⏳ Pending Approval
+                                </span>
+                              )}
+                              {isRejected && (
+                                <span className="px-2 py-0.5 rounded bg-rose-500/10 text-rose-400 text-[10px] font-bold">
+                                  ❌ Rejected
+                                </span>
+                              )}
+                              {!isPending && !isRejected && (
+                                <span className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 text-[10px] font-bold">
+                                  Approved Contribution
+                                </span>
+                              )}
+                            </div>
+                            <h4 className="font-bold text-primary text-sm line-clamp-2 mb-2">{res.title}</h4>
+                            {isRejected && res.rejectionReason && (
+                              <p className="text-xs text-rose-400 mt-1 font-medium">Rejection Reason: {res.rejectionReason}</p>
+                            )}
+                          </div>
+                          <a
+                            href={res.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="mt-4 w-full px-3 py-2 rounded-xl text-xs font-semibold gradient-accent text-white flex items-center justify-center gap-1.5 glow-accent"
+                          >
+                            <Play className="w-3 h-3 fill-current" /> Watch / Access Link
+                          </a>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
           )}
 
           {/* ── File list (all other tabs) ── */}
-          {!loading && activeTab !== 'YouTube' && !error && (
-            files.length === 0 ? (
+          {!loading && activeTab !== 'YouTube' && (
+            (files.length === 0 && contributedResources.length === 0) ? (
               <div className="card p-12 text-center">
                 <FileText className="w-10 h-10 text-muted-custom mx-auto mb-3" />
                 <p className="text-secondary font-medium">No {activeTab} uploaded yet</p>
                 <p className="text-xs text-muted-custom mt-1">
-                  Add files to the <code className="bg-card-custom px-1 rounded">{activeTab}/</code> folder in Drive.
+                  Add files to the <code className="bg-card-custom px-1 rounded">{activeTab}/</code> folder in Drive or contribute one!
                 </p>
               </div>
             ) : (
               <div className="space-y-3">
+                {/* 1. Drive Files List */}
                 {files.map((file, i) => {
                   const Icon    = getFileIcon(file.mimeType);
                   const isPDF   = file.mimeType.includes('pdf');
@@ -278,7 +430,7 @@ function SubjectPageContent() {
                       transition={{ delay: i * 0.04 }}
                       className="card-hover p-4 flex flex-col sm:flex-row sm:items-center gap-4 group"
                     >
-                      <div className="flex items-center gap-3 w-full sm:w-auto">
+                      <div className="flex items-center gap-3 w-full sm:w-auto flex-1">
                         <div className="w-10 h-10 rounded-xl bg-card-custom border border-custom flex items-center justify-center flex-shrink-0">
                           <Icon className="w-4 h-4 text-indigo-400" />
                         </div>
@@ -310,6 +462,70 @@ function SubjectPageContent() {
                           className="flex-1 sm:flex-none px-3 py-1.5 rounded-lg text-xs font-medium gradient-accent text-white flex items-center justify-center gap-1.5"
                         >
                           <Download className="w-3.5 h-3.5" /> Download
+                        </a>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+
+                {/* 2. Contributed Resources List */}
+                {contributedResources.map((res, i) => {
+                  const Icon = getFileIconForContributed(res.fileType);
+                  const isPending = res.status === 'pending';
+                  const isRejected = res.status === 'rejected';
+
+                  return (
+                    <motion.div
+                      key={res._id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: (files.length + i) * 0.04 }}
+                      className="card-hover p-4 flex flex-col sm:flex-row sm:items-center gap-4 group"
+                    >
+                      <div className="flex items-center gap-3 w-full sm:w-auto flex-1">
+                        <div className="w-10 h-10 rounded-xl bg-card-custom border border-custom flex items-center justify-center flex-shrink-0">
+                          <Icon className="w-4 h-4 text-emerald-400" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="font-medium text-sm text-primary truncate flex items-center gap-2 flex-wrap">
+                            <span>{res.title}</span>
+                            {isPending && (
+                              <span className="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 text-[10px] font-bold">
+                                ⏳ Waiting for Admin Approval
+                              </span>
+                            )}
+                            {isRejected && (
+                              <span className="px-2 py-0.5 rounded bg-rose-500/10 text-rose-400 text-[10px] font-bold">
+                                ❌ Rejected
+                              </span>
+                            )}
+                            {!isPending && !isRejected && (
+                              <span className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 text-[10px] font-bold">
+                                Community
+                              </span>
+                            )}
+                          </div>
+                          {isRejected && res.rejectionReason && (
+                            <p className="text-xs text-rose-400 mt-1 font-medium">Rejection Reason: {res.rejectionReason}</p>
+                          )}
+                          <div className="text-xs text-muted-custom mt-0.5 flex items-center gap-2 flex-wrap">
+                            <span className="uppercase font-mono font-semibold text-emerald-400">{res.fileType}</span>
+                            <span>Contributed by {res.uploadedBy}</span>
+                            {res.createdAt && (
+                              <span>{new Date(res.createdAt).toLocaleDateString('en-IN')}</span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 flex-shrink-0 sm:w-auto w-full">
+                        {/* Preview/Download Button */}
+                        <a
+                          href={res.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex-1 sm:flex-none px-4 py-1.5 rounded-lg text-xs font-medium gradient-accent text-white flex items-center justify-center gap-1.5"
+                        >
+                          <ExternalLink className="w-3.5 h-3.5" /> Preview / Download
                         </a>
                       </div>
                     </motion.div>

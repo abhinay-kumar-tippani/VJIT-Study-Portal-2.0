@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import {
   BookOpen, Sparkles, Clock, ArrowRight,
   GraduationCap, User, FileText, HelpCircle,
-  Library, Users, Compass, BookMarked
+  Library, Users, Compass, BookMarked, Crown
 } from 'lucide-react';
 import Link from 'next/link';
 import { getBranchFromRollNumber, getBranchLabel, getBranchColor } from '@/lib/branch';
@@ -28,6 +28,8 @@ const item = {
 export default function DashboardPage() {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [userCount, setUserCount] = useState<number | null>(null);
+  const [topContributors, setTopContributors] = useState<any[]>([]);
 
   useEffect(() => {
     fetch('/api/auth/me')
@@ -40,6 +42,26 @@ export default function DashboardPage() {
         setSession(null);
         setLoading(false);
       });
+  }, []);
+
+  useEffect(() => {
+    const fetchStats = () => {
+      fetch('/api/stats')
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (data) {
+            setUserCount(data.totalUsers);
+            // Hide initially, show top contributors only when contributions are > 0
+            const activeContributors = (data.topContributors ?? []).filter((c: any) => c.count > 0);
+            setTopContributors(activeContributors);
+          }
+        })
+        .catch((err) => console.error('[Dashboard stats fetch error]', err));
+    };
+
+    fetchStats();
+    const interval = setInterval(fetchStats, 10000);
+    return () => clearInterval(interval);
   }, []);
 
   if (loading) {
@@ -80,7 +102,7 @@ export default function DashboardPage() {
   // Other branches list for exploration
   const OTHER_BRANCHES = [
     { id: 'CSE', label: 'Computer Science' },
-    { id: 'CSE-AIML', label: 'AI & Machine Learning' },
+    { id: 'CSE-AIML', label: 'Artifical Intelligence & Machine Learning' },
     { id: 'CSE-DS', label: 'Data Science' },
     { id: 'IT', label: 'Information Technology' },
   ].filter((b) => b.id !== branch);
@@ -110,6 +132,15 @@ export default function DashboardPage() {
             <span className="font-mono text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded-lg border border-indigo-500/15 text-xs">
               {rollNumber}
             </span>
+            {userCount !== null && (
+              <span className="text-xs font-semibold text-emerald-400 ml-0 md:ml-3 flex items-center gap-1.5">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                </span>
+                <span>{userCount} students joined</span>
+              </span>
+            )}
           </p>
         </div>
 
@@ -224,9 +255,9 @@ export default function DashboardPage() {
                 <Sparkles className="w-5 h-5" />
               </div>
               <div className="space-y-1">
-                <h3 className="font-bold text-sm text-primary">AI Study Assistant</h3>
+                <h3 className="font-bold text-sm text-primary">JARVIS Assistant</h3>
                 <p className="text-xs text-secondary leading-normal">
-                  Get explainers, summaries, and instant solutions dynamically based on your uploaded subject files.
+                  Your AI personal assistant answers all your academic doubts dynamically based on your uploaded subject files.
                 </p>
               </div>
             </motion.div>
@@ -269,6 +300,45 @@ export default function DashboardPage() {
           </Link>
         </div>
       </div>
+
+      {/* Top Contributors Section (initially hidden, shown only when contributions > 0) */}
+      {topContributors.length > 0 && (
+        <div className="space-y-4 pt-2">
+          <div className="flex items-center gap-2">
+            <Crown className="w-5 h-5 text-amber-400 animate-bounce" style={{ animationDuration: '3s' }} />
+            <h2 className="text-lg font-bold text-primary tracking-wide">Top Batch Contributors</h2>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+            {topContributors.map((c, i) => (
+              <motion.div
+                key={c.rollNumber}
+                whileHover={{ y: -3, scale: 1.01 }}
+                className="card p-5 text-center border-custom relative overflow-hidden bg-card-custom/40 flex flex-col justify-between"
+              >
+                {/* Ranking badge */}
+                <div className="absolute top-2 left-2 text-[10px] font-mono font-bold text-muted-custom bg-card-custom px-2 py-0.5 rounded-full border border-custom">
+                  #{i + 1}
+                </div>
+                
+                <div className="my-3 space-y-2.5">
+                  <div className="w-10 h-10 rounded-full gradient-accent flex items-center justify-center text-white font-extrabold mx-auto text-sm shadow-md">
+                    {c.name.charAt(0).toUpperCase()}
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-primary text-sm truncate" title={c.name}>{c.name}</h4>
+                    <p className="text-[10px] text-muted-custom font-mono">{c.rollNumber}</p>
+                  </div>
+                </div>
+
+                <div className="mt-2 pt-2.5 border-t border-custom text-xs">
+                  <span className="text-indigo-400 font-bold">{c.count}</span>{' '}
+                  <span className="text-secondary font-medium">materials</span>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Explore Other Branches Section */}
       <div className="p-6 rounded-3xl glass-strong border border-custom flex flex-col md:flex-row md:items-center justify-between gap-4">

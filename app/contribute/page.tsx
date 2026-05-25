@@ -252,30 +252,22 @@ export default function ContributePage() {
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-secondary uppercase tracking-wider mb-2 block">Subject *</label>
-
-            {/* Smart Clickable Toggle Chips Grid */}
-            <div className="flex flex-wrap gap-2.5">
-              {activeSubjects.map((sub) => {
-                const isSelected = form.subject === sub.label;
-                return (
-                  <button
-                    key={sub.id}
-                    type="button"
-                    onClick={() => setForm((f) => ({ ...f, subject: sub.label }))}
-                    className={`
-                      px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-200 cursor-pointer
-                      ${isSelected
-                        ? 'gradient-accent text-white shadow-lg glow-accent border border-transparent'
-                        : 'bg-card-custom border border-custom text-secondary hover:text-primary hover:border-indigo-500/50'
-                      }
-                    `}
-                  >
-                    {sub.label}
-                  </button>
-                );
-              })}
-            </div>
+            <label className="text-xs font-semibold text-secondary uppercase tracking-wider mb-1.5 block">Subject *</label>
+            
+            {/* Styled Dropdown */}
+            <select
+              value={form.subject}
+              onChange={(e) => setForm((f) => ({ ...f, subject: e.target.value }))}
+              required
+              className={`${inputClass} cursor-pointer`}
+            >
+              <option value="">Select a Subject...</option>
+              {activeSubjects.map((sub) => (
+                <option key={sub.id} value={sub.label}>
+                  {sub.label} ({sub.short})
+                </option>
+              ))}
+            </select>
           </div>
 
           {form.type === 'youtube' && (

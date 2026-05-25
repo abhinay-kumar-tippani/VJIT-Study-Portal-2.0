@@ -4,17 +4,41 @@ import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ShieldCheck, Users, Search, Eye, EyeOff,
-  Trash2, Crown, AlertCircle, Loader2, RefreshCw
+  Trash2, Crown, AlertCircle, Loader2, RefreshCw,
+  User, BookOpen, Calendar, GraduationCap, ExternalLink
 } from 'lucide-react';
 import type { AdminUserRow } from '@/types';
 
+// Lucide icon helper
+import { FileText, FileImage, FileType2, Youtube } from 'lucide-react';
+
+function getFileIcon(type: string) {
+  if (!type) return FileText;
+  const t = type.toLowerCase();
+  if (t.includes('pdf')) return FileText;
+  if (t.includes('image') || t.includes('png') || t.includes('jpg') || t.includes('jpeg')) return FileImage;
+  if (t.includes('word') || t.includes('document') || t === 'docx') return FileType2;
+  if (t === 'youtube') return Youtube;
+  return FileText;
+}
+
 export default function AdminPage() {
+  const [activeTab, setActiveTab] = useState<'users' | 'pending'>('users');
+  
+  // Users state
   const [users, setUsers] = useState<AdminUserRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [search, setSearch] = useState('');
   const [visiblePasswords, setVisiblePasswords] = useState<Set<string>>(new Set());
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+
+  // Pending materials state
+  const [pendingList, setPendingList] = useState<any[]>([]);
+  const [pendingLoading, setPendingLoading] = useState(false);
+  const [pendingError, setPendingError] = useState('');
+  const [rejectionReasons, setRejectionReasons] = useState<Record<string, string>>({});
+  const [rejectingId, setRejectingId] = useState<string | null>(null);
 
   const fetchUsers = async () => {
     setLoading(true);
@@ -27,7 +51,6 @@ export default function AdminPage() {
       }
       const data = await res.json();
       setUsers(data.users ?? []);
-      // Check if current session is super admin by presence of plainPassword
       if (data.users?.[0]?.plainPassword !== undefined) setIsSuperAdmin(true);
     } catch {
       setError('Network error');
@@ -36,7 +59,28 @@ export default function AdminPage() {
     }
   };
 
-  useEffect(() => { fetchUsers(); }, []);
+  const fetchPending = async () => {
+    setPendingLoading(true);
+    setPendingError('');
+    try {
+      const res = await fetch('/api/admin/pending');
+      if (!res.ok) {
+        setPendingError('Failed to load pending submissions');
+        return;
+      }
+      const data = await res.json();
+      setPendingList(data.resources ?? []);
+    } catch {
+      setPendingError('Network error');
+    } finally {
+      setPendingLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+    fetchPending();
+  }, []);
 
   const togglePassword = (id: string) => {
     setVisiblePasswords((prev) => {
@@ -65,7 +109,42 @@ export default function AdminPage() {
     fetchUsers();
   };
 
-  const filtered = users.filter(
+  const handleApprove = async (resourceId: string) => {
+    try {
+      const res = await fetch('/api/admin/pending', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ resourceId, action: 'approve' }),
+      });
+      if (res.ok) {
+        setPendingList((prev) => prev.filter((item) => item._id !== resourceId));
+      } else {
+        alert('Failed to approve resource');
+      }
+    } catch {
+      alert('Network error');
+    }
+  };
+
+  const handleReject = async (resourceId: string, reason: string) => {
+    try {
+      const res = await fetch('/api/admin/pending', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ resourceId, action: 'reject', rejectionReason: reason }),
+      });
+      if (res.ok) {
+        setPendingList((prev) => prev.filter((item) => item._id !== resourceId));
+        setRejectingId(null);
+      } else {
+        alert('Failed to reject resource');
+      }
+    } catch {
+      alert('Network error');
+    }
+  };
+
+  const filteredUsers = users.filter(
     (u) =>
       u.rollNumber.toLowerCase().includes(search.toLowerCase()) ||
       u.name.toLowerCase().includes(search.toLowerCase())
@@ -87,173 +166,405 @@ export default function AdminPage() {
                   <Crown className="w-2.5 h-2.5" /> SUPER ADMIN
                 </span>
               )}
-              <span className="text-xs text-secondary">{users.length} registered students</span>
+              <span className="text-xs text-secondary">
+                {activeTab === 'users'
+                  ? `${users.length} registered students`
+                  : `${pendingList.length} pending materials`}
+              </span>
             </div>
           </div>
         </div>
       </motion.div>
 
-      {/* Toolbar */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.1 }}
-        className="flex items-center gap-3 mb-6"
-      >
-        <div className="relative flex-1 max-w-xs">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-custom" />
-          <input
-            type="text"
-            placeholder="Search by name or roll no..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="
-              w-full pl-9 pr-4 py-2.5 rounded-xl bg-card-custom border border-custom
-              text-primary placeholder:text-muted-custom text-sm
-              focus:outline-none focus:border-indigo-500 transition-all
-            "
-          />
-        </div>
+      {/* Tab bar */}
+      <div className="flex items-center gap-1 p-1 rounded-2xl glass border border-custom mb-6 overflow-x-auto w-fit max-w-full">
         <button
-          onClick={fetchUsers}
-          className="p-2.5 rounded-xl glass border border-custom text-secondary hover:text-primary transition-all"
+          onClick={() => setActiveTab('users')}
+          className={`
+            relative flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap
+            transition-all duration-150
+            ${activeTab === 'users' ? 'text-white' : 'text-secondary hover:text-primary'}
+          `}
         >
-          <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+          {activeTab === 'users' && (
+            <motion.div
+              layoutId="admin-tab-active"
+              className="absolute inset-0 gradient-accent rounded-xl"
+              style={{ zIndex: -1 }}
+              transition={{ type: 'spring', bounce: 0.2, duration: 0.3 }}
+            />
+          )}
+          <Users className="w-4 h-4" />
+          Registered Students
         </button>
-        <div className="flex items-center gap-2 text-xs text-muted-custom">
-          <Users className="w-3.5 h-3.5" />
-          {filtered.length} of {users.length}
-        </div>
-      </motion.div>
+        <button
+          onClick={() => setActiveTab('pending')}
+          className={`
+            relative flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap
+            transition-all duration-150
+            ${activeTab === 'pending' ? 'text-white' : 'text-secondary hover:text-primary'}
+          `}
+        >
+          {activeTab === 'pending' && (
+            <motion.div
+              layoutId="admin-tab-active"
+              className="absolute inset-0 gradient-accent rounded-xl"
+              style={{ zIndex: -1 }}
+              transition={{ type: 'spring', bounce: 0.2, duration: 0.3 }}
+            />
+          )}
+          <ShieldCheck className="w-4 h-4" />
+          Pending Approvals
+          {pendingList.length > 0 && (
+            <span className="ml-1.5 px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-rose-500 text-white animate-pulse">
+              {pendingList.length}
+            </span>
+          )}
+        </button>
+      </div>
 
-      {/* Error */}
-      {error && (
-        <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm mb-4">
-          <AlertCircle className="w-4 h-4" /> {error}
-        </div>
-      )}
+      <AnimatePresence mode="wait">
+        {activeTab === 'users' ? (
+          <motion.div
+            key="users-tab"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+          >
+            {/* Toolbar */}
+            <div className="flex items-center gap-3 mb-6">
+              <div className="relative flex-1 max-w-xs">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-custom" />
+                <input
+                  type="text"
+                  placeholder="Search by name or roll no..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="
+                    w-full pl-9 pr-4 py-2.5 rounded-xl bg-card-custom border border-custom
+                    text-primary placeholder:text-muted-custom text-sm
+                    focus:outline-none focus:border-indigo-500 transition-all
+                  "
+                />
+              </div>
+              <button
+                onClick={fetchUsers}
+                className="p-2.5 rounded-xl glass border border-custom text-secondary hover:text-primary transition-all"
+              >
+                <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+              </button>
+              <div className="flex items-center gap-2 text-xs text-muted-custom">
+                <Users className="w-3.5 h-3.5" />
+                {filteredUsers.length} of {users.length}
+              </div>
+            </div>
 
-      {/* Table */}
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.15 }}
-        className="card overflow-hidden"
-      >
-        {loading ? (
-          <div className="p-12 text-center">
-            <Loader2 className="w-8 h-8 animate-spin text-indigo-400 mx-auto mb-3" />
-            <p className="text-secondary text-sm">Loading users...</p>
-          </div>
+            {/* Error */}
+            {error && (
+              <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm mb-4">
+                <AlertCircle className="w-4 h-4" /> {error}
+              </div>
+            )}
+
+            {/* Table */}
+            <div className="card overflow-hidden">
+              {loading ? (
+                <div className="p-12 text-center">
+                  <Loader2 className="w-8 h-8 animate-spin text-indigo-400 mx-auto mb-3" />
+                  <p className="text-secondary text-sm">Loading users...</p>
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b border-custom bg-card-custom">
+                        <th className="px-5 py-3 text-left text-xs font-semibold text-secondary uppercase tracking-wider">#</th>
+                        <th className="px-5 py-3 text-left text-xs font-semibold text-secondary uppercase tracking-wider">Roll No.</th>
+                        <th className="px-5 py-3 text-left text-xs font-semibold text-secondary uppercase tracking-wider">Name</th>
+                        {isSuperAdmin && (
+                          <th className="px-5 py-3 text-left text-xs font-semibold text-amber-400 uppercase tracking-wider">
+                            <div className="flex items-center gap-1.5">
+                              <Crown className="w-3 h-3" /> Password
+                            </div>
+                          </th>
+                        )}
+                        <th className="px-5 py-3 text-left text-xs font-semibold text-secondary uppercase tracking-wider">Role</th>
+                        <th className="px-5 py-3 text-left text-xs font-semibold text-secondary uppercase tracking-wider">Joined</th>
+                        <th className="px-5 py-3 text-left text-xs font-semibold text-secondary uppercase tracking-wider">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <AnimatePresence>
+                        {filteredUsers.map((user, i) => (
+                          <motion.tr
+                            key={user._id}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: i * 0.03 }}
+                            className="border-b border-custom last:border-0 hover:bg-card-custom transition-colors"
+                          >
+                            <td className="px-5 py-4 text-xs text-muted-custom">{i + 1}</td>
+                            <td className="px-5 py-4 font-mono text-sm font-semibold text-primary">
+                              {user.rollNumber}
+                            </td>
+                            <td className="px-5 py-4 text-sm text-primary">{user.name}</td>
+
+                            {isSuperAdmin && (
+                              <td className="px-5 py-4">
+                                <div className="flex items-center gap-2">
+                                  <span className="font-mono text-sm text-amber-300">
+                                    {visiblePasswords.has(user._id)
+                                      ? user.plainPassword
+                                      : '•'.repeat(Math.min(user.plainPassword?.length ?? 8, 10))}
+                                  </span>
+                                  <button
+                                    onClick={() => togglePassword(user._id)}
+                                    className="p-1 rounded text-muted-custom hover:text-amber-400 transition-colors"
+                                    title={visiblePasswords.has(user._id) ? 'Hide' : 'Show'}
+                                  >
+                                    {visiblePasswords.has(user._id)
+                                      ? <EyeOff className="w-3.5 h-3.5" />
+                                      : <Eye className="w-3.5 h-3.5" />}
+                                  </button>
+                                </div>
+                              </td>
+                            )}
+
+                            <td className="px-5 py-4">
+                              <div className="flex items-center gap-1.5">
+                                {user.isSuperAdmin ? (
+                                  <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 text-[10px] font-bold flex items-center gap-1">
+                                    <Crown className="w-2.5 h-2.5" /> Super
+                                  </span>
+                                ) : user.isAdmin ? (
+                                  <span className="px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-400 text-[10px] font-bold">
+                                    Admin
+                                  </span>
+                                ) : (
+                                  <span className="px-2 py-0.5 rounded-full bg-zinc-500/20 text-zinc-400 text-[10px] font-bold">
+                                    Student
+                                  </span>
+                                )}
+                              </div>
+                            </td>
+                            <td className="px-5 py-4 text-xs text-muted-custom">
+                              {new Date(user.createdAt).toLocaleDateString('en-IN')}
+                            </td>
+                            <td className="px-5 py-4">
+                              {isSuperAdmin && !user.isSuperAdmin && (
+                                <div className="flex items-center gap-2">
+                                  <button
+                                    onClick={() => toggleAdmin(user._id, !user.isAdmin)}
+                                    className="px-2.5 py-1 rounded-lg text-xs font-medium border border-custom text-secondary hover:text-primary hover:border-indigo-500/50 transition-all"
+                                  >
+                                    {user.isAdmin ? 'Revoke Admin' : 'Make Admin'}
+                                  </button>
+                                  <button
+                                    onClick={() => deleteUser(user._id)}
+                                    className="p-1.5 rounded-lg text-muted-custom hover:text-red-400 hover:bg-red-500/10 transition-all"
+                                  >
+                                    <Trash2 className="w-3.5 h-3.5" />
+                                  </button>
+                                </div>
+                              )}
+                            </td>
+                          </motion.tr>
+                        ))}
+                      </AnimatePresence>
+                    </tbody>
+                  </table>
+                </div>
+              )}
+
+              {!loading && filteredUsers.length === 0 && (
+                <div className="p-10 text-center text-secondary text-sm">No users found</div>
+              )}
+            </div>
+          </motion.div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-custom bg-card-custom">
-                  <th className="px-5 py-3 text-left text-xs font-semibold text-secondary uppercase tracking-wider">#</th>
-                  <th className="px-5 py-3 text-left text-xs font-semibold text-secondary uppercase tracking-wider">Roll No.</th>
-                  <th className="px-5 py-3 text-left text-xs font-semibold text-secondary uppercase tracking-wider">Name</th>
-                  {/* Password column — ONLY renders for super admin */}
-                  {isSuperAdmin && (
-                    <th className="px-5 py-3 text-left text-xs font-semibold text-amber-400 uppercase tracking-wider">
-                      <div className="flex items-center gap-1.5">
-                        <Crown className="w-3 h-3" /> Password
-                      </div>
-                    </th>
-                  )}
-                  <th className="px-5 py-3 text-left text-xs font-semibold text-secondary uppercase tracking-wider">Role</th>
-                  <th className="px-5 py-3 text-left text-xs font-semibold text-secondary uppercase tracking-wider">Joined</th>
-                  <th className="px-5 py-3 text-left text-xs font-semibold text-secondary uppercase tracking-wider">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
+          <motion.div
+            key="pending-tab"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className="space-y-4"
+          >
+            {/* Toolbar equivalent */}
+            <div className="flex items-center gap-3 mb-6">
+              <button
+                onClick={fetchPending}
+                className="p-2.5 rounded-xl glass border border-custom text-secondary hover:text-primary transition-all"
+              >
+                <RefreshCw className={`w-4 h-4 ${pendingLoading ? 'animate-spin' : ''}`} />
+              </button>
+              <div className="text-xs text-muted-custom">
+                {pendingList.length} pending material{pendingList.length !== 1 ? 's' : ''} awaiting review
+              </div>
+            </div>
+
+            {/* Error */}
+            {pendingError && (
+              <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm mb-4">
+                <AlertCircle className="w-4 h-4" /> {pendingError}
+              </div>
+            )}
+
+            {/* Pending Materials Grid */}
+            {pendingLoading ? (
+              <div className="card p-12 text-center">
+                <Loader2 className="w-8 h-8 animate-spin text-indigo-400 mx-auto mb-3" />
+                <p className="text-secondary text-sm">Loading pending resources...</p>
+              </div>
+            ) : pendingList.length === 0 ? (
+              <div className="card p-12 text-center text-secondary text-sm">
+                <ShieldCheck className="w-10 h-10 text-muted-custom mx-auto mb-3" />
+                <p className="font-semibold text-primary">All caught up!</p>
+                <p className="text-xs text-muted-custom mt-1">No study materials are pending approval.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <AnimatePresence>
-                  {filtered.map((user, i) => (
-                    <motion.tr
-                      key={user._id}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: i * 0.03 }}
-                      className="border-b border-custom last:border-0 hover:bg-card-custom transition-colors"
-                    >
-                      <td className="px-5 py-4 text-xs text-muted-custom">{i + 1}</td>
-                      <td className="px-5 py-4 font-mono text-sm font-semibold text-primary">
-                        {user.rollNumber}
-                      </td>
-                      <td className="px-5 py-4 text-sm text-primary">{user.name}</td>
-
-                      {/* Password cell — ONLY for super admin */}
-                      {isSuperAdmin && (
-                        <td className="px-5 py-4">
-                          <div className="flex items-center gap-2">
-                            <span className="font-mono text-sm text-amber-300">
-                              {visiblePasswords.has(user._id)
-                                ? user.plainPassword
-                                : '•'.repeat(Math.min(user.plainPassword?.length ?? 8, 10))}
-                            </span>
-                            <button
-                              onClick={() => togglePassword(user._id)}
-                              className="p-1 rounded text-muted-custom hover:text-amber-400 transition-colors"
-                              title={visiblePasswords.has(user._id) ? 'Hide' : 'Show'}
-                            >
-                              {visiblePasswords.has(user._id)
-                                ? <EyeOff className="w-3.5 h-3.5" />
-                                : <Eye className="w-3.5 h-3.5" />}
-                            </button>
+                  {pendingList.map((res) => {
+                    const FileIcon = getFileIcon(res.fileType || 'pdf');
+                    return (
+                      <motion.div
+                        key={res._id}
+                        layout
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.95, y: 15 }}
+                        transition={{ duration: 0.2 }}
+                        className="card p-6 flex flex-col justify-between border border-custom bg-card-custom hover:border-indigo-500/30 transition-all duration-200"
+                      >
+                        <div>
+                          {/* File Details Header */}
+                          <div className="flex items-start gap-4 mb-4">
+                            <div className="w-11 h-11 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center flex-shrink-0">
+                              <FileIcon className="w-5 h-5 text-indigo-400" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <h3 className="font-bold text-primary text-base truncate" title={res.title}>
+                                {res.title}
+                              </h3>
+                              <span className="inline-block px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-400 text-[10px] font-bold uppercase tracking-wider mt-1">
+                                {res.type === 'qbank' ? 'Question Bank' : res.type === 'pyq' ? 'PYQ' : res.type}
+                              </span>
+                            </div>
                           </div>
-                        </td>
-                      )}
 
-                      <td className="px-5 py-4">
-                        <div className="flex items-center gap-1.5">
-                          {user.isSuperAdmin ? (
-                            <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 text-[10px] font-bold flex items-center gap-1">
-                              <Crown className="w-2.5 h-2.5" /> Super
-                            </span>
-                          ) : user.isAdmin ? (
-                            <span className="px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-400 text-[10px] font-bold">
-                              Admin
-                            </span>
-                          ) : (
-                            <span className="px-2 py-0.5 rounded-full bg-zinc-500/20 text-zinc-400 text-[10px] font-bold">
-                              Student
-                            </span>
+                          {/* Info Fields Grid */}
+                          <div className="space-y-3 text-sm text-secondary mb-6">
+                            <div className="flex items-center gap-3">
+                              <User className="w-4 h-4 text-muted-custom flex-shrink-0" />
+                              <span className="truncate">
+                                Student: <strong className="text-primary font-medium">{res.studentName}</strong> ({res.uploadedBy})
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-3">
+                              <GraduationCap className="w-4 h-4 text-muted-custom flex-shrink-0" />
+                              <span>
+                                Branch/Semester: <strong className="text-primary font-medium">{res.branch}</strong> (Sem {res.semester})
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-3">
+                              <BookOpen className="w-4 h-4 text-muted-custom flex-shrink-0" />
+                              <span className="truncate">
+                                Subject: <strong className="text-primary font-medium">{res.subject}</strong>
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-3">
+                              <Calendar className="w-4 h-4 text-muted-custom flex-shrink-0" />
+                              <span>
+                                Date Uploaded: <strong className="text-primary font-medium">{new Date(res.createdAt).toLocaleDateString('en-IN')}</strong>
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Action section */}
+                        <div className="space-y-4 pt-4 border-t border-custom mt-auto">
+                          <div className="flex items-center gap-2">
+                            {/* Preview Button */}
+                            <a
+                              href={res.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex-1 px-4 py-2.5 rounded-xl text-xs font-semibold glass border border-custom text-secondary hover:text-primary transition-all flex items-center justify-center gap-1.5"
+                            >
+                              <ExternalLink className="w-4 h-4" /> Preview / Download
+                            </a>
+
+                            {/* Reject / Approve action buttons (only if not currently expanding rejection details) */}
+                            {rejectingId !== res._id && (
+                              <>
+                                <button
+                                  onClick={() => setRejectingId(res._id)}
+                                  className="px-3.5 py-2.5 rounded-xl text-xs font-semibold bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 hover:border-red-500/30 transition-all flex items-center justify-center gap-1"
+                                >
+                                  ❌ Reject
+                                </button>
+                                <button
+                                  onClick={() => handleApprove(res._id)}
+                                  className="px-4 py-2.5 rounded-xl text-xs font-semibold bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/20 hover:border-emerald-500/30 transition-all flex items-center justify-center gap-1"
+                                >
+                                  ✅ Approve
+                                </button>
+                              </>
+                            )}
+                          </div>
+
+                          {/* Rejection input area */}
+                          {rejectingId === res._id && (
+                            <motion.div
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: 'auto' }}
+                              className="space-y-3 pt-2"
+                            >
+                              <div>
+                                <label className="text-xs font-semibold text-secondary uppercase tracking-wider block mb-1.5">
+                                  Reason for Rejection (Optional)
+                                </label>
+                                <input
+                                  type="text"
+                                  placeholder="e.g. File format is incorrect, wrong subjects selected, poor scan quality..."
+                                  value={rejectionReasons[res._id] || ''}
+                                  onChange={(e) =>
+                                    setRejectionReasons((prev) => ({ ...prev, [res._id]: e.target.value }))
+                                  }
+                                  className="w-full px-3.5 py-2.5 rounded-xl bg-card-custom border border-custom text-primary placeholder:text-muted-custom text-sm focus:outline-none focus:border-indigo-500 transition-all"
+                                />
+                              </div>
+                              <div className="flex gap-2 justify-end">
+                                <button
+                                  onClick={() => {
+                                    setRejectingId(null);
+                                    setRejectionReasons((prev) => ({ ...prev, [res._id]: '' }));
+                                  }}
+                                  className="px-3 py-2 rounded-lg text-xs font-semibold border border-custom text-secondary hover:text-primary transition-all"
+                                >
+                                  Cancel
+                                </button>
+                                <button
+                                  onClick={() => handleReject(res._id, rejectionReasons[res._id] || '')}
+                                  className="px-4 py-2 rounded-lg text-xs font-semibold bg-red-500 text-white hover:bg-red-600 transition-all"
+                                >
+                                  Confirm Rejection
+                                </button>
+                              </div>
+                            </motion.div>
                           )}
                         </div>
-                      </td>
-                      <td className="px-5 py-4 text-xs text-muted-custom">
-                        {new Date(user.createdAt).toLocaleDateString('en-IN')}
-                      </td>
-                      <td className="px-5 py-4">
-                        {isSuperAdmin && !user.isSuperAdmin && (
-                          <div className="flex items-center gap-2">
-                            <button
-                              onClick={() => toggleAdmin(user._id, !user.isAdmin)}
-                              className="px-2.5 py-1 rounded-lg text-xs font-medium border border-custom text-secondary hover:text-primary hover:border-indigo-500/50 transition-all"
-                            >
-                              {user.isAdmin ? 'Revoke Admin' : 'Make Admin'}
-                            </button>
-                            <button
-                              onClick={() => deleteUser(user._id)}
-                              className="p-1.5 rounded-lg text-muted-custom hover:text-red-400 hover:bg-red-500/10 transition-all"
-                            >
-                              <Trash2 className="w-3.5 h-3.5" />
-                            </button>
-                          </div>
-                        )}
-                      </td>
-                    </motion.tr>
-                  ))}
+                      </motion.div>
+                    );
+                  })}
                 </AnimatePresence>
-              </tbody>
-            </table>
-          </div>
+              </div>
+            )}
+          </motion.div>
         )}
-
-        {!loading && filtered.length === 0 && (
-          <div className="p-10 text-center text-secondary text-sm">No users found</div>
-        )}
-      </motion.div>
+      </AnimatePresence>
     </div>
   );
 }

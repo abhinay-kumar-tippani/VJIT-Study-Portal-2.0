@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generateSignedUploadUrl } from '@/lib/gcs';
-import { verifyToken } from '@/lib/auth';
+import { verifyToken, COOKIE_NAME } from '@/lib/auth';
 
 export async function POST(req: NextRequest) {
-  const token = req.cookies.get('__session')?.value;
+  const token = req.cookies.get(COOKIE_NAME)?.value || req.cookies.get('__session')?.value;
   if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const session = await verifyToken(token);
