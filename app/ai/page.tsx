@@ -667,7 +667,7 @@ export default function AIPage() {
               <div ref={bottomRef} />
             </div>
 
-            <div className="flex-shrink-0 pt-2 border-t border-custom flex gap-2">
+            <div className="flex-shrink-0 pt-2 border-t border-custom flex items-center gap-2">
               <input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
@@ -679,9 +679,9 @@ export default function AIPage() {
                 whileTap={{ scale: 0.95 }}
                 onClick={sendMessage}
                 disabled={!input.trim() || loading}
-                className="px-4.5 rounded-xl gradient-accent text-white disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-md flex items-center justify-center cursor-pointer"
+                className="w-11 h-11 flex-shrink-0 rounded-xl gradient-accent text-white disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-md flex items-center justify-center cursor-pointer"
               >
-                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-5 h-5" />}
               </motion.button>
             </div>
           </>

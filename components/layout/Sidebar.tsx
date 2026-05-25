@@ -25,8 +25,8 @@ const NAV_ITEMS = [
   { href: '/dashboard', label: 'Dashboard',   icon: LayoutDashboard },
   { href: '/branch',    label: 'My Subjects',  icon: BookOpen        },
   { href: '/contribute', label: 'Contribute',   icon: Users           },
-  { href: '#report-issue', label: 'Report an Issue', icon: AlertCircle, isAction: true },
   { href: '/ai',        label: 'JARVIS',       icon: Bot             },
+  { href: '#report-issue', label: 'Report an Issue', icon: AlertCircle, isAction: true },
   { href: '/admin',     label: 'Admin Panel',  icon: ShieldCheck, adminOnly: true },
 ];
 

@@ -8,13 +8,25 @@
 @layer base {
   :root {
     /* Light mode */
-    --bg-primary: 250 250 250;          /* zinc-50 */
-    --bg-card: 255 255 255;
-    --bg-card-hover: 244 244 245;       /* zinc-100 */
-    --border: 228 228 231;              /* zinc-200 */
-    --text-primary: 24 24 27;          /* zinc-900 */
-    --text-secondary: 113 113 122;     /* zinc-500 */
-    --text-muted: 161 161 170;         /* zinc-400 */
+    --background: 240 240 240;        /* #f0f0f0 (soft gray, replaces pure white) */
+    --surface: 232 232 232;           /* #e8e8e8 (slightly darker gray for cards) */
+    --surface-hover: 220 220 220;     /* #dcdcdc (hover state for cards) */
+    --border: 204 204 204;            /* #cccccc (subtle borders) */
+    --text-primary: 26 26 26;         /* #1a1a1a (near black, not pure black) */
+    --text-secondary: 85 85 85;       /* #555555 (muted text) */
+    --text-muted: 136 136 136;        /* #888888 (placeholder/hint text) */
+    --sidebar-bg: 226 226 226;        /* #e2e2e2 (sidebar background) */
+    --sidebar-hover: 212 212 212;     /* #d4d4d4 (sidebar item hover) */
+    --input-bg: 235 235 235;          /* #ebebeb (input field background) */
+    --card-bg: 232 232 232;           /* #e8e8e8 (subject cards) */
+    --modal-bg: 240 240 240;          /* #f0f0f0 (modals and dialogs) */
+
+    /* Core compatibility overrides */
+    --bg-primary: var(--background);
+    --bg-card: var(--surface);
+    --bg-card-hover: var(--surface-hover);
+
+    /* Keep teal/green gradient accent colors exactly the same */
     --accent: 99 102 241;              /* indigo-500 */
     --accent-hover: 79 70 229;         /* indigo-600 */
     --accent-emerald: 16 185 129;      /* emerald-500 */
@@ -22,14 +34,26 @@
   }
 
   .dark {
-    /* Dark mode */
-    --bg-primary: 9 9 11;             /* zinc-950 */
-    --bg-card: 18 18 20;              /* ~zinc-900 */
-    --bg-card-hover: 24 24 27;        /* zinc-900 */
-    --border: 39 39 42;               /* zinc-800 */
-    --text-primary: 250 250 250;      /* zinc-50 */
-    --text-secondary: 161 161 170;    /* zinc-400 */
-    --text-muted: 113 113 122;        /* zinc-500 */
+    /* Dark mode completely unchanged */
+    --background: 9 9 11;
+    --surface: 18 18 20;
+    --surface-hover: 24 24 27;
+    --border: 39 39 42;
+    --text-primary: 250 250 250;
+    --text-secondary: 161 161 170;
+    --text-muted: 113 113 122;
+    --sidebar-bg: 18 18 20;
+    --sidebar-hover: 24 24 27;
+    --input-bg: 18 18 20;
+    --card-bg: 18 18 20;
+    --modal-bg: 18 18 20;
+
+    /* Core compatibility overrides */
+    --bg-primary: var(--background);
+    --bg-card: var(--surface);
+    --bg-card-hover: var(--surface-hover);
+
+    /* Accent colors */
     --accent: 99 102 241;             /* indigo-500 */
     --accent-hover: 129 140 248;      /* indigo-400 */
     --accent-emerald: 52 211 153;     /* emerald-400 */
@@ -178,5 +202,25 @@
   .animate-swing {
     animation: swing 1s ease-in-out infinite;
     transform-origin: top center;
+  }
+
+  /* Specific overrides for eye-friendly soft gray theme components */
+  aside.glass-strong {
+    background: rgb(var(--sidebar-bg) / 0.85) !important;
+  }
+
+  aside.glass-strong button:hover:not(.hover\:bg-red-500\/10),
+  aside.glass-strong a:hover:not(.hover\:bg-red-500\/10) {
+    background-color: rgb(var(--sidebar-hover)) !important;
+  }
+
+  div.fixed.inset-0 .glass-strong {
+    background: rgb(var(--modal-bg) / 0.85) !important;
+  }
+
+  input.bg-card-custom,
+  select.bg-card-custom,
+  textarea.bg-card-custom {
+    background: rgb(var(--input-bg)) !important;
   }
 }
