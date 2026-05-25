@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDriveClient, ROOT_FOLDER_ID, FOLDER_MIME } from '@/lib/drive';
 import { verifyToken, COOKIE_NAME } from '@/lib/auth';
+import { SEM4_SUBJECTS } from '@/lib/subjects';
 
 /**
  * GET /api/drive/files?branch=CSE-AIML&semester=4&subject=DM&tab=Notes
@@ -101,6 +102,19 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'branch and subject are required' }, { status: 400 });
   }
 
+  // Look up the subject configuration to find the correct Google Drive folder name and label
+  let driveFolderName = subject;
+  let searchLabel = label;
+  if (branch && SEM4_SUBJECTS[branch]) {
+    const branchConfig = SEM4_SUBJECTS[branch];
+    const foundSubject = [...(branchConfig.theory || []), ...(branchConfig.lab || [])]
+      .find((s) => s.id === subject || s.label === subject);
+    if (foundSubject) {
+      driveFolderName = foundSubject.driveFolder;
+      searchLabel = foundSubject.label;
+    }
+  }
+
   if (!ROOT_FOLDER_ID) {
     return NextResponse.json({ error: 'DRIVE_ROOT_FOLDER_ID not configured' }, { status: 500 });
   }
@@ -127,9 +141,9 @@ export async function GET(req: NextRequest) {
     folderIdCache.set(`${branchId}::Semester ${semester}`, semFolder.id);
 
     // ── Step 3: subject folder ─────────────────────────────────
-    const subjectId = await findFolder(semFolder.id, subject, label);
+    const subjectId = await findFolder(semFolder.id, driveFolderName, searchLabel);
     if (!subjectId) {
-      return NextResponse.json({ error: `Subject "${subject}" not found` }, { status: 404 });
+      return NextResponse.json({ error: 'No materials uploaded yet for this subject.' }, { status: 404 });
     }
 
     // ── Step 4: tab folder (Notes / PYQs / etc.) ───────────────────────
