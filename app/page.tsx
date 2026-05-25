@@ -139,18 +139,18 @@ export default function HomePage() {
         variants={container}
         initial="hidden"
         animate="show"
-        className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto"
+        className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto items-stretch"
       >
         {BRANCHES.map((branch) => (
-          <motion.div key={branch.id} variants={item}>
-            <Link href={`/branch/${branch.id}`}>
+          <motion.div key={branch.id} variants={item} className="h-full">
+            <Link href={`/branch/${branch.id}`} className="h-full block">
               <motion.div
                 whileHover={{ y: -4, scale: 1.01 }}
                 whileTap={{ scale: 0.99 }}
-                className="card-hover p-7 cursor-pointer group"
+                className="card-hover p-7 cursor-pointer group h-full flex flex-col"
                 style={{ '--glow-color': branch.glow } as React.CSSProperties}
               >
-                <div className="flex items-start justify-between mb-5">
+                <div className="flex items-start justify-between mb-5 flex-shrink-0">
                   <div
                     className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${branch.color} flex items-center justify-center shadow-lg`}
                   >
@@ -159,7 +159,7 @@ export default function HomePage() {
                   <ArrowRight className="w-4 h-4 text-muted-custom group-hover:text-indigo-400 transition-all duration-200 group-hover:translate-x-1" />
                 </div>
 
-                <div>
+                <div className="flex-grow">
                   <div className="flex items-center gap-2 mb-1">
                     <span
                       className={`font-mono text-xs font-bold bg-gradient-to-r ${branch.color} bg-clip-text text-transparent`}
@@ -174,7 +174,7 @@ export default function HomePage() {
                   <p className="text-sm text-secondary leading-relaxed">{branch.desc}</p>
                 </div>
 
-                <div className="mt-5 pt-4 border-t border-custom flex items-center gap-4 text-xs text-muted-custom">
+                <div className="mt-auto pt-4 border-t border-custom flex items-center gap-4 text-xs text-muted-custom flex-shrink-0">
                   {['Notes', 'PYQs', 'Q-Banks', 'Syllabus'].map((tag) => (
                     <span key={tag} className="flex items-center gap-1">
                       <span className="w-1 h-1 rounded-full bg-indigo-400" />
