@@ -171,7 +171,6 @@ export default function HomePage() {
                     </span>
                   </div>
                   <h2 className="text-xl font-bold text-primary mb-2">{branch.label}</h2>
-                  <p className="text-sm text-secondary leading-relaxed">{branch.desc}</p>
                 </div>
 
                 <div className="mt-auto pt-4 border-t border-custom flex items-center gap-4 text-xs text-muted-custom flex-shrink-0">
