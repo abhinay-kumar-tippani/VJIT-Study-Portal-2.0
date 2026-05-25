@@ -3,9 +3,10 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Bot, Send, Settings, Loader2, Sparkles, Key,
-  ArrowRight, Trash2, Menu, Clock, Trash, X
+  Bot, Send, Settings, Loader2, Sparkles, Globe, CheckCircle2,
+  ArrowRight, Menu, Clock, Trash, X
 } from 'lucide-react';
+import { toast } from '@/components/ui/toaster';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -39,9 +40,12 @@ export default function AIPage() {
   const [history, setHistory] = useState<any[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
-  const [showSettings, setShowSettings] = useState(false);
+  const [showSetupScreen, setShowSetupScreen] = useState(false);
   const [apiKey, setApiKey] = useState('');
   const [savedKey, setSavedKey] = useState('');
+  const [keyErrorMessage, setKeyErrorMessage] = useState('');
+  const [keyProblem, setKeyProblem] = useState(false);
+  const [hasOpenedStudio, setHasOpenedStudio] = useState(false);
   
   // History sidebar panel states
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -90,9 +94,28 @@ export default function AIPage() {
   }, [messages, loading]);
 
   const saveApiKey = () => {
-    localStorage.setItem('gemini_api_key', apiKey);
-    setSavedKey(apiKey);
-    setShowSettings(false);
+    const candidate = apiKey.trim();
+    if (!candidate.startsWith('AIzaSy')) {
+      setKeyErrorMessage("This doesn't look like a valid key. Make sure it starts with AIzaSy...");
+      return;
+    }
+
+    localStorage.setItem('gemini_api_key', candidate);
+    setSavedKey(candidate);
+    setApiKey(candidate);
+    setKeyErrorMessage('');
+    setKeyProblem(false);
+    setShowSetupScreen(false);
+    toast({ title: 'JARVIS activated!', description: 'Ask me anything.' });
+  };
+
+  const removeApiKey = () => {
+    localStorage.removeItem('gemini_api_key');
+    setSavedKey('');
+    setApiKey('');
+    setKeyErrorMessage('');
+    setKeyProblem(false);
+    setShowSetupScreen(true);
   };
 
   const startNewChat = () => {
@@ -225,18 +248,22 @@ export default function AIPage() {
       
       setMessages(finalMessages);
       setHistory(finalHistory);
+      setKeyProblem(false);
       
       // Save session with assistant reply
       saveSession(currentSessionId, finalMessages, finalHistory);
     } catch (err: any) {
       console.error('[AIPage Chat Error]', err);
+      const messageText = err.message || 'Failed to generate response. Check your Gemini API key in settings.';
       const finalMessages = [
         ...nextMessages,
         {
           role: 'assistant' as const,
-          content: `⚠️ Error: ${err.message || 'Failed to generate response. Check your Gemini API key in settings.'}`,
+          content: `⚠️ Error: ${messageText}`,
         }
       ];
+      const isKeyIssue = /(invalid|restricted|quota|auth|key)/i.test(messageText);
+      if (isKeyIssue) setKeyProblem(true);
       setMessages(finalMessages);
       saveSession(currentSessionId, finalMessages, history);
     } finally {
@@ -250,6 +277,12 @@ export default function AIPage() {
     focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20
     transition-all duration-150
   `;
+
+  const showSetup = !savedKey || showSetupScreen;
+  const step1Complete = hasOpenedStudio;
+  const step2Complete = apiKey.trim().length > 0;
+  const step3Complete = apiKey.trim().startsWith('AIzaSy');
+  const step4Complete = Boolean(savedKey);
 
   return (
     <div className="flex flex-grow flex-1 min-h-[calc(100vh-6rem)] md:min-h-[calc(100vh-2rem)] h-[calc(100vh-6rem)] md:h-[calc(100vh-2rem)] max-w-6xl w-full mx-auto px-2 md:px-8 py-2 md:py-4 gap-4 overflow-hidden relative">
@@ -372,7 +405,7 @@ export default function AIPage() {
               </span>
             )}
             <button
-              onClick={() => setShowSettings(!showSettings)}
+              onClick={() => setShowSetupScreen((prev) => !prev)}
               className="p-2 rounded-xl text-secondary hover:text-primary hover:bg-card-custom border border-custom transition-all cursor-pointer"
               aria-label="API Settings"
             >
@@ -381,126 +414,211 @@ export default function AIPage() {
           </div>
         </div>
 
-        {/* Settings Overlay Drawer */}
-        <AnimatePresence>
-          {showSettings && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="overflow-hidden border border-custom rounded-2xl bg-card-custom p-4 mb-4 flex-shrink-0"
-            >
-              <div className="flex items-center gap-2 mb-3">
-                <Key className="w-4 h-4 text-amber-400" />
-                <h2 className="text-sm font-semibold text-primary">Gemini API Key Configuration</h2>
-              </div>
-              <div className="flex gap-2">
-                <input
-                  type="password"
-                  value={apiKey}
-                  onChange={(e) => setApiKey(e.target.value)}
-                  placeholder="AIzaSy..."
-                  className="flex-1 px-3 py-2 text-xs rounded-xl bg-zinc-900 border border-custom text-primary placeholder:text-muted-custom focus:outline-none focus:border-indigo-500"
-                />
-                <button
-                  onClick={saveApiKey}
-                  className="px-4 py-2 text-xs rounded-xl gradient-accent text-white font-semibold shadow-md cursor-pointer"
-                >
-                  Save Key
-                </button>
-              </div>
-              <p className="text-[11px] text-secondary mt-2.5 flex flex-wrap items-center gap-1">
-                Stored securely in your local browser only. Acquire a free key at{' '}
-                <a href="https://aistudio.google.com" target="_blank" className="text-indigo-400 hover:underline inline-flex items-center gap-0.5">
-                  aistudio.google.com <ArrowRight className="w-2.5 h-2.5" />
-                </a>
-              </p>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {showSetup ? (
+          <div className="flex-1 overflow-y-auto min-h-0 mb-4 pr-1.5 scrollbar-thin">
+            <div className="mx-auto flex h-full w-full max-w-4xl items-start justify-center py-6">
+              <div className="w-full space-y-6">
+                <div className="rounded-3xl border border-custom bg-card-custom p-6">
+                  <div className="mb-6">
+                    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-indigo-400">JARVIS - AI Study Assistant</p>
+                    <h2 className="mt-3 text-3xl font-bold text-primary">To use JARVIS, you need a free API key. Follow these steps:</h2>
+                  </div>
 
-        {/* Chat Messages Stream */}
-        <div className="flex-1 overflow-y-auto min-h-0 mb-4 space-y-4 pr-1.5 scrollbar-thin">
-          {messages.length === 0 && (
-            <div className="h-full flex flex-col items-center justify-center text-center max-w-md mx-auto">
-              <div className="w-14 h-14 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 mb-4 animate-bounce">
-                <Bot className="w-7 h-7" />
+                  <div className="space-y-4">
+                    <div className={`rounded-3xl border p-5 ${step1Complete ? 'border-emerald-500/20 bg-emerald-500/5' : 'border-custom bg-zinc-950/60'}`}>
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex items-center gap-3">
+                          <div className={`flex h-10 w-10 items-center justify-center rounded-2xl ${step1Complete ? 'bg-emerald-500/10 text-emerald-400' : 'bg-zinc-900 text-indigo-400'}`}>
+                            {step1Complete ? <CheckCircle2 className="w-5 h-5" /> : <span className="text-sm font-bold">1</span>}
+                          </div>
+                          <div>
+                            <h3 className="text-sm font-semibold text-primary">STEP 1</h3>
+                            <p className="text-sm text-secondary">Go to Google AI Studio</p>
+                          </div>
+                        </div>
+                        {step1Complete && <CheckCircle2 className="w-5 h-5 text-emerald-400" />}
+                      </div>
+                      <p className="mt-4 text-sm text-secondary">Click the button below to open it in a new tab.</p>
+                      <a
+                        href="https://aistudio.google.com"
+                        target="_blank"
+                        rel="noreferrer"
+                        onClick={() => setHasOpenedStudio(true)}
+                        className="mt-4 inline-flex items-center gap-2 rounded-xl border border-custom px-4 py-2 text-sm font-semibold text-indigo-300 hover:bg-zinc-900 transition"
+                      >
+                        Open Google AI Studio <ArrowRight className="w-4 h-4" />
+                      </a>
+                    </div>
+
+                    <div className={`rounded-3xl border p-5 ${step2Complete ? 'border-emerald-500/20 bg-emerald-500/5' : 'border-custom bg-zinc-950/60'}`}>
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex items-center gap-3">
+                          <div className={`flex h-10 w-10 items-center justify-center rounded-2xl ${step2Complete ? 'bg-emerald-500/10 text-emerald-400' : 'bg-zinc-900 text-indigo-400'}`}>
+                            {step2Complete ? <CheckCircle2 className="w-5 h-5" /> : <span className="text-sm font-bold">2</span>}
+                          </div>
+                          <div>
+                            <h3 className="text-sm font-semibold text-primary">STEP 2</h3>
+                            <p className="text-sm text-secondary">Create your API Key</p>
+                          </div>
+                        </div>
+                        {step2Complete && <CheckCircle2 className="w-5 h-5 text-emerald-400" />}
+                      </div>
+                      <ul className="mt-4 space-y-2 text-sm text-secondary list-disc list-inside">
+                        <li>Click "Get API Key" on the top left</li>
+                        <li>Click "Create API key in new project"</li>
+                        <li>Wait about 5 seconds for it to generate</li>
+                      </ul>
+                    </div>
+
+                    <div className={`rounded-3xl border p-5 ${step3Complete ? 'border-emerald-500/20 bg-emerald-500/5' : 'border-custom bg-zinc-950/60'}`}>
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex items-center gap-3">
+                          <div className={`flex h-10 w-10 items-center justify-center rounded-2xl ${step3Complete ? 'bg-emerald-500/10 text-emerald-400' : 'bg-zinc-900 text-indigo-400'}`}>
+                            {step3Complete ? <CheckCircle2 className="w-5 h-5" /> : <span className="text-sm font-bold">3</span>}
+                          </div>
+                          <div>
+                            <h3 className="text-sm font-semibold text-primary">STEP 3</h3>
+                            <p className="text-sm text-secondary">Copy your API Key</p>
+                          </div>
+                        </div>
+                        {step3Complete && <CheckCircle2 className="w-5 h-5 text-emerald-400" />}
+                      </div>
+                      <ul className="mt-4 space-y-2 text-sm text-secondary list-disc list-inside">
+                        <li>Your key will start with <span className="text-primary">AIzaSy...</span></li>
+                        <li>Click the copy button next to it</li>
+                        <li>Copy the full key with no spaces</li>
+                      </ul>
+                    </div>
+
+                    <div className={`rounded-3xl border p-5 ${step4Complete ? 'border-emerald-500/20 bg-emerald-500/5' : 'border-custom bg-zinc-950/60'}`}>
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex items-center gap-3">
+                          <div className={`flex h-10 w-10 items-center justify-center rounded-2xl ${step4Complete ? 'bg-emerald-500/10 text-emerald-400' : 'bg-zinc-900 text-indigo-400'}`}>
+                            {step4Complete ? <CheckCircle2 className="w-5 h-5" /> : <span className="text-sm font-bold">4</span>}
+                          </div>
+                          <div>
+                            <h3 className="text-sm font-semibold text-primary">STEP 4</h3>
+                            <p className="text-sm text-secondary">Paste it below and click Activate</p>
+                          </div>
+                        </div>
+                        {step4Complete && <CheckCircle2 className="w-5 h-5 text-emerald-400" />}
+                      </div>
+                      <div className="mt-4 space-y-3">
+                        <input
+                          type="text"
+                          value={apiKey}
+                          onChange={(e) => { setApiKey(e.target.value); setKeyErrorMessage(''); }}
+                          placeholder="Paste your API key here (AIzaSy...)"
+                          className="w-full rounded-xl border border-custom bg-zinc-950/60 px-4 py-3 text-sm text-primary placeholder:text-muted-custom focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                        />
+                        {keyErrorMessage && (
+                          <p className="text-sm text-rose-400">{keyErrorMessage}</p>
+                        )}
+                        <button
+                          onClick={saveApiKey}
+                          className="w-full rounded-xl bg-gradient-to-r from-emerald-400 to-teal-400 text-sm font-semibold text-zinc-950 px-4 py-3 shadow-sm"
+                        >
+                          Activate JARVIS
+                        </button>
+                        {savedKey && (
+                          <button
+                            onClick={removeApiKey}
+                            className="w-full rounded-xl border border-red-500/30 bg-red-500/5 text-sm font-semibold text-red-300 px-4 py-3 hover:bg-red-500/10 transition"
+                          >
+                            Remove API Key
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <h2 className="text-base font-bold text-primary mb-1">Your Personal Academic Tutor</h2>
-              <p className="text-xs text-secondary leading-relaxed">
-                Ask queries about your VJIT syllabus, request exam question trends, or summarize files.
-                The AI will automatically pull contexts from your uploaded branch notes!
-              </p>
-              {!savedKey && (
-                <button
-                  onClick={() => setShowSettings(true)}
-                  className="mt-4 px-4 py-2 rounded-xl glass border border-custom text-xs font-semibold text-indigo-400 hover:text-primary transition-all cursor-pointer"
-                >
-                  Add Gemini API Key to Start
-                </button>
-              )}
             </div>
-          )}
-
-          {messages.map((msg, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
-            >
-              <div
-                className={`max-w-[85%] md:max-w-[80%] px-4 py-3 rounded-2xl text-sm leading-relaxed ${
-                  msg.role === 'user'
-                    ? 'gradient-accent text-white shadow-md'
-                    : 'bg-card-custom border border-custom text-primary'
-                }`}
+          </div>
+        ) : (
+          <>
+            {keyProblem && (
+              <button
+                onClick={() => setShowSetupScreen(true)}
+                className="mb-4 w-full rounded-2xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-left text-sm text-amber-300 hover:border-amber-400 hover:text-white transition"
               >
-                {msg.role === 'assistant' && msg.content ? (
-                  <div 
-                    className="prose prose-invert text-xs sm:text-sm space-y-2"
-                    dangerouslySetInnerHTML={{ __html: renderMarkdown(msg.content) }} 
-                  />
-                ) : (
-                  msg.content || (
-                    <span className="flex items-center gap-1.5 text-muted-custom">
-                      <Loader2 className="w-3.5 h-3.5 animate-spin" /> Thinking...
-                    </span>
-                  )
-                )}
-              </div>
-            </motion.div>
-          ))}
+                Your API key has an issue. Click here to update it.
+              </button>
+            )}
+            <div className="flex-1 overflow-y-auto min-h-0 mb-4 space-y-4 pr-1.5 scrollbar-thin">
+              {messages.length === 0 && (
+                <div className="h-full flex flex-col items-center justify-center text-center max-w-md mx-auto">
+                  <div className="w-14 h-14 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 mb-4 animate-bounce">
+                    <Bot className="w-7 h-7" />
+                  </div>
+                  <h2 className="text-base font-bold text-primary mb-1">Your Personal Academic Tutor</h2>
+                  <p className="text-xs text-secondary leading-relaxed">
+                    Ask queries about your VJIT syllabus, request exam question trends, or summarize files.
+                    The AI will automatically pull contexts from your uploaded branch notes!
+                  </p>
+                </div>
+              )}
 
-          {loading && messages[messages.length - 1]?.role !== 'assistant' && (
-            <div className="flex justify-start">
-              <div className="px-4 py-3 rounded-2xl bg-card-custom border border-custom text-sm text-muted-custom flex items-center gap-2">
-                <Loader2 className="w-3.5 h-3.5 animate-spin" /> Thinking...
-              </div>
+              {messages.map((msg, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                >
+                  <div
+                    className={`max-w-[85%] md:max-w-[80%] px-4 py-3 rounded-2xl text-sm leading-relaxed ${
+                      msg.role === 'user'
+                        ? 'gradient-accent text-white shadow-md'
+                        : 'bg-card-custom border border-custom text-primary'
+                    }`}
+                  >
+                    {msg.role === 'assistant' && msg.content ? (
+                      <div
+                        className="prose prose-invert text-xs sm:text-sm space-y-2"
+                        dangerouslySetInnerHTML={{ __html: renderMarkdown(msg.content) }}
+                      />
+                    ) : (
+                      msg.content || (
+                        <span className="flex items-center gap-1.5 text-muted-custom">
+                          <Loader2 className="w-3.5 h-3.5 animate-spin" /> Thinking...
+                        </span>
+                      )
+                    )}
+                  </div>
+                </motion.div>
+              ))}
+
+              {loading && messages[messages.length - 1]?.role !== 'assistant' && (
+                <div className="flex justify-start">
+                  <div className="px-4 py-3 rounded-2xl bg-card-custom border border-custom text-sm text-muted-custom flex items-center gap-2">
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" /> Thinking...
+                  </div>
+                </div>
+              )}
+
+              <div ref={bottomRef} />
             </div>
-          )}
 
-          <div ref={bottomRef} />
-        </div>
-
-        {/* Input Message Bar */}
-        <div className="flex-shrink-0 pt-2 border-t border-custom flex gap-2">
-          <input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && sendMessage()}
-            placeholder="Ask JARVIS or search notes..."
-            className={`${inputClass} flex-1`}
-          />
-          <motion.button
-            whileTap={{ scale: 0.95 }}
-            onClick={sendMessage}
-            disabled={!input.trim() || loading}
-            className="px-4.5 rounded-xl gradient-accent text-white disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-md flex items-center justify-center cursor-pointer"
-          >
-            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-          </motion.button>
-        </div>
+            <div className="flex-shrink-0 pt-2 border-t border-custom flex gap-2">
+              <input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && sendMessage()}
+                placeholder="Ask JARVIS or search notes..."
+                className={`${inputClass} flex-1`}
+              />
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                onClick={sendMessage}
+                disabled={!input.trim() || loading}
+                className="px-4.5 rounded-xl gradient-accent text-white disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-md flex items-center justify-center cursor-pointer"
+              >
+                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+              </motion.button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
