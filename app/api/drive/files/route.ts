@@ -18,7 +18,7 @@ const folderIdCache = new Map<string, string | null>();
 
 const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
 
-/** List ONLY folders inside parentId (faster — filtered query) */
+/** List ONLY folders or shortcuts inside parentId (faster — filtered query) */
 async function listFolders(parentId: string) {
   const cacheKey = `folders:${parentId}`;
   // We cache folder lists for 5 minutes
@@ -27,8 +27,8 @@ async function listFolders(parentId: string) {
 
   const drive = getDriveClient();
   const res = await drive.files.list({
-    q: `'${parentId}' in parents and mimeType = '${FOLDER_MIME}' and trashed = false`,
-    fields: 'files(id, name)',
+    q: `'${parentId}' in parents and trashed = false and (mimeType = '${FOLDER_MIME}' or mimeType = 'application/vnd.google-apps.shortcut')`,
+    fields: 'files(id, name, mimeType, shortcutDetails)',
     pageSize: 100,
     orderBy: 'name',
   });
@@ -39,7 +39,7 @@ async function listFolders(parentId: string) {
   return data;
 }
 
-/** Fuzzy-find a folder by name inside parentId. Returns folder ID or null. */
+/** Resolve a folder or shortcut by name inside parentId. Returns the real folder ID or null. */
 async function findFolder(
   parentId: string,
   subject: string,
@@ -52,21 +52,31 @@ async function findFolder(
   const normSubject = norm(subject);
   const normLabel   = norm(label);
 
-  const match = folders.find((f) => {
-    const fn = norm(f.name ?? '');
-    // 1. Exact match — always safe
+  const findMatch = (candidate: (typeof folders)[number]) => {
+    const fn = norm(candidate.name ?? '');
     if (fn === normSubject) return true;
     if (normLabel && fn === normLabel) return true;
-    // 2. Label contains folder name (e.g. "oopsthroughjava".includes("java") → JAVA folder)
-    //    Only when both strings are long enough to avoid false positives
     if (normLabel.length > 3 && fn.length > 2 && normLabel.includes(fn)) return true;
-    // 3. Folder name contains subject code — only for codes > 3 chars
-    //    (prevents "dm" matching "dbms")
     if (normSubject.length > 3 && fn.includes(normSubject)) return true;
     return false;
+  };
+
+  const exactFolder = folders.find((f) => {
+    if (f.mimeType !== FOLDER_MIME) return false;
+    return findMatch(f);
   });
 
-  const found = match?.id ?? null;
+  const exactShortcut = folders.find((f) => {
+    if (f.mimeType !== 'application/vnd.google-apps.shortcut') return false;
+    return findMatch(f);
+  });
+
+  const match = exactFolder ?? exactShortcut ?? folders.find(findMatch);
+  const found = match ? (match.mimeType === 'application/vnd.google-apps.shortcut'
+    ? match.shortcutDetails?.targetId ?? null
+    : match.id)
+    : null;
+
   folderIdCache.set(key, found);
   return found;
 }
