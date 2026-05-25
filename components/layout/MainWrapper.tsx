@@ -44,7 +44,7 @@ export function MainWrapper({ children }: { children: React.ReactNode }) {
               </a>{' '}
               · CSE(AI&ML)
             </p>
-            <p className="text-[10px] text-muted-custom/60 uppercase tracking-wider font-mono">Study Portal v2.0</p>
+            <p className="text-[10px] text-muted-custom/60 uppercase tracking-wider font-mono">VJIT Study Portal v2.0</p>
           </div>
         </footer>
       )}
