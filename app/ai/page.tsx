@@ -52,6 +52,11 @@ export default function AIPage() {
 
   // Initialize and load saved sessions
   useEffect(() => {
+    // 0. Close sidebar by default on mobile
+    if (typeof window !== 'undefined' && window.innerWidth < 768) {
+      setSidebarOpen(false);
+    }
+
     // 1. Fetch Gemini key
     const stored = localStorage.getItem('gemini_api_key') ?? '';
     setSavedKey(stored);
@@ -247,8 +252,21 @@ export default function AIPage() {
   `;
 
   return (
-    <div className="flex flex-grow flex-1 min-h-[80vh] md:min-h-[88vh] h-[80vh] md:h-[88vh] max-w-6xl w-full mx-auto px-4 md:px-8 py-4 gap-4 overflow-hidden relative">
+    <div className="flex flex-grow flex-1 min-h-[calc(100vh-6rem)] md:min-h-[calc(100vh-2rem)] h-[calc(100vh-6rem)] md:h-[calc(100vh-2rem)] max-w-6xl w-full mx-auto px-2 md:px-8 py-2 md:py-4 gap-4 overflow-hidden relative">
       
+      {/* Backdrop overlay for mobile when sidebar is open */}
+      <AnimatePresence>
+        {sidebarOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSidebarOpen(false)}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-10 md:hidden"
+          />
+        )}
+      </AnimatePresence>
+
       {/* 1. Left Chat History Sidebar Panel */}
       <AnimatePresence>
         {sidebarOpen && (
@@ -257,7 +275,7 @@ export default function AIPage() {
             animate={{ opacity: 1, width: 260 }}
             exit={{ opacity: 0, width: 0 }}
             transition={{ type: 'spring', bounce: 0.1, duration: 0.3 }}
-            className="flex-shrink-0 bg-card-custom border border-custom rounded-2xl p-4 flex flex-col h-full overflow-hidden absolute md:relative z-20 left-4 md:left-0 top-4 bottom-4 md:top-0 md:bottom-0 shadow-2xl md:shadow-none"
+            className="flex-shrink-0 bg-card-custom border border-custom rounded-r-2xl md:rounded-2xl p-4 flex flex-col h-full overflow-hidden fixed md:relative z-20 left-0 md:left-0 top-0 md:top-0 bottom-0 md:bottom-0 shadow-2xl md:shadow-none border-l-0 md:border-l"
           >
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-sm font-bold text-primary flex items-center gap-1.5">
@@ -338,18 +356,19 @@ export default function AIPage() {
               <Bot className="w-5.5 h-5.5 text-white" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-primary flex items-center gap-2">
+              <h1 className="text-lg md:text-xl font-bold text-primary flex items-center gap-2">
                 JARVIS
                 <Sparkles className="w-4 h-4 text-indigo-400 animate-pulse" />
               </h1>
-              <p className="text-xs text-secondary mt-0.5">your ai personal assistant answers all your academic doubts</p>
+              <p className="text-xs text-secondary mt-0.5 hidden sm:block">your ai personal assistant answers all your academic doubts</p>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
             {savedKey && (
               <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-semibold animate-pulse">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" /> Active Key
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                <span className="hidden sm:inline">Active Key</span>
               </span>
             )}
             <button
@@ -390,7 +409,7 @@ export default function AIPage() {
                   Save Key
                 </button>
               </div>
-              <p className="text-[11px] text-secondary mt-2.5 flex items-center gap-1">
+              <p className="text-[11px] text-secondary mt-2.5 flex flex-wrap items-center gap-1">
                 Stored securely in your local browser only. Acquire a free key at{' '}
                 <a href="https://aistudio.google.com" target="_blank" className="text-indigo-400 hover:underline inline-flex items-center gap-0.5">
                   aistudio.google.com <ArrowRight className="w-2.5 h-2.5" />
@@ -431,7 +450,7 @@ export default function AIPage() {
               className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               <div
-                className={`max-w-[80%] px-4 py-3 rounded-2xl text-sm leading-relaxed ${
+                className={`max-w-[85%] md:max-w-[80%] px-4 py-3 rounded-2xl text-sm leading-relaxed ${
                   msg.role === 'user'
                     ? 'gradient-accent text-white shadow-md'
                     : 'bg-card-custom border border-custom text-primary'
@@ -470,7 +489,7 @@ export default function AIPage() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && sendMessage()}
-            placeholder="Ask a syllabus question or search study notes..."
+            placeholder="Ask JARVIS or search notes..."
             className={`${inputClass} flex-1`}
           />
           <motion.button

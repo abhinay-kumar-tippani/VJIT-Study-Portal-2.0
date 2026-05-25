@@ -29,23 +29,25 @@ export function MainWrapper({ children }: { children: React.ReactNode }) {
       <div className="flex-1 w-full flex flex-col">
         {children}
       </div>
-      <footer className="w-full py-8 border-t border-custom bg-card-custom/20 text-center text-xs text-muted-custom mt-auto">
-        <div className="max-w-7xl mx-auto px-6 space-y-1.5">
-          <p>
-            Built with passion by{' '}
-            <a
-              href="https://www.linkedin.com/in/abhinay-kumar-tippani/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary hover:text-indigo-400 font-semibold transition-colors underline decoration-dotted underline-offset-4"
-            >
-              Abhinay Kumar
-            </a>{' '}
-            · CSE AI-ML · VJIT
-          </p>
-          <p className="text-[10px] text-muted-custom/60 uppercase tracking-wider font-mono">VJIT Study Portal v2.0</p>
-        </div>
-      </footer>
+      {pathname !== '/ai' && (
+        <footer className="w-full py-8 border-t border-custom bg-card-custom/20 text-center text-xs text-muted-custom mt-auto">
+          <div className="max-w-7xl mx-auto px-6 space-y-1.5">
+            <p>
+              Built with passion by{' '}
+              <a
+                href="https://www.linkedin.com/in/abhinay-kumar-tippani/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:text-indigo-400 font-semibold transition-colors underline decoration-dotted underline-offset-4"
+              >
+                Abhinay Kumar
+              </a>{' '}
+              · CSE AI-ML · VJIT
+            </p>
+            <p className="text-[10px] text-muted-custom/60 uppercase tracking-wider font-mono">VJIT Study Portal v2.0</p>
+          </div>
+        </footer>
+      )}
     </main>
   );
 }
