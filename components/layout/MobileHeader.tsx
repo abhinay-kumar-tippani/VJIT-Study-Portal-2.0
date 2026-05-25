@@ -2,6 +2,7 @@
 
 import { Menu, GraduationCap } from 'lucide-react';
 import Link from 'next/link';
+import { NotificationBell } from './NotificationBell';
 
 /**
  * MobileHeader component shown only on mobile viewports (< 768px).
@@ -28,6 +29,10 @@ export function MobileHeader() {
           </div>
           <span className="font-bold text-sm text-primary tracking-wide">VJIT Portal</span>
         </Link>
+      </div>
+      
+      <div className="flex items-center gap-2">
+        <NotificationBell />
       </div>
     </header>
   );

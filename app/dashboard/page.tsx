@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import {
   BookOpen, Sparkles, Clock, ArrowRight,
   GraduationCap, User, FileText, HelpCircle,
-  Library, Users, Compass, BookMarked, Crown
+  Library, Users, Compass, BookMarked, Crown, X
 } from 'lucide-react';
 import Link from 'next/link';
 import { getBranchFromRollNumber, getBranchLabel, getBranchColor } from '@/lib/branch';
@@ -30,6 +30,20 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [userCount, setUserCount] = useState<number | null>(null);
   const [topContributors, setTopContributors] = useState<any[]>([]);
+  const [showResolvedBanner, setShowResolvedBanner] = useState(false);
+
+  const checkNotifications = async () => {
+    try {
+      const res = await fetch('/api/notifications');
+      if (res.ok) {
+        const data = await res.json();
+        const unread = (data.notifications ?? []).filter((n: any) => !n.isRead);
+        setShowResolvedBanner(unread.length > 0);
+      }
+    } catch (err) {
+      console.error('[Dashboard Notifications Error]', err);
+    }
+  };
 
   useEffect(() => {
     fetch('/api/auth/me')
@@ -43,6 +57,30 @@ export default function DashboardPage() {
         setLoading(false);
       });
   }, []);
+
+  useEffect(() => {
+    checkNotifications();
+
+    const handleUpdate = () => {
+      checkNotifications();
+    };
+    window.addEventListener('notifications-updated', handleUpdate);
+    return () => window.removeEventListener('notifications-updated', handleUpdate);
+  }, []);
+
+  const handleBannerClick = async () => {
+    try {
+      await fetch('/api/notifications', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({}),
+      });
+      setShowResolvedBanner(false);
+      window.dispatchEvent(new Event('notifications-updated'));
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   useEffect(() => {
     const fetchStats = () => {
@@ -109,6 +147,34 @@ export default function DashboardPage() {
 
   return (
     <div className="px-6 md:px-8 py-8 md:py-10 max-w-7xl mx-auto space-y-8">
+      {/* Dynamic Resolution Banner */}
+      {showResolvedBanner && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          onClick={handleBannerClick}
+          className="flex items-center justify-between p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm cursor-pointer hover:bg-emerald-500/15 transition-all shadow-lg shadow-emerald-500/5 group"
+        >
+          <div className="flex items-center gap-2.5 min-w-0">
+            <span role="img" aria-label="celebrate" className="text-base flex-shrink-0">🎉</span>
+            <span className="font-semibold truncate">
+              Your reported issue has been resolved! Click to view.
+            </span>
+          </div>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowResolvedBanner(false);
+            }}
+            className="p-1.5 rounded-lg hover:bg-emerald-500/20 text-emerald-400/70 hover:text-emerald-400 transition-colors focus:outline-none"
+            aria-label="Dismiss banner"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </motion.div>
+      )}
+
       {/* Personalized Header */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}

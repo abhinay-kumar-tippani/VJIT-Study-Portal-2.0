@@ -5,7 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   ShieldCheck, Users, Search, Eye, EyeOff,
   Trash2, Crown, AlertCircle, Loader2, RefreshCw,
-  User, BookOpen, Calendar, GraduationCap, ExternalLink
+  User, BookOpen, Calendar, GraduationCap, ExternalLink,
+  X, CheckCircle2
 } from 'lucide-react';
 import type { AdminUserRow } from '@/types';
 
@@ -23,7 +24,7 @@ function getFileIcon(type: string) {
 }
 
 export default function AdminPage() {
-  const [activeTab, setActiveTab] = useState<'users' | 'pending'>('users');
+  const [activeTab, setActiveTab] = useState<'users' | 'pending' | 'issues'>('users');
   
   // Users state
   const [users, setUsers] = useState<AdminUserRow[]>([]);
@@ -39,6 +40,13 @@ export default function AdminPage() {
   const [pendingError, setPendingError] = useState('');
   const [rejectionReasons, setRejectionReasons] = useState<Record<string, string>>({});
   const [rejectingId, setRejectingId] = useState<string | null>(null);
+
+  // Issues state
+  const [issuesList, setIssuesList] = useState<any[]>([]);
+  const [issuesLoading, setIssuesLoading] = useState(false);
+  const [issuesError, setIssuesError] = useState('');
+  const [selectedIssue, setSelectedIssue] = useState<any | null>(null);
+  const [lightboxImage, setLightboxImage] = useState<string | null>(null);
 
   const fetchUsers = async () => {
     setLoading(true);
@@ -77,9 +85,54 @@ export default function AdminPage() {
     }
   };
 
+  const fetchIssues = async () => {
+    setIssuesLoading(true);
+    setIssuesError('');
+    try {
+      const res = await fetch('/api/issues');
+      if (!res.ok) {
+        setIssuesError('Failed to load reported issues');
+        return;
+      }
+      const data = await res.json();
+      setIssuesList(data.issues ?? []);
+    } catch {
+      setIssuesError('Network error');
+    } finally {
+      setIssuesLoading(false);
+    }
+  };
+
+  const handleResolveIssue = async (reportId: string) => {
+    try {
+      const res = await fetch(`/api/issues/${reportId}/resolve`, {
+        method: 'POST',
+      });
+      if (res.ok) {
+        setIssuesList((prev) =>
+          prev.map((iss) =>
+            iss.reportId === reportId
+              ? { ...iss, status: 'resolved', resolvedAt: new Date().toISOString() }
+              : iss
+          )
+        );
+        setSelectedIssue((prev) =>
+          prev && prev.reportId === reportId
+            ? { ...prev, status: 'resolved', resolvedAt: new Date().toISOString() }
+            : prev
+        );
+      } else {
+        alert('Failed to resolve issue');
+      }
+    } catch {
+      alert('Network error');
+    }
+  };
+
   useEffect(() => {
     fetchUsers();
     fetchPending();
+    fetchIssues();
   }, []);
 
   const togglePassword = (id: string) => {
@@ -169,7 +222,9 @@ export default function AdminPage() {
               <span className="text-xs text-secondary">
                 {activeTab === 'users'
                   ? `${users.length} registered students`
-                  : `${pendingList.length} pending materials`}
+                  : activeTab === 'pending'
+                  ? `${pendingList.length} pending materials`
+                  : `${issuesList.length} reported issues`}
               </span>
             </div>
           </div>
@@ -218,6 +273,30 @@ export default function AdminPage() {
           {pendingList.length > 0 && (
             <span className="ml-1.5 px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-rose-500 text-white animate-pulse">
               {pendingList.length}
+            </span>
+          )}
+        </button>
+        <button
+          onClick={() => setActiveTab('issues')}
+          className={`
+            relative flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap
+            transition-all duration-150
+            ${activeTab === 'issues' ? 'text-white' : 'text-secondary hover:text-primary'}
+          `}
+        >
+          {activeTab === 'issues' && (
+            <motion.div
+              layoutId="admin-tab-active"
+              className="absolute inset-0 gradient-accent rounded-xl"
+              style={{ zIndex: -1 }}
+              transition={{ type: 'spring', bounce: 0.2, duration: 0.3 }}
+            />
+          )}
+          <AlertCircle className="w-4 h-4" />
+          Issues
+          {issuesList.filter((i) => i.status === 'pending').length > 0 && (
+            <span className="ml-1.5 px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-rose-500 text-white animate-pulse">
+              {issuesList.filter((i) => i.status === 'pending').length}
             </span>
           )}
         </button>
@@ -382,7 +461,7 @@ export default function AdminPage() {
               )}
             </div>
           </motion.div>
-        ) : (
+        ) : activeTab === 'pending' ? (
           <motion.div
             key="pending-tab"
             initial={{ opacity: 0, y: 10 }}
@@ -563,6 +642,292 @@ export default function AdminPage() {
               </div>
             )}
           </motion.div>
+        ) : (
+          <motion.div
+            key="issues-tab"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className="space-y-4"
+          >
+            {/* Toolbar equivalent */}
+            <div className="flex items-center gap-3 mb-6">
+              <button
+                onClick={fetchIssues}
+                className="p-2.5 rounded-xl glass border border-custom text-secondary hover:text-primary transition-all focus:outline-none"
+              >
+                <RefreshCw className={`w-4 h-4 ${issuesLoading ? 'animate-spin' : ''}`} />
+              </button>
+              <div className="text-xs text-muted-custom font-semibold">
+                {issuesList.filter((i) => i.status === 'pending').length} pending issue{issuesList.filter((i) => i.status === 'pending').length !== 1 ? 's' : ''} awaiting resolution
+              </div>
+            </div>
+
+            {/* Error */}
+            {issuesError && (
+              <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm mb-4">
+                <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                <span>{issuesError}</span>
+              </div>
+            )}
+
+            {/* Issues List */}
+            {issuesLoading ? (
+              <div className="card p-12 text-center">
+                <Loader2 className="w-8 h-8 animate-spin text-indigo-400 mx-auto mb-3" />
+                <p className="text-secondary text-sm">Loading issues...</p>
+              </div>
+            ) : issuesList.length === 0 ? (
+              <div className="card p-12 text-center text-secondary text-sm">
+                <AlertCircle className="w-10 h-10 text-muted-custom mx-auto mb-3" />
+                <p className="font-semibold text-primary">All clear!</p>
+                <p className="text-xs text-muted-custom mt-1">No student issues have been reported.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 gap-4">
+                {issuesList.map((iss) => {
+                  const isPending = iss.status === 'pending';
+                  
+                  const getSeverityClass = (type: string) => {
+                    const t = type.toLowerCase();
+                    if (t.includes('missing') || t.includes('login') || t.includes('signup')) {
+                      return 'bg-red-500/10 text-red-400 border-red-500/20';
+                    }
+                    if (t.includes('broken') || t.includes('wrong') || t.includes('youtube')) {
+                      return 'bg-amber-500/10 text-amber-400 border-amber-500/20';
+                    }
+                    return 'bg-blue-500/10 text-blue-400 border-blue-500/20';
+                  };
+
+                  return (
+                    <motion.div
+                      key={iss._id}
+                      className="card p-5 flex flex-col md:flex-row md:items-center justify-between gap-5 border border-custom bg-card-custom hover:border-indigo-500/25 transition-all duration-200"
+                    >
+                      {/* Left: Student & Issue Details */}
+                      <div className="flex-1 space-y-3 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className={`px-2.5 py-0.5 rounded-full border text-[10px] font-bold uppercase tracking-wider ${getSeverityClass(iss.issueType)}`}>
+                            {iss.issueType}
+                          </span>
+                          {iss.subject && (
+                            <span className="px-2 py-0.5 rounded bg-zinc-800 text-secondary text-[10px] font-medium border border-custom animate-fade-in">
+                              Subject: {iss.subject}
+                            </span>
+                          )}
+                          <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                            isPending ? 'bg-red-500/10 text-red-400 border border-red-500/25 animate-pulse' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/25'
+                          }`}>
+                            {isPending ? '⏳ Pending' : '✅ Resolved'}
+                          </span>
+                        </div>
+
+                        <div className="text-xs text-secondary flex flex-wrap items-center gap-x-3 gap-y-1">
+                          <span>Student: <strong className="text-primary font-semibold">{iss.studentName}</strong></span>
+                          <span>Roll No: <strong className="text-primary font-mono">{iss.studentRollNo}</strong></span>
+                          <span>Branch: <strong className="text-primary">{iss.branch}</strong></span>
+                          <span>Semester: <strong className="text-primary">Sem {iss.semester}</strong></span>
+                          <span>Submitted: <strong className="text-primary font-mono">{new Date(iss.createdAt).toLocaleDateString('en-IN')}</strong></span>
+                          {iss.resolvedAt && (
+                            <span className="text-emerald-400 font-bold">Resolved: <strong className="font-mono">{new Date(iss.resolvedAt).toLocaleDateString('en-IN')}</strong></span>
+                          )}
+                        </div>
+
+                        <p className="text-sm text-primary leading-relaxed break-words">
+                          {iss.description}
+                        </p>
+                      </div>
+
+                      {/* Right: Screenshot Preview & Actions */}
+                      <div className="flex items-center gap-4 flex-shrink-0">
+                        {iss.screenshotUrl && (
+                          <button
+                            onClick={() => setLightboxImage(iss.screenshotUrl)}
+                            className="w-16 h-16 rounded-xl overflow-hidden border border-custom bg-zinc-950 flex-shrink-0 hover:scale-105 active:scale-95 transition-all relative group focus:outline-none"
+                            title="Click to zoom screenshot"
+                          >
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src={iss.screenshotUrl} alt="Screenshot" className="w-full h-full object-cover" />
+                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white text-[10px] font-semibold transition-opacity">
+                              Zoom
+                            </div>
+                          </button>
+                        )}
+
+                        <div className="flex flex-col sm:flex-row gap-2">
+                          <button
+                            onClick={() => setSelectedIssue(iss)}
+                            className="px-3.5 py-2 rounded-xl text-xs font-semibold glass border border-custom text-secondary hover:text-primary transition-all flex items-center justify-center gap-1 focus:outline-none"
+                          >
+                            <User className="w-3.5 h-3.5" /> View Details
+                          </button>
+                          {isPending && (
+                            <button
+                              onClick={() => handleResolveIssue(iss.reportId)}
+                              className="px-4 py-2 rounded-xl text-xs font-bold bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/20 hover:border-emerald-500/30 transition-all flex items-center justify-center gap-1 focus:outline-none"
+                            >
+                              Mark Resolved
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── Issue Details Modal ── */}
+      <AnimatePresence>
+        {selectedIssue && (
+          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="relative w-full max-w-2xl rounded-3xl glass-strong border border-custom bg-card-custom shadow-2xl p-6 overflow-hidden flex flex-col gap-5"
+            >
+              {/* Close button */}
+              <button
+                onClick={() => setSelectedIssue(null)}
+                className="absolute right-4 top-4 p-1.5 rounded-lg text-secondary hover:text-primary hover:bg-card-custom border border-transparent hover:border-custom transition-all focus:outline-none"
+                title="Close"
+              >
+                <X className="w-4 h-4" />
+              </button>
+
+              <div>
+                <span className="text-[10px] font-mono text-muted-custom bg-card-custom px-2 py-0.5 rounded border border-custom uppercase">
+                  {selectedIssue.reportId}
+                </span>
+                <h3 className="text-xl font-extrabold text-primary mt-2">
+                  {selectedIssue.issueType}
+                </h3>
+              </div>
+
+              {/* Student Metadata Card */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 rounded-2xl bg-card-custom/40 border border-custom text-xs">
+                <div>
+                  <p className="text-muted-custom font-semibold">STUDENT NAME</p>
+                  <p className="text-primary font-bold mt-1 text-sm">{selectedIssue.studentName}</p>
+                </div>
+                <div>
+                  <p className="text-muted-custom font-semibold">ROLL NUMBER</p>
+                  <p className="text-primary font-mono font-bold mt-1 text-sm">{selectedIssue.studentRollNo}</p>
+                </div>
+                <div>
+                  <p className="text-muted-custom font-semibold">BRANCH / SEMESTER</p>
+                  <p className="text-primary font-bold mt-1 text-sm">{selectedIssue.branch} (Sem {selectedIssue.semester})</p>
+                </div>
+                <div>
+                  <p className="text-muted-custom font-semibold">SUBMITTED DATE</p>
+                  <p className="text-primary font-bold mt-1 text-sm">{new Date(selectedIssue.createdAt).toLocaleDateString('en-IN')}</p>
+                </div>
+              </div>
+
+              {/* Subject (if provided) */}
+              {selectedIssue.subject && (
+                <div className="text-sm">
+                  <span className="text-xs font-semibold text-secondary uppercase tracking-wider block mb-1">
+                    Subject context
+                  </span>
+                  <span className="px-3 py-1.5 rounded-xl bg-zinc-800 text-indigo-400 font-semibold border border-custom inline-block">
+                    {selectedIssue.subject}
+                  </span>
+                </div>
+              )}
+
+              {/* Description */}
+              <div className="space-y-1.5">
+                <span className="text-xs font-semibold text-secondary uppercase tracking-wider block">
+                  Description details
+                </span>
+                <div className="p-4 rounded-2xl bg-zinc-950/40 border border-custom text-sm text-primary leading-relaxed break-words max-h-40 overflow-y-auto">
+                  {selectedIssue.description}
+                </div>
+              </div>
+
+              {/* Screenshot */}
+              {selectedIssue.screenshotUrl && (
+                <div className="space-y-1.5">
+                  <span className="text-xs font-semibold text-secondary uppercase tracking-wider block">
+                    Report Screenshot
+                  </span>
+                  <div
+                    onClick={() => setLightboxImage(selectedIssue.screenshotUrl)}
+                    className="relative max-w-sm aspect-video rounded-2xl overflow-hidden border border-custom bg-zinc-950 cursor-zoom-in group hover:scale-102 transition-transform duration-300"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={selectedIssue.screenshotUrl} alt="Attached screenshot" className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white text-xs font-bold transition-opacity">
+                      Click to expand full size
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Footer and resolve action */}
+              <div className="flex items-center justify-between gap-4 pt-4 border-t border-custom mt-2">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-muted-custom">Status:</span>
+                  <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${
+                    selectedIssue.status === 'pending' ? 'bg-red-500/10 text-red-400 animate-pulse' : 'bg-emerald-500/10 text-emerald-400'
+                  }`}>
+                    {selectedIssue.status === 'pending' ? '⏳ Pending' : '✅ Resolved'}
+                  </span>
+                </div>
+
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setSelectedIssue(null)}
+                    className="px-4 py-2 rounded-xl text-xs font-semibold border border-custom text-secondary hover:text-primary transition-all focus:outline-none"
+                  >
+                    Close Details
+                  </button>
+                  {selectedIssue.status === 'pending' && (
+                    <button
+                      onClick={() => handleResolveIssue(selectedIssue.reportId)}
+                      className="px-5 py-2 rounded-xl text-xs font-bold bg-emerald-500 text-white hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-500/20 focus:outline-none"
+                    >
+                      Mark as Resolved
+                    </button>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* ── Screenshot Lightbox ── */}
+      <AnimatePresence>
+        {lightboxImage && (
+          <div
+            onClick={() => setLightboxImage(null)}
+            className="fixed inset-0 bg-black/90 backdrop-blur-md z-[100] flex items-center justify-center p-4 cursor-zoom-out"
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="relative max-w-5xl max-h-[85vh] rounded-3xl overflow-hidden border border-custom bg-zinc-950 shadow-2xl"
+            >
+              {/* Close indicator */}
+              <button
+                onClick={() => setLightboxImage(null)}
+                className="absolute right-4 top-4 p-2 rounded-full bg-black/60 backdrop-blur-sm border border-zinc-800 text-white hover:bg-black/80 transition-all focus:outline-none"
+                title="Close Lightbox"
+              >
+                <X className="w-5 h-5" />
+              </button>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={lightboxImage} alt="Full resolution screenshot" className="w-auto h-auto max-w-full max-h-[85vh] object-contain" />
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
     </div>

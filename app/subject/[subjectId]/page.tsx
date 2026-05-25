@@ -10,6 +10,9 @@ import {
   FileImage, FileType2, Download, AlertCircle, Play, X
 } from 'lucide-react';
 
+import { SEM4_SUBJECTS } from '@/lib/subjects';
+
+
 // ─── Types ────────────────────────────────────────────────────────
 interface DriveFile {
   id: string;
@@ -97,6 +100,114 @@ function SkeletonCard() {
   );
 }
 
+// ─── Playlist Card Component with oEmbed ──────────────────────────
+interface PlaylistCardProps {
+  title: string;
+  url: string;
+}
+
+function PlaylistCard({ title, url }: PlaylistCardProps) {
+  const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let active = true;
+    setLoading(true);
+    fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (active) {
+          if (data && data.thumbnail_url) {
+            setThumbnailUrl(data.thumbnail_url);
+          }
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
+        console.error('[oEmbed fetch error]', err);
+        if (active) setLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [url]);
+
+  if (loading) {
+    return (
+      <div className="card p-4 flex flex-col gap-3 h-full animate-pulse bg-zinc-900/20 border border-zinc-800">
+        <div className="skeleton aspect-video w-full rounded-xl animate-pulse bg-zinc-800" style={{ minHeight: '120px' }} />
+        <div className="skeleton h-4 w-3/4 rounded mt-2 animate-pulse bg-zinc-800" />
+        <div className="skeleton h-8 w-full rounded-xl mt-2 animate-pulse bg-zinc-800" />
+      </div>
+    );
+  }
+
+  if (!thumbnailUrl) {
+    // Fallback card
+    return (
+      <motion.div
+        whileHover={{ y: -3, scale: 1.01 }}
+        className="card-hover p-6 flex flex-col items-center justify-between border border-custom bg-card-custom h-full text-center group"
+      >
+        <div className="flex flex-col items-center gap-4 flex-1 justify-center py-6">
+          <div className="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center border border-red-500/25 group-hover:scale-110 transition-transform duration-300">
+            <Youtube className="w-8 h-8 text-red-500 fill-current" />
+          </div>
+          <div>
+            <h4 className="font-bold text-primary text-sm line-clamp-2 px-2 group-hover:text-indigo-400 transition-colors">
+              {title}
+            </h4>
+            <p className="text-[11px] text-muted-custom mt-1">Playlist Resource</p>
+          </div>
+        </div>
+        <a
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-4 w-full px-4 py-2 rounded-xl text-xs font-semibold gradient-accent text-white flex items-center justify-center gap-1.5 glow-accent"
+        >
+          <Play className="w-3 h-3 fill-current" /> Watch Playlist
+        </a>
+      </motion.div>
+    );
+  }
+
+  // Premium playlist card with thumbnail
+  return (
+    <motion.div
+      whileHover={{ y: -3, scale: 1.01 }}
+      className="card-hover overflow-hidden flex flex-col justify-between border border-custom bg-card-custom h-full group"
+    >
+      <div className="relative aspect-video w-full overflow-hidden bg-zinc-900">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={thumbnailUrl}
+          alt={title}
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/80 via-transparent to-transparent" />
+        <div className="absolute bottom-3 right-3 px-2 py-0.5 rounded bg-black/60 backdrop-blur-sm text-[10px] font-bold text-white uppercase tracking-wider flex items-center gap-1">
+          <Youtube className="w-3 h-3 text-red-500 fill-current" /> Playlist
+        </div>
+      </div>
+      <div className="p-5 flex-1 flex flex-col justify-between">
+        <h4 className="font-bold text-primary text-sm line-clamp-2 mb-4 group-hover:text-indigo-400 transition-colors leading-snug">
+          {title}
+        </h4>
+        <a
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full px-4 py-2 rounded-xl text-xs font-semibold gradient-accent text-white flex items-center justify-center gap-1.5 glow-accent"
+        >
+          <Play className="w-3 h-3 fill-current" /> Watch Playlist
+        </a>
+      </div>
+    </motion.div>
+  );
+}
+
 // ─── Page Content ──────────────────────────────────────────────────
 function SubjectPageContent() {
   const { subjectId } = useParams<{ subjectId: string }>();
@@ -104,6 +215,13 @@ function SubjectPageContent() {
   const branch   = searchParams.get('branch')   ?? 'CSE-AIML';
   const semester = searchParams.get('semester')  ?? '4';
   const label    = searchParams.get('label')     ?? decodeURIComponent(subjectId);
+
+  const branchConfig = SEM4_SUBJECTS[branch];
+  const subjectConfig = branchConfig
+    ? [...(branchConfig.theory || []), ...(branchConfig.lab || [])].find(
+        (s) => s.id === decodeURIComponent(subjectId)
+      )
+    : null;
 
   const [activeTab, setActiveTab] = useState<TabId>('Notes');
   const [files,     setFiles]     = useState<DriveFile[]>([]);
@@ -303,11 +421,32 @@ function SubjectPageContent() {
           {/* ── YouTube Tab ── */}
           {!loading && activeTab === 'YouTube' && (
             <div className="space-y-6">
+              {/* Curated Playlists from config */}
+              {subjectConfig?.youtube && subjectConfig.youtube.length > 0 && (
+                <div className="space-y-4">
+                  <h3 className="text-base font-bold text-primary flex items-center gap-2">
+                    <Youtube className="w-5 h-5 text-red-400" />
+                    Curated Playlists
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {subjectConfig.youtube.map((pl, i) => (
+                      <PlaylistCard key={i} title={pl.title} url={pl.url} />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Drive YouTube Playlist (if it exists) */}
               {ytLink ? (
                 <div className="card p-5">
                   <div className="flex items-center gap-2 mb-4">
                     <Youtube className="w-5 h-5 text-red-400" />
-                    <span className="font-semibold text-primary">YouTube Playlist</span>
+                    <span className="font-semibold text-primary">
+                      {subjectConfig?.youtube && subjectConfig.youtube.length > 0
+                        ? "Additional Reference Playlist"
+                        : "YouTube Playlist"
+                      }
+                    </span>
                   </div>
                   {/* Embed the playlist */}
                   <div className="aspect-video rounded-xl overflow-hidden bg-zinc-900">
@@ -332,7 +471,10 @@ function SubjectPageContent() {
                     Open in YouTube
                   </a>
                 </div>
-              ) : (!error && contributedResources.length === 0) ? (
+              ) : null}
+
+              {/* Empty placeholder */}
+              {!ytLink && (!subjectConfig?.youtube || subjectConfig.youtube.length === 0) && (!error && contributedResources.length === 0) ? (
                 <div className="card p-12 text-center">
                   <Youtube className="w-10 h-10 text-muted-custom mx-auto mb-3" />
                   <p className="text-secondary font-medium">No playlist added yet</p>

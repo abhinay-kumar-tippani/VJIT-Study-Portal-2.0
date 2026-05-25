@@ -3,6 +3,7 @@ export interface Subject {
   label: string;
   short: string;
   driveFolder: string;
+  youtube?: { title: string; url: string; }[];
 }
 
 export const ACTIVE_SEM = 4;
@@ -16,11 +17,55 @@ export const SEM4_SUBJECTS: Record<string, { theory: Subject[]; lab?: Subject[] 
   // ── CSE-AIML ────────────────────────────────────────────────
   'CSE-AIML': {
     theory: [
-      { id: 'DM',        label: 'Discrete Mathematics',                  short: 'DM',        driveFolder: 'DM'        },
-      { id: 'ATCD',      label: 'Automata Theory & Compiler Design',     short: 'ATCD',      driveFolder: 'ATCD'      },
-      { id: 'DBMS',      label: 'Database Management Systems',           short: 'DBMS',      driveFolder: 'DBMS'      },
+      {
+        id: 'DM',
+        label: 'Discrete Mathematics',
+        short: 'DM',
+        driveFolder: 'DM',
+        youtube: [
+          {
+            title: "Discrete Mathematics - Full Playlist",
+            url: "https://youtube.com/playlist?list=PLXj4XH7LcRfBB-4hXp4XI84HOCWkaBD63"
+          }
+        ]
+      },
+      {
+        id: 'ATCD',
+        label: 'Automata Theory & Compiler Design',
+        short: 'ATCD',
+        driveFolder: 'AT&CD',
+        youtube: [
+          {
+            title: "Automata Theory & Compiler Design - Full Playlist",
+            url: "https://youtube.com/playlist?list=PLLOxZwkBK52AwK39Lh1Ny6xbwVPH7QDJg"
+          }
+        ]
+      },
+      {
+        id: 'DBMS',
+        label: 'Database Management Systems',
+        short: 'DBMS',
+        driveFolder: 'DBMS',
+        youtube: [
+          {
+            title: "DBMS - Full Playlist",
+            url: "https://youtube.com/playlist?list=PLqcuf9-ILPYAjSxpAssMGrWsTOE5-111e"
+          }
+        ]
+      },
       { id: 'IAI',       label: 'Introduction to Artificial Intelligence', short: 'IAI',     driveFolder: 'IAI'       },
-      { id: 'OOPs-Java', label: 'OOPs through Java',                     short: 'JAVA',      driveFolder: 'JAVA'      },
+      {
+        id: 'OOPs-Java',
+        label: 'OOPs through Java',
+        short: 'JAVA',
+        driveFolder: 'JAVA',
+        youtube: [
+          {
+            title: "Java OOPs - Full Playlist",
+            url: "https://youtube.com/playlist?list=PLXj4XH7LcRfDlQklXu3Hrtru-bm2dJ9Df"
+          }
+        ]
+      },
       { id: 'PC',        label: 'Professional Communication',            short: 'PC',        driveFolder: 'PC'        },
     ],
     lab: [
@@ -35,7 +80,18 @@ export const SEM4_SUBJECTS: Record<string, { theory: Subject[]; lab?: Subject[] 
     theory: [
       { id: 'DAA',       label: 'Design & Analysis of Algorithms',          short: 'DAA',       driveFolder: 'DAA'       },
       { id: 'OS',        label: 'Operating Systems',                        short: 'OS',        driveFolder: 'OS'        },
-      { id: 'OOPs-Java', label: 'OOPs through Java',                        short: 'JAVA',      driveFolder: 'JAVA'      },
+      {
+        id: 'OOPs-Java',
+        label: 'OOPs through Java',
+        short: 'JAVA',
+        driveFolder: 'JAVA',
+        youtube: [
+          {
+            title: "Java OOPs - Full Playlist",
+            url: "https://youtube.com/playlist?list=PLXj4XH7LcRfDlQklXu3Hrtru-bm2dJ9Df"
+          }
+        ]
+      },
       { id: 'SE',        label: 'Software Engineering',                     short: 'SE',        driveFolder: 'SE'        },
       { id: 'IAI',       label: 'Introduction to Artificial Intelligence',  short: 'IAI',       driveFolder: 'IAI'       },
       { id: 'PC',        label: 'Professional Communication',               short: 'PC',        driveFolder: 'PC'        },
@@ -52,7 +108,18 @@ export const SEM4_SUBJECTS: Record<string, { theory: Subject[]; lab?: Subject[] 
     theory: [
       { id: 'DAA',       label: 'Design & Analysis of Algorithms',          short: 'DAA',       driveFolder: 'DAA'  },
       { id: 'OS',        label: 'Operating Systems',                        short: 'OS',        driveFolder: 'OS'   },
-      { id: 'OOPs-Java', label: 'OOPs through Java',                        short: 'JAVA',      driveFolder: 'JAVA' },
+      {
+        id: 'OOPs-Java',
+        label: 'OOPs through Java',
+        short: 'JAVA',
+        driveFolder: 'JAVA',
+        youtube: [
+          {
+            title: "Java OOPs - Full Playlist",
+            url: "https://youtube.com/playlist?list=PLXj4XH7LcRfDlQklXu3Hrtru-bm2dJ9Df"
+          }
+        ]
+      },
       { id: 'SE',        label: 'Software Engineering',                     short: 'SE',        driveFolder: 'SE'   },
       { id: 'IAI',       label: 'Introduction to Artificial Intelligence',  short: 'IAI',       driveFolder: 'IAI'  },
       { id: 'PC',        label: 'Professional Communication',               short: 'PC',        driveFolder: 'PC'   },
@@ -69,7 +136,18 @@ export const SEM4_SUBJECTS: Record<string, { theory: Subject[]; lab?: Subject[] 
     theory: [
       { id: 'DAA',       label: 'Design & Analysis of Algorithms',          short: 'DAA',       driveFolder: 'DAA'   },
       { id: 'OS',        label: 'Operating Systems',                        short: 'OS',        driveFolder: 'OS'    },
-      { id: 'OOPs-Java', label: 'OOPs through Java',                        short: 'JAVA',      driveFolder: 'JAVA'  },
+      {
+        id: 'OOPs-Java',
+        label: 'OOPs through Java',
+        short: 'JAVA',
+        driveFolder: 'JAVA',
+        youtube: [
+          {
+            title: "Java OOPs - Full Playlist",
+            url: "https://youtube.com/playlist?list=PLXj4XH7LcRfDlQklXu3Hrtru-bm2dJ9Df"
+          }
+        ]
+      },
       { id: 'SE',        label: 'Software Engineering',                     short: 'SE',        driveFolder: 'SE'    },
       { id: 'FIoT',      label: 'Foundations of IoT',                       short: 'FIoT',      driveFolder: 'F IoT' },
       { id: 'QMLR',      label: 'Quantitative Methods & Linear Regression', short: 'QMLR',      driveFolder: 'QMLR'  },

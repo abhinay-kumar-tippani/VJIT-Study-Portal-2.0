@@ -54,6 +54,45 @@ export default function AIPage() {
   
   const bottomRef = useRef<HTMLDivElement>(null);
 
+  const [showResolvedBanner, setShowResolvedBanner] = useState(false);
+
+  const checkNotifications = async () => {
+    try {
+      const res = await fetch('/api/notifications');
+      if (res.ok) {
+        const data = await res.json();
+        const unread = (data.notifications ?? []).filter((n: any) => !n.isRead);
+        setShowResolvedBanner(unread.length > 0);
+      }
+    } catch (err) {
+      console.error('[AI Notifications Error]', err);
+    }
+  };
+
+  useEffect(() => {
+    checkNotifications();
+
+    const handleUpdate = () => {
+      checkNotifications();
+    };
+    window.addEventListener('notifications-updated', handleUpdate);
+    return () => window.removeEventListener('notifications-updated', handleUpdate);
+  }, []);
+
+  const handleBannerClick = async () => {
+    try {
+      await fetch('/api/notifications', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({}),
+      });
+      setShowResolvedBanner(false);
+      window.dispatchEvent(new Event('notifications-updated'));
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   // Initialize and load saved sessions
   useEffect(() => {
     // 0. Close sidebar by default on mobile
@@ -375,6 +414,34 @@ export default function AIPage() {
 
       {/* 2. Main Chat Panel */}
       <div className="flex-1 flex flex-col h-full bg-transparent overflow-hidden min-w-0">
+        {/* Dynamic Resolution Banner */}
+        {showResolvedBanner && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            onClick={handleBannerClick}
+            className="flex items-center justify-between p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm cursor-pointer hover:bg-emerald-500/15 transition-all shadow-lg shadow-emerald-500/5 group mb-4 flex-shrink-0"
+          >
+            <div className="flex items-center gap-2.5 min-w-0">
+              <span role="img" aria-label="celebrate" className="text-base flex-shrink-0">🎉</span>
+              <span className="font-semibold truncate">
+                Your reported issue has been resolved! Click to view.
+              </span>
+            </div>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowResolvedBanner(false);
+              }}
+              className="p-1.5 rounded-lg hover:bg-emerald-500/20 text-emerald-400/70 hover:text-emerald-400 transition-colors focus:outline-none"
+              aria-label="Dismiss banner"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </motion.div>
+        )}
+
         {/* Premium Header */}
         <div className="flex items-center justify-between pb-4 border-b border-custom mb-4 flex-shrink-0">
           <div className="flex items-center gap-3">
