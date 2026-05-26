@@ -155,12 +155,12 @@ export default function ContributePage() {
           });
 
           if (!signedRes.ok) {
-            // If GCS not configured, show mock success
-            await new Promise((r) => setTimeout(r, 500));
+            const data = await signedRes.json();
+            setError(data.error || 'Failed to initialize secure upload.');
             setFiles((f) =>
-              f.map((item, idx) => idx === i ? { ...item, status: 'done', progress: 100 } : item)
+              f.map((item, idx) => idx === i ? { ...item, status: 'error', progress: 0 } : item)
             );
-            continue;
+            return;
           }
 
           const { signedUrl } = await signedRes.json();
