@@ -10,6 +10,14 @@ export async function POST(req: NextRequest) {
   const session = await verifyToken(token);
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
+  console.log('DRIVE_ROOT_FOLDER_ID:', process.env.DRIVE_ROOT_FOLDER_ID);
+  console.log('Service account email from key:', 
+    JSON.parse(
+      (() => { try { JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_KEY!); return process.env.GOOGLE_SERVICE_ACCOUNT_KEY!; } 
+      catch { return Buffer.from(process.env.GOOGLE_SERVICE_ACCOUNT_KEY!, 'base64').toString(); }})()
+    ).client_email
+  );
+
   try {
     const formData = await req.formData();
     const file = formData.get('file') as File | null;
@@ -39,15 +47,12 @@ export async function POST(req: NextRequest) {
 
     const drive = google.drive({ version: 'v3', auth });
 
-    // Step 5: Get or create "Contributions" subfolder
-    const contributionsFolderId = await getOrCreateContributionsFolder(drive, parentId);
-
     // Upload file
     const buffer = Buffer.from(await file.arrayBuffer());
     const fileResponse = await drive.files.create({
       requestBody: {
         name: file.name,
-        parents: [contributionsFolderId],
+        parents: [process.env.DRIVE_ROOT_FOLDER_ID!],
       },
       media: {
         mimeType: file.type,
