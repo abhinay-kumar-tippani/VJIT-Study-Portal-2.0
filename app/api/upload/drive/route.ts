@@ -47,12 +47,15 @@ export async function POST(req: NextRequest) {
 
     const drive = google.drive({ version: 'v3', auth });
 
+    // Get or create "Contributions" subfolder in Drive
+    const contributionsFolderId = await getOrCreateContributionsFolder(drive, parentId);
+
     // Upload file
     const buffer = Buffer.from(await file.arrayBuffer());
     const response = await drive.files.create({
       requestBody: {
         name: file.name,
-        parents: [process.env.DRIVE_ROOT_FOLDER_ID!],
+        parents: [contributionsFolderId],
         mimeType: file.type,
       },
       media: {
@@ -93,6 +96,8 @@ async function getOrCreateContributionsFolder(drive: any, parentId: string): Pro
     q: `'${parentId}' in parents and name = 'Contributions' and mimeType = 'application/vnd.google-apps.folder' and trashed = false`,
     fields: 'files(id)',
     pageSize: 1,
+    supportsAllDrives: true,
+    includeItemsFromAllDrives: true,
   });
 
   const files = listRes.data.files;
@@ -107,6 +112,7 @@ async function getOrCreateContributionsFolder(drive: any, parentId: string): Pro
       parents: [parentId],
     },
     fields: 'id',
+    supportsAllDrives: true,
   });
 
   return createRes.data.id!;
