@@ -60,6 +60,7 @@ export async function POST(req: NextRequest) {
         body: Readable.from(buffer),
       },
       fields: 'id, webViewLink',
+      supportsAllDrives: true,
     });
 
     const fileId = response.data.id;
@@ -74,6 +75,7 @@ export async function POST(req: NextRequest) {
         role: 'reader',
         type: 'anyone',
       },
+      supportsAllDrives: true,
     });
 
     const viewUrl = `https://drive.google.com/file/d/${fileId}/view`;
