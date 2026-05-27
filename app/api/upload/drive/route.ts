@@ -24,7 +24,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Drive env variables are missing' }, { status: 500 });
     }
 
-    const credentials = JSON.parse(Buffer.from(keyJson, 'base64').toString('utf8'));
+    let credentials;
+    try {
+      credentials = JSON.parse(keyJson);
+    } catch {
+      const decoded = Buffer.from(keyJson, 'base64').toString('utf-8');
+      credentials = JSON.parse(decoded);
+    }
+
     const auth = new google.auth.GoogleAuth({
       credentials,
       scopes: ['https://www.googleapis.com/auth/drive'],
