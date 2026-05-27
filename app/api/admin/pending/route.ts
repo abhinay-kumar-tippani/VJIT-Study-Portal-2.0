@@ -3,6 +3,7 @@ import { connectDB } from '@/lib/db';
 import { verifyToken, COOKIE_NAME } from '@/lib/auth';
 import Resource from '@/models/Resource';
 import User from '@/models/User';
+import { transformResourceUrl } from '@/lib/resourceHelper';
 
 // Helper to authenticate admin
 async function getAdminSession(req: NextRequest) {
@@ -31,6 +32,7 @@ export async function GET(req: NextRequest) {
       return {
         ...res,
         _id: String(res._id),
+        url: transformResourceUrl(res.url),
         studentName: user?.name || 'Unknown Student',
       };
     })

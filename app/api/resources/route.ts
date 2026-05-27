@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '@/lib/db';
 import { verifyToken, COOKIE_NAME } from '@/lib/auth';
 import Resource from '@/models/Resource';
+import { transformResourceUrl } from '@/lib/resourceHelper';
 
 // GET /api/resources?branch=CSE&semester=3&subject=xyz&type=notes
 export async function GET(req: NextRequest) {
@@ -38,7 +39,12 @@ export async function GET(req: NextRequest) {
     .sort({ createdAt: -1 })
     .lean();
 
-  return NextResponse.json({ resources });
+  const transformedResources = resources.map((res) => ({
+    ...res,
+    url: transformResourceUrl(res.url),
+  }));
+
+  return NextResponse.json({ resources: transformedResources });
 }
 
 // POST /api/resources — create resource metadata (after GCS upload)
