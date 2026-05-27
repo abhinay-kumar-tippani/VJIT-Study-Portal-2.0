@@ -140,39 +140,34 @@ export default function ContributePage() {
           }),
         });
       } else {
-        // Upload each file via GCS signed URL
+        // Upload each file directly to Google Drive API
         for (let i = 0; i < files.length; i++) {
           const { file } = files[i];
           setFiles((f) =>
             f.map((item, idx) => idx === i ? { ...item, status: 'uploading' } : item)
           );
 
-          // Get signed URL
-          const signedRes = await fetch('/api/upload/signed-url', {
+          // Construct FormData for Drive Upload
+          const uploadData = new FormData();
+          uploadData.append('file', file);
+
+          const uploadRes = await fetch('/api/upload/drive', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ fileName: file.name, contentType: file.type }),
+            body: uploadData,
           });
 
-          if (!signedRes.ok) {
-            const data = await signedRes.json();
-            setError(data.error || 'Failed to initialize secure upload.');
+          if (!uploadRes.ok) {
+            const data = await uploadRes.json();
+            setError(data.error || 'Failed to upload file to Google Drive.');
             setFiles((f) =>
               f.map((item, idx) => idx === i ? { ...item, status: 'error', progress: 0 } : item)
             );
             return;
           }
 
-          const { signedUrl } = await signedRes.json();
+          const { viewUrl } = await uploadRes.json();
 
-          // Upload to GCS
-          await fetch(signedUrl, {
-            method: 'PUT',
-            body: file,
-            headers: { 'Content-Type': file.type },
-          });
-
-          // Save metadata
+          // Save metadata to MongoDB
           await fetch('/api/resources', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -182,7 +177,7 @@ export default function ContributePage() {
               branch: form.branch,
               semester: Number(form.semester),
               subject: form.subject,
-              url: signedUrl.split('?')[0], // public URL
+              url: viewUrl, // Save the exact Google Drive view link
               fileType: getFileType(file.type),
             }),
           });
@@ -197,7 +192,7 @@ export default function ContributePage() {
       setFiles([]);
     } catch (err) {
       setStatus('error');
-      setError('Upload failed — check your connection or GCS configuration');
+      setError('Upload failed — check your connection or Google Drive configuration');
     } finally {
       setSubmitting(false);
     }
