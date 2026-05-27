@@ -147,18 +147,18 @@ export default function ContributePage() {
             f.map((item, idx) => idx === i ? { ...item, status: 'uploading' } : item)
           );
 
-          // Construct FormData for Drive Upload
+          // Construct FormData for GCS Upload
           const uploadData = new FormData();
           uploadData.append('file', file);
 
-          const uploadRes = await fetch('/api/upload/drive', {
+          const uploadRes = await fetch('/api/upload/gcs', {
             method: 'POST',
             body: uploadData,
           });
 
           if (!uploadRes.ok) {
             const data = await uploadRes.json();
-            setError(data.error || 'Failed to upload file to Google Drive.');
+            setError(data.error || 'Failed to upload file to Google Cloud Storage.');
             setFiles((f) =>
               f.map((item, idx) => idx === i ? { ...item, status: 'error', progress: 0 } : item)
             );
@@ -192,7 +192,7 @@ export default function ContributePage() {
       setFiles([]);
     } catch (err) {
       setStatus('error');
-      setError('Upload failed — check your connection or Google Drive configuration');
+      setError('Upload failed — check your connection or Google Cloud Storage configuration');
     } finally {
       setSubmitting(false);
     }
