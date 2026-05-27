@@ -49,26 +49,27 @@ export async function POST(req: NextRequest) {
 
     // Upload file
     const buffer = Buffer.from(await file.arrayBuffer());
-    const fileResponse = await drive.files.create({
+    const response = await drive.files.create({
       requestBody: {
         name: file.name,
         parents: [process.env.DRIVE_ROOT_FOLDER_ID!],
+        mimeType: file.type,
       },
       media: {
         mimeType: file.type,
         body: Readable.from(buffer),
       },
-      fields: 'id',
+      fields: 'id, webViewLink',
     });
 
-    const fileId = fileResponse.data.id;
+    const fileId = response.data.id;
     if (!fileId) {
       throw new Error('Failed to create file in Google Drive');
     }
 
     // Set permission to anyone with link can view
     await drive.permissions.create({
-      fileId,
+      fileId: response.data.id!,
       requestBody: {
         role: 'reader',
         type: 'anyone',
