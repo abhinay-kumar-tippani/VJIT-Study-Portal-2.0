@@ -17,11 +17,10 @@ export async function POST(req: NextRequest) {
 
     const signedUrl = await generateSignedUploadUrl(fileName, contentType);
     return NextResponse.json({ signedUrl });
-  } catch (err) {
-    console.error('[signed-url]', err);
-    return NextResponse.json(
-      { error: 'Could not generate signed URL — check GCS configuration' },
-      { status: 500 }
-    );
+  } catch (error) {
+    console.error('GCS Signed URL Error:', error);
+    return NextResponse.json({ 
+      error: error instanceof Error ? error.message : String(error) 
+    }, { status: 500 });
   }
 }
