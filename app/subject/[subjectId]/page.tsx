@@ -593,10 +593,12 @@ function SubjectPageContent() {
                           href={previewUrl(file.id)}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex-1 sm:flex-none px-3 py-1.5 rounded-lg text-xs font-medium glass border border-custom text-secondary hover:text-primary transition-all flex items-center justify-center gap-1.5"
+                          className="flex-1 sm:flex-none px-3 py-1.5 rounded-lg text-xs font-medium gradient-accent text-white flex items-center justify-center gap-1.5"
+                          // className="flex-1 sm:flex-none px-3 py-1.5 rounded-lg text-xs font-medium glass border border-custom text-secondary hover:text-primary transition-all flex items-center justify-center gap-1.5"
                         >
-                          <Eye className="w-3.5 h-3.5" /> Preview
+                          <Eye className="w-3.5 h-3.5" /> View 
                         </a>
+                        <div style={{  gap: '25px' }}></div>
                         {/* Download — forces save-as */}
                         <a
                           href={downloadUrl(file.id)}
