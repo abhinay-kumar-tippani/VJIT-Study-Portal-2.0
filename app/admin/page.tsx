@@ -11,9 +11,10 @@ import {
   ShieldCheck, Users, Search, Eye, EyeOff,
   Trash2, Crown, AlertCircle, Loader2, RefreshCw,
   User, BookOpen, Calendar, GraduationCap, ExternalLink,
-  X, CheckCircle2
+  X, CheckCircle2, ArrowUpDown
 } from 'lucide-react';
 import type { AdminUserRow } from '@/types';
+import { getBranchFromRollNumber, getBranchLabel, getBranchColor } from '@/lib/branch';
 
 // Lucide icon helper
 import { FileText, FileImage, FileType2, Youtube } from 'lucide-react';
@@ -28,8 +29,12 @@ function getFileIcon(type: string) {
   return FileText;
 }
 
+// Toggle feature: set to true to show student branch instead of password, set to false to rollback
+const SHOW_BRANCH_INSTEAD_OF_PASSWORD = true;
+
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState<'users' | 'pending' | 'issues'>('users');
+  const [branchSortDir, setBranchSortDir] = useState<'asc' | 'desc' | null>(null);
   
   // Users state
   const [users, setUsers] = useState<AdminUserRow[]>([]);
@@ -202,11 +207,23 @@ export default function AdminPage() {
     }
   };
 
-  const filteredUsers = users.filter(
+  let filteredUsers = users.filter(
     (u) =>
       u.rollNumber.toLowerCase().includes(search.toLowerCase()) ||
       u.name.toLowerCase().includes(search.toLowerCase())
   );
+
+  if (SHOW_BRANCH_INSTEAD_OF_PASSWORD && branchSortDir) {
+    filteredUsers = [...filteredUsers].sort((a, b) => {
+      const branchA = getBranchFromRollNumber(a.rollNumber);
+      const branchB = getBranchFromRollNumber(b.rollNumber);
+      if (branchSortDir === 'asc') {
+        return branchA.localeCompare(branchB);
+      } else {
+        return branchB.localeCompare(branchA);
+      }
+    });
+  }
 
   return (
     <div className="px-8 py-10">
@@ -367,10 +384,31 @@ export default function AdminPage() {
                         <th className="px-5 py-3 text-left text-xs font-semibold text-secondary uppercase tracking-wider">Roll No.</th>
                         <th className="px-5 py-3 text-left text-xs font-semibold text-secondary uppercase tracking-wider">Name</th>
                         {isSuperAdmin && (
-                          <th className="px-5 py-3 text-left text-xs font-semibold text-amber-400 uppercase tracking-wider">
-                            <div className="flex items-center gap-1.5">
-                              <Crown className="w-3 h-3" /> Password
-                            </div>
+                          <th className={`px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider ${SHOW_BRANCH_INSTEAD_OF_PASSWORD ? 'text-indigo-400' : 'text-amber-400'}`}>
+                            {SHOW_BRANCH_INSTEAD_OF_PASSWORD ? (
+                              <button
+                                onClick={() => {
+                                  setBranchSortDir((prev) => {
+                                    if (prev === null) return 'asc';
+                                    if (prev === 'asc') return 'desc';
+                                    return null;
+                                  });
+                                }}
+                                className="flex items-center gap-1.5 hover:text-white transition-colors focus:outline-none"
+                              >
+                                <GraduationCap className="w-3.5 h-3.5" /> Branch
+                                <ArrowUpDown className={`w-3.5 h-3.5 transition-transform ${branchSortDir ? 'text-white' : 'text-indigo-400/50'}`} />
+                                {branchSortDir && (
+                                  <span className="text-[9px] lowercase bg-indigo-500/20 px-1 py-0.2 rounded font-normal text-indigo-300">
+                                    {branchSortDir}
+                                  </span>
+                                )}
+                              </button>
+                            ) : (
+                              <div className="flex items-center gap-1.5">
+                                <Crown className="w-3 h-3" /> Password
+                              </div>
+                            )}
                           </th>
                         )}
                         <th className="px-5 py-3 text-left text-xs font-semibold text-secondary uppercase tracking-wider">Role</th>
@@ -396,22 +434,35 @@ export default function AdminPage() {
 
                             {isSuperAdmin && (
                               <td className="px-5 py-4">
-                                <div className="flex items-center gap-2">
-                                  <span className="font-mono text-sm text-amber-300">
-                                    {visiblePasswords.has(user._id)
-                                      ? user.plainPassword
-                                      : '•'.repeat(Math.min(user.plainPassword?.length ?? 8, 10))}
-                                  </span>
-                                  <button
-                                    onClick={() => togglePassword(user._id)}
-                                    className="p-1 rounded text-muted-custom hover:text-amber-400 transition-colors"
-                                    title={visiblePasswords.has(user._id) ? 'Hide' : 'Show'}
-                                  >
-                                    {visiblePasswords.has(user._id)
-                                      ? <EyeOff className="w-3.5 h-3.5" />
-                                      : <Eye className="w-3.5 h-3.5" />}
-                                  </button>
-                                </div>
+                                {SHOW_BRANCH_INSTEAD_OF_PASSWORD ? (
+                                  (() => {
+                                    const b = getBranchFromRollNumber(user.rollNumber);
+                                    const bLabel = getBranchLabel(b);
+                                    const bColor = getBranchColor(b);
+                                    return (
+                                      <span className={`inline-block px-2.5 py-1 text-xs font-bold rounded-lg bg-gradient-to-r ${bColor} text-white shadow-sm`}>
+                                        {bLabel}
+                                      </span>
+                                    );
+                                  })()
+                                ) : (
+                                  <div className="flex items-center gap-2">
+                                    <span className="font-mono text-sm text-amber-300">
+                                      {visiblePasswords.has(user._id)
+                                        ? user.plainPassword
+                                        : '•'.repeat(Math.min(user.plainPassword?.length ?? 8, 10))}
+                                    </span>
+                                    <button
+                                      onClick={() => togglePassword(user._id)}
+                                      className="p-1 rounded text-muted-custom hover:text-amber-400 transition-colors"
+                                      title={visiblePasswords.has(user._id) ? 'Hide' : 'Show'}
+                                    >
+                                      {visiblePasswords.has(user._id)
+                                        ? <EyeOff className="w-3.5 h-3.5" />
+                                        : <Eye className="w-3.5 h-3.5" />}
+                                    </button>
+                                  </div>
+                                )}
                               </td>
                             )}
 
