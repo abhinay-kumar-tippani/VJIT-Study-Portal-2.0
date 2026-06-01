@@ -39,7 +39,7 @@ export function getBranchLabel(branch: string): string {
     case 'CSE':
       return 'Computer Science Engineering';
     case 'CSE-AIML':
-      return 'CSE — AI & Machine Learning';
+      return 'CSE — AI & ML';
     case 'CSE-DS':
       return 'CSE — Data Science';
     case 'IT':
