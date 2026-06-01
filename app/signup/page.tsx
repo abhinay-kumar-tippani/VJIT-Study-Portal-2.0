@@ -22,10 +22,10 @@ export default function SignupPage() {
                         roll.startsWith('24911A05') ||
                         roll.startsWith('24911A12') ||
                         roll.startsWith('24911A67') ||
-                        roll.startsWith('25912A66') ||
-                        roll.startsWith('25912A05') ||
-                        roll.startsWith('25912A12') ||
-                        roll.startsWith('25912A67');
+                        roll.startsWith('25915A66') ||
+                        roll.startsWith('25915A05') ||
+                        roll.startsWith('25915A12') ||
+                        roll.startsWith('25915A67');
 
     if (!isValidRoll) {
       setError('Enter valid roll no'); return;
