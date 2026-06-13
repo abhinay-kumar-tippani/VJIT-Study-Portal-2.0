@@ -44,6 +44,9 @@ export default function AdminPage() {
   const [visiblePasswords, setVisiblePasswords] = useState<Set<string>>(new Set());
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
 
+  // Active users state
+  const [activeUsersCount, setActiveUsersCount] = useState<number | null>(null);
+
   // Pending materials state
   const [pendingList, setPendingList] = useState<any[]>([]);
   const [pendingLoading, setPendingLoading] = useState(false);
@@ -58,9 +61,22 @@ export default function AdminPage() {
   const [selectedIssue, setSelectedIssue] = useState<IssueReport | null>(null);
   const [lightboxImage, setLightboxImage] = useState<string | null>(null);
 
+  const fetchActiveUsers = async () => {
+    try {
+      const res = await fetch('/api/admin/active-users');
+      if (res.ok) {
+        const data = await res.json();
+        setActiveUsersCount(data.activeCount);
+      }
+    } catch (err) {
+      console.error('Failed to fetch active users count', err);
+    }
+  };
+
   const fetchUsers = async () => {
     setLoading(true);
     setError('');
+    fetchActiveUsers();
     try {
       const res = await fetch('/api/admin/users');
       if (!res.ok) {
@@ -143,6 +159,11 @@ export default function AdminPage() {
     fetchUsers();
     fetchPending();
     fetchIssues();
+    fetchActiveUsers();
+
+    // Poll active user count every 5 minutes
+    const interval = setInterval(fetchActiveUsers, 5 * 60 * 1000);
+    return () => clearInterval(interval);
   }, []);
 
   const togglePassword = (id: string) => {
@@ -248,6 +269,19 @@ export default function AdminPage() {
                   ? `${pendingList.length} pending materials`
                   : `${issuesList.length} reported issues`}
               </span>
+              {activeUsersCount !== null && (
+                <span 
+                  onClick={fetchActiveUsers}
+                  title="Click to refresh active count"
+                  className="cursor-pointer flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-bold hover:bg-emerald-500/20 transition-all select-none"
+                >
+                  <span className="relative flex h-1.5 w-1.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+                  </span>
+                  {activeUsersCount} ACTIVE NOW
+                </span>
+              )}
             </div>
           </div>
         </div>

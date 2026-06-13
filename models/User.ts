@@ -7,6 +7,7 @@ export interface IUserDoc extends Document {
   isAdmin: boolean;
   isSuperAdmin: boolean;
   createdAt: Date;
+  lastActiveAt?: Date;
 }
 
 const UserSchema = new Schema<IUserDoc>(
@@ -16,6 +17,7 @@ const UserSchema = new Schema<IUserDoc>(
     passwordEncrypted: { type: String, required: true },
     isAdmin:           { type: Boolean, default: false },
     isSuperAdmin:      { type: Boolean, default: false },
+    lastActiveAt:      { type: Date },
   },
   { timestamps: true }
 );

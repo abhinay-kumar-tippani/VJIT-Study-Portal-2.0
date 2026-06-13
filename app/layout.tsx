@@ -6,6 +6,7 @@ import { MobileHeader } from '@/components/layout/MobileHeader';
 import { MainWrapper } from '@/components/layout/MainWrapper';
 import { AIChatPanel } from '@/components/layout/AIChatPanel';
 import { Toaster } from '@/components/ui/toaster';
+import { ActiveUserTracker } from '@/components/layout/ActiveUserTracker';
 
 export const metadata: Metadata = {
   title: { default: 'VJIT Study Portal 2.0', template: '%s | VJIT Study Portal 2.0' },
@@ -21,6 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="antialiased">
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+          <ActiveUserTracker />
           <div className="flex flex-col md:flex-row min-h-screen">
             <MobileHeader />
             <Sidebar />
