@@ -48,6 +48,7 @@ export default function AdminPage() {
   const [activeUsersCount, setActiveUsersCount] = useState<number | null>(null);
   const [activeUsersList, setActiveUsersList] = useState<any[]>([]);
   const [showActiveUsersModal, setShowActiveUsersModal] = useState(false);
+  const [activeUsersLoading, setActiveUsersLoading] = useState(false);
 
   // Pending materials state
   const [pendingList, setPendingList] = useState<any[]>([]);
@@ -64,6 +65,7 @@ export default function AdminPage() {
   const [lightboxImage, setLightboxImage] = useState<string | null>(null);
 
   const fetchActiveUsers = async () => {
+    setActiveUsersLoading(true);
     try {
       const res = await fetch('/api/admin/active-users');
       if (res.ok) {
@@ -73,6 +75,8 @@ export default function AdminPage() {
       }
     } catch (err) {
       console.error('Failed to fetch active users count', err);
+    } finally {
+      setActiveUsersLoading(false);
     }
   };
 
@@ -1108,9 +1112,11 @@ export default function AdminPage() {
               <div className="flex items-center justify-between gap-4 pt-4 border-t border-custom mt-2">
                 <button
                   onClick={fetchActiveUsers}
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 hover:bg-indigo-500/20 transition-all focus:outline-none"
+                  disabled={activeUsersLoading}
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 hover:bg-indigo-500/20 transition-all focus:outline-none disabled:opacity-50 select-none"
                 >
-                  <RefreshCw className="w-3.5 h-3.5 animate-pulse" /> Refresh List
+                  <RefreshCw className={`w-3.5 h-3.5 ${activeUsersLoading ? 'animate-spin' : ''}`} />
+                  {activeUsersLoading ? 'Refreshing...' : 'Refresh List'}
                 </button>
                 <button
                   onClick={() => setShowActiveUsersModal(false)}
