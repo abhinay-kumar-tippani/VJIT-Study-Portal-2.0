@@ -33,7 +33,7 @@ function getFileIcon(type: string) {
 const SHOW_BRANCH_INSTEAD_OF_PASSWORD = true;
 
 export default function AdminPage() {
-  const [activeTab, setActiveTab] = useState<'users' | 'pending' | 'issues'>('users');
+  const [activeTab, setActiveTab] = useState<'users' | 'pending' | 'issues' | 'activity'>('users');
   const [branchSortDir, setBranchSortDir] = useState<'asc' | 'desc' | null>(null);
   
   // Users state
@@ -64,6 +64,19 @@ export default function AdminPage() {
   const [selectedIssue, setSelectedIssue] = useState<IssueReport | null>(null);
   const [lightboxImage, setLightboxImage] = useState<string | null>(null);
 
+  // Daily activity state
+  const [activityLogs, setActivityLogs] = useState<any[]>([]);
+  const [activityLoading, setActivityLoading] = useState(false);
+  const [activityError, setActivityError] = useState('');
+  const [expandedDates, setExpandedDates] = useState<Record<string, boolean>>({});
+
+  const toggleDate = (dateStr: string) => {
+    setExpandedDates((prev) => ({
+      ...prev,
+      [dateStr]: !prev[dateStr],
+    }));
+  };
+
   const fetchActiveUsers = async () => {
     setActiveUsersLoading(true);
     try {
@@ -77,6 +90,24 @@ export default function AdminPage() {
       console.error('Failed to fetch active users count', err);
     } finally {
       setActiveUsersLoading(false);
+    }
+  };
+
+  const fetchActivityLogs = async () => {
+    setActivityLoading(true);
+    setActivityError('');
+    try {
+      const res = await fetch('/api/admin/activity-logs');
+      if (!res.ok) {
+        setActivityError('Failed to load daily activity logs');
+        return;
+      }
+      const data = await res.json();
+      setActivityLogs(data.logs ?? []);
+    } catch {
+      setActivityError('Network error');
+    } finally {
+      setActivityLoading(false);
     }
   };
 
@@ -167,6 +198,7 @@ export default function AdminPage() {
     fetchPending();
     fetchIssues();
     fetchActiveUsers();
+    fetchActivityLogs();
 
     // Poll active user count every 5 minutes
     const interval = setInterval(fetchActiveUsers, 5 * 60 * 1000);
@@ -274,7 +306,9 @@ export default function AdminPage() {
                   ? `${users.length} registered students`
                   : activeTab === 'pending'
                   ? `${pendingList.length} pending materials`
-                  : `${issuesList.length} reported issues`}
+                  : activeTab === 'issues'
+                  ? `${issuesList.length} reported issues`
+                  : `${activityLogs.reduce((acc, log) => acc + log.count, 0)} student visits recorded`}
               </span>
               {activeUsersCount !== null && (
                 <span 
@@ -365,6 +399,25 @@ export default function AdminPage() {
               {issuesList.filter((i) => i.status === 'pending').length}
             </span>
           )}
+        </button>
+        <button
+          onClick={() => setActiveTab('activity')}
+          className={`
+            relative flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap
+            transition-all duration-150
+            ${activeTab === 'activity' ? 'text-white' : 'text-secondary hover:text-primary'}
+          `}
+        >
+          {activeTab === 'activity' && (
+            <motion.div
+              layoutId="admin-tab-active"
+              className="absolute inset-0 gradient-accent rounded-xl"
+              style={{ zIndex: -1 }}
+              transition={{ type: 'spring', bounce: 0.2, duration: 0.3 }}
+            />
+          )}
+          <Calendar className="w-4 h-4" />
+          Daily Activity
         </button>
       </div>
 
@@ -745,7 +798,7 @@ export default function AdminPage() {
               </div>
             )}
           </motion.div>
-        ) : (
+        ) : activeTab === 'issues' ? (
           <motion.div
             key="issues-tab"
             initial={{ opacity: 0, y: 10 }}
@@ -876,6 +929,160 @@ export default function AdminPage() {
                         </div>
                       </div>
                     </motion.div>
+                  );
+                })}
+              </div>
+            )}
+          </motion.div>
+        ) : (
+          <motion.div
+            key="activity-tab"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className="space-y-4"
+          >
+            {/* Toolbar equivalent */}
+            <div className="flex items-center gap-3 mb-6">
+              <button
+                onClick={fetchActivityLogs}
+                disabled={activityLoading}
+                className="p-2.5 rounded-xl glass border border-custom text-secondary hover:text-primary transition-all focus:outline-none disabled:opacity-50"
+              >
+                <RefreshCw className={`w-4 h-4 ${activityLoading ? 'animate-spin' : ''}`} />
+              </button>
+              <div className="text-xs text-muted-custom font-semibold">
+                Daily visitor logs for the past 7 days (rolling auto-retention)
+              </div>
+            </div>
+
+            {/* Error */}
+            {activityError && (
+              <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm mb-4">
+                <AlertCircle className="w-4 h-4" /> {activityError}
+              </div>
+            )}
+
+            {/* Logs List */}
+            {activityLoading ? (
+              <div className="card p-12 text-center">
+                <Loader2 className="w-8 h-8 animate-spin text-indigo-400 mx-auto mb-3" />
+                <p className="text-secondary text-sm">Loading activity logs...</p>
+              </div>
+            ) : activityLogs.length === 0 ? (
+              <div className="card p-12 text-center text-secondary text-sm">
+                No activity logs available.
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {activityLogs.map((dayLog) => {
+                  const dateObj = new Date(dayLog.date);
+                  const formattedDate = dateObj.toLocaleDateString('en-IN', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  });
+                  const isToday = new Date().toDateString() === dateObj.toDateString();
+                  const isExpanded = !!expandedDates[dayLog.date];
+
+                  return (
+                    <div
+                      key={dayLog.date}
+                      className="card overflow-hidden border border-custom bg-card-custom/40 transition-all duration-200"
+                    >
+                      {/* Accordion Header */}
+                      <button
+                        onClick={() => toggleDate(dayLog.date)}
+                        className="w-full flex items-center justify-between p-5 text-left focus:outline-none hover:bg-card-custom/80 transition-colors"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
+                            isToday ? 'bg-indigo-500/15 text-indigo-400 border border-indigo-500/25' : 'bg-zinc-800 text-secondary border border-custom'
+                          }`}>
+                            <Calendar className="w-5 h-5" />
+                          </div>
+                          <div>
+                            <span className="flex items-center gap-2">
+                              <h4 className="font-bold text-primary text-base">
+                                {formattedDate}
+                              </h4>
+                              {isToday && (
+                                <span className="px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-400 text-[9px] font-bold uppercase tracking-wider animate-pulse">
+                                  Today
+                                </span>
+                              )}
+                            </span>
+                            <span className="text-xs text-secondary mt-0.5 block">
+                              {dayLog.count} student{dayLog.count !== 1 ? 's' : ''} active
+                            </span>
+                          </div>
+                        </div>
+                        <div className="text-secondary hover:text-primary transition-all">
+                          <span className={`text-xs font-semibold px-3 py-1.5 rounded-xl border border-custom bg-card-custom hover:border-indigo-500/30 transition-all`}>
+                            {isExpanded ? 'Hide Students' : 'View Students'}
+                          </span>
+                        </div>
+                      </button>
+
+                      {/* Accordion Expand Area */}
+                      <AnimatePresence initial={false}>
+                        {isExpanded && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                            className="border-t border-custom bg-card-custom/25 overflow-hidden"
+                          >
+                            <div className="p-5">
+                              {dayLog.users.length === 0 ? (
+                                <div className="text-secondary text-xs py-2">
+                                  No student activity logged for this day.
+                                </div>
+                              ) : (
+                                <div className="overflow-x-auto rounded-2xl border border-custom bg-card-custom/40">
+                                  <table className="w-full text-left border-collapse">
+                                    <thead>
+                                      <tr className="border-b border-custom bg-card-custom">
+                                        <th className="px-5 py-3 text-xs font-semibold text-secondary uppercase tracking-wider w-16">#</th>
+                                        <th className="px-5 py-3 text-xs font-semibold text-secondary uppercase tracking-wider">Name</th>
+                                        <th className="px-5 py-3 text-xs font-semibold text-secondary uppercase tracking-wider">Roll Number</th>
+                                        <th className="px-5 py-3 text-xs font-semibold text-secondary uppercase tracking-wider">Branch</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {dayLog.users.map((user: any, index: number) => {
+                                        const branch = getBranchFromRollNumber(user.rollNumber);
+                                        const branchLabel = getBranchLabel(branch);
+                                        const branchColor = getBranchColor(branch);
+
+                                        return (
+                                          <tr
+                                            key={user._id || user.rollNumber}
+                                            className="border-b border-custom last:border-0 hover:bg-card-custom/60 transition-colors"
+                                          >
+                                            <td className="px-5 py-3.5 text-xs text-muted-custom font-mono">{index + 1}</td>
+                                            <td className="px-5 py-3.5 text-sm font-semibold text-primary">{user.name}</td>
+                                            <td className="px-5 py-3.5 text-sm font-mono text-secondary">{user.rollNumber}</td>
+                                            <td className="px-5 py-3.5">
+                                              <span className={`inline-block px-2.5 py-0.5 text-[10px] font-bold rounded bg-gradient-to-r ${branchColor} text-white shadow-sm`}>
+                                                {branchLabel}
+                                              </span>
+                                            </td>
+                                          </tr>
+                                        );
+                                      })}
+                                    </tbody>
+                                  </table>
+                                </div>
+                              )}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
                   );
                 })}
               </div>
