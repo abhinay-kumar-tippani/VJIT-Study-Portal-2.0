@@ -46,6 +46,8 @@ export default function AdminPage() {
 
   // Active users state
   const [activeUsersCount, setActiveUsersCount] = useState<number | null>(null);
+  const [activeUsersList, setActiveUsersList] = useState<any[]>([]);
+  const [showActiveUsersModal, setShowActiveUsersModal] = useState(false);
 
   // Pending materials state
   const [pendingList, setPendingList] = useState<any[]>([]);
@@ -67,6 +69,7 @@ export default function AdminPage() {
       if (res.ok) {
         const data = await res.json();
         setActiveUsersCount(data.activeCount);
+        setActiveUsersList(data.activeUsers ?? []);
       }
     } catch (err) {
       console.error('Failed to fetch active users count', err);
@@ -271,8 +274,11 @@ export default function AdminPage() {
               </span>
               {activeUsersCount !== null && (
                 <span 
-                  onClick={fetchActiveUsers}
-                  title="Click to refresh active count"
+                  onClick={() => {
+                    fetchActiveUsers();
+                    setShowActiveUsersModal(true);
+                  }}
+                  title="Click to view active users"
                   className="cursor-pointer flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-bold hover:bg-emerald-500/20 transition-all select-none"
                 >
                   <span className="relative flex h-1.5 w-1.5">
@@ -1019,6 +1025,100 @@ export default function AdminPage() {
               </button>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={lightboxImage} alt="Full resolution screenshot" className="w-auto h-auto max-w-full max-h-[85vh] object-contain" />
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* ── Active Users Modal ── */}
+      <AnimatePresence>
+        {showActiveUsersModal && (
+          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="relative w-full max-w-lg rounded-3xl glass-strong border border-custom bg-card-custom shadow-2xl p-6 overflow-hidden flex flex-col gap-4"
+            >
+              {/* Close button */}
+              <button
+                onClick={() => setShowActiveUsersModal(false)}
+                className="absolute right-4 top-4 p-1.5 rounded-lg text-secondary hover:text-primary hover:bg-card-custom border border-transparent hover:border-custom transition-all focus:outline-none"
+                title="Close"
+              >
+                <X className="w-4 h-4" />
+              </button>
+
+              <div className="flex items-center gap-2">
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                </span>
+                <h3 className="text-lg font-extrabold text-primary">
+                  Active Students Online
+                </h3>
+                <span className="text-xs text-muted-custom bg-card-custom px-2 py-0.5 rounded border border-custom ml-auto mr-8 font-bold">
+                  {activeUsersList.length} Online
+                </span>
+              </div>
+
+              <div className="text-xs text-secondary mb-1">
+                Showing students who interacted with the platform in the last 5 minutes.
+              </div>
+
+              {/* Active Users List */}
+              <div className="max-h-[350px] overflow-y-auto pr-1 space-y-2.5">
+                {activeUsersList.length === 0 ? (
+                  <div className="text-center py-8 text-secondary text-sm">
+                    No active students online in the last 5 minutes.
+                  </div>
+                ) : (
+                  activeUsersList.map((user, i) => (
+                    <div 
+                      key={user._id || user.rollNumber}
+                      className="flex items-center justify-between p-3.5 rounded-2xl bg-card-custom/40 border border-custom hover:bg-card-custom transition-colors"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-xl bg-indigo-500/10 border border-indigo-500/25 flex items-center justify-center text-indigo-400 font-bold text-xs">
+                          {i + 1}
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-primary">{user.name}</p>
+                          <p className="text-xs font-mono text-secondary">{user.rollNumber}</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
+                          {(() => {
+                            if (!user.lastActiveAt) return 'active now';
+                            const diffMs = Date.now() - new Date(user.lastActiveAt).getTime();
+                            const diffMins = Math.max(0, Math.floor(diffMs / 60000));
+                            if (diffMins === 0) return 'active now';
+                            if (diffMins === 1) return '1m ago';
+                            return `${diffMins}m ago`;
+                          })()}
+                        </span>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+
+              {/* Actions Footer */}
+              <div className="flex items-center justify-between gap-4 pt-4 border-t border-custom mt-2">
+                <button
+                  onClick={fetchActiveUsers}
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 hover:bg-indigo-500/20 transition-all focus:outline-none"
+                >
+                  <RefreshCw className="w-3.5 h-3.5 animate-pulse" /> Refresh List
+                </button>
+                <button
+                  onClick={() => setShowActiveUsersModal(false)}
+                  className="px-4 py-2 rounded-xl text-xs font-semibold border border-custom text-secondary hover:text-primary transition-all focus:outline-none"
+                >
+                  Close
+                </button>
+              </div>
             </motion.div>
           </div>
         )}

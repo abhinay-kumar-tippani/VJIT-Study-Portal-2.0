@@ -22,11 +22,22 @@ export async function GET(req: NextRequest) {
     // Active users window: past 5 minutes
     const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
 
-    const activeCount = await User.countDocuments({
+    const activeUsers = await User.find({
       lastActiveAt: { $gte: fiveMinutesAgo },
-    });
+    })
+    .select('rollNumber name lastActiveAt')
+    .sort({ lastActiveAt: -1 })
+    .lean();
 
-    return NextResponse.json({ activeCount });
+    return NextResponse.json({
+      activeCount: activeUsers.length,
+      activeUsers: activeUsers.map((u) => ({
+        _id:          String(u._id),
+        rollNumber:   u.rollNumber,
+        name:         u.name,
+        lastActiveAt: u.lastActiveAt,
+      })),
+    });
   } catch (err: unknown) {
     console.error('[active-users]', err);
     return NextResponse.json(
