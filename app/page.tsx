@@ -48,6 +48,13 @@ const BRANCHES = [
   },
 ];
 
+const BRANCH_HIGHLIGHTS: Record<string, string> = {
+  'CSE': 'bg-indigo-500/15 border-indigo-500/30 text-indigo-300',
+  'CSE-AIML': 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300',
+  'CSE-DS': 'bg-orange-500/15 border-orange-500/30 text-orange-300',
+  'IT': 'bg-sky-500/15 border-sky-500/30 text-sky-300',
+};
+
 const container = {
   hidden: {},
   show: { transition: { staggerChildren: 0.1 } },
@@ -60,13 +67,24 @@ const item = {
 
 export default function HomePage() {
   const [userCount, setUserCount] = useState<number | null>(null);
+  const [branchCounts, setBranchCounts] = useState<Record<string, number>>({
+    'CSE': 0,
+    'CSE-AIML': 0,
+    'CSE-DS': 0,
+    'IT': 0,
+  });
 
   useEffect(() => {
     const fetchStats = () => {
       fetch('/api/stats')
         .then((res) => (res.ok ? res.json() : null))
         .then((data) => {
-          if (data) setUserCount(data.totalUsers);
+          if (data) {
+            setUserCount(data.totalUsers);
+            if (data.branchCounts) {
+              setBranchCounts(data.branchCounts);
+            }
+          }
         })
         .catch((err) => console.error('[Stats fetch error]', err));
     };
@@ -166,8 +184,12 @@ export default function HomePage() {
                     >
                       {branch.short}
                     </span>
-                    <span className="px-2 py-0.5 rounded-full bg-card-custom border border-custom text-[10px] text-muted-custom">
-                      {branch.students} students
+                    <span className={`px-2 py-0.5 rounded-full border text-[10px] font-bold shadow-sm flex items-center gap-1.5 ${BRANCH_HIGHLIGHTS[branch.id] || 'bg-indigo-500/15 border-indigo-500/30 text-indigo-300'}`}>
+                      <span className="relative flex h-1.5 w-1.5">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-current opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-current"></span>
+                      </span>
+                      {branchCounts[branch.id] ?? 0} students
                     </span>
                   </div>
                   <h2 className="text-xl font-bold text-primary mb-2">{branch.label}</h2>

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '@/lib/db';
 import User from '@/models/User';
 import Resource from '@/models/Resource';
+import { getBranchFromRollNumber } from '@/lib/branch';
 
 export const dynamic = 'force-dynamic';
 
@@ -35,7 +36,22 @@ export async function GET(req: NextRequest) {
       })
     );
 
-    return NextResponse.json({ totalUsers, topContributors });
+    // 3. Fetch all user roll numbers and aggregate branch statistics
+    const users = await User.find({}).select('rollNumber').lean();
+    const branchCounts = {
+      'CSE': 0,
+      'CSE-AIML': 0,
+      'CSE-DS': 0,
+      'IT': 0
+    };
+    for (const u of users) {
+      const branch = getBranchFromRollNumber(u.rollNumber);
+      if (branchCounts[branch] !== undefined) {
+        branchCounts[branch]++;
+      }
+    }
+
+    return NextResponse.json({ totalUsers, topContributors, branchCounts });
   } catch (err: any) {
     console.error('[api/stats]', err);
     return NextResponse.json({ error: 'Server error: ' + err.message }, { status: 500 });
