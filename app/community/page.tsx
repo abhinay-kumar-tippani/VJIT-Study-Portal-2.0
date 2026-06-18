@@ -179,7 +179,13 @@ function MessageBubble({
       <div className="flex-1 min-w-0">
         {/* Author line */}
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-sm font-semibold text-primary">{msg.authorName}</span>
+          <span
+            onClick={handleAvatarClick}
+            className="text-sm font-semibold text-primary cursor-pointer hover:text-indigo-400 transition-colors"
+            title="Click to see roll number"
+          >
+            {msg.authorName}
+          </span>
           {msg.authorRole === 'admin' && (
             <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-md bg-indigo-500/20 text-indigo-400 text-[10px] font-semibold">
               <ShieldCheck className="w-2.5 h-2.5" /> Admin
