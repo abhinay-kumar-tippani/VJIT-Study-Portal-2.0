@@ -159,3 +159,25 @@ export const SEM4_SUBJECTS: Record<string, { theory: Subject[]; lab?: Subject[] 
     ],
   },
 };
+
+/**
+ * Returns all branch codes that share a given subjectId for the specified semester.
+ * Used to enable cross-branch resource visibility for common subjects
+ * (e.g. Operating Systems is shared by CSE, CSE-DS, and IT).
+ *
+ * @param subjectId - The subject ID (e.g. "OS", "DAA", "OOPs-Java")
+ * @param semester  - The semester number (currently only 4 is supported)
+ * @returns Array of branch codes that have that subject (e.g. ["CSE", "CSE-DS", "IT"])
+ */
+export function getSharedBranches(subjectId: string, semester: number): string[] {
+  if (semester !== ACTIVE_SEM) return [];
+
+  const sharedBranches: string[] = [];
+  for (const [branch, config] of Object.entries(SEM4_SUBJECTS)) {
+    const allSubjects = [...(config.theory || []), ...(config.lab || [])];
+    if (allSubjects.some((s) => s.id === subjectId)) {
+      sharedBranches.push(branch);
+    }
+  }
+  return sharedBranches;
+}

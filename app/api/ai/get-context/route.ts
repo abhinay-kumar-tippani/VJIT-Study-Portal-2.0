@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '@/lib/db';
 import Resource from '@/models/Resource';
+import { getSharedBranches } from '@/lib/subjects';
 
 export async function POST(req: NextRequest) {
   try {
@@ -12,7 +13,16 @@ export async function POST(req: NextRequest) {
 
     // Fall back to text search if no vector index is configured
     const filter: Record<string, unknown> = { status: 'approved' };
-    if (branch) filter.branch = branch;
+
+    // For shared subjects (e.g. OS is shared by CSE, CSE-DS, IT), broaden
+    // the branch filter so the AI can source context from any branch.
+    if (branch && semester && subject) {
+      const shared = getSharedBranches(subject, Number(semester));
+      filter.branch = shared.length > 1 ? { $in: shared } : branch;
+    } else if (branch) {
+      filter.branch = branch;
+    }
+
     if (semester) filter.semester = Number(semester);
     if (subject) filter.subject = subject;
 

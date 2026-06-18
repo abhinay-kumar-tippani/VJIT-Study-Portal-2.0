@@ -3,6 +3,7 @@ import { connectDB } from '@/lib/db';
 import { verifyToken, COOKIE_NAME } from '@/lib/auth';
 import Resource from '@/models/Resource';
 import { transformResourceUrl } from '@/lib/resourceHelper';
+import { getSharedBranches } from '@/lib/subjects';
 
 // GET /api/resources?branch=CSE&semester=3&subject=xyz&type=notes
 export async function GET(req: NextRequest) {
@@ -20,7 +21,17 @@ export async function GET(req: NextRequest) {
   const session = token ? await verifyToken(token) : null;
 
   const filter: Record<string, any> = {};
-  if (branch) filter.branch = branch;
+
+  // For shared subjects (e.g. OS is common to CSE, CSE-DS, IT), query
+  // resources from ALL branches that offer that subject so uploads from
+  // any one branch are visible to all other branches with the same subject.
+  if (branch && semester && subject) {
+    const shared = getSharedBranches(subject, Number(semester));
+    filter.branch = shared.length > 1 ? { $in: shared } : branch;
+  } else if (branch) {
+    filter.branch = branch;
+  }
+
   if (semester) filter.semester = Number(semester);
   if (subject) filter.subject = subject;
   if (type) filter.type = type;
