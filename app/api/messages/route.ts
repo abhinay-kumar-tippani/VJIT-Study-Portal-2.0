@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '@/lib/db';
 import { verifyToken, COOKIE_NAME } from '@/lib/auth';
 import Message from '@/models/Message';
+import User from '@/models/User';
 import { COMMUNITY_CONFIG } from '@/lib/community';
 
 /**
@@ -36,6 +37,54 @@ export async function GET(req: NextRequest) {
     .lean();
 
   messages.reverse();
+
+  // Update views for these messages
+  const messageIds = messages.map(m => m._id);
+  if (messageIds.length > 0) {
+    // Add current user to views in DB if not already present
+    await Message.updateMany(
+      {
+        _id: { $in: messageIds },
+        'views.rollNumber': { $ne: session.rollNumber }
+      },
+      {
+        $push: {
+          views: {
+            rollNumber: session.rollNumber,
+            name: session.name,
+            viewedAt: new Date()
+          }
+        }
+      }
+    );
+
+    // Sync in-memory so returned list reflects this view
+    for (const msg of messages) {
+      if (!msg.views) {
+        msg.views = [];
+      }
+      if (!msg.views.some((v: any) => v.rollNumber === session.rollNumber)) {
+        msg.views.push({
+          rollNumber: session.rollNumber,
+          name: session.name,
+          viewedAt: new Date()
+        });
+      }
+    }
+  }
+
+  // Update user's communityLastReadAt to clear unread indicator
+  await User.updateOne(
+    { rollNumber: session.rollNumber },
+    { $set: { communityLastReadAt: new Date() } }
+  );
+
+  // Strip views field for non-admins to preserve privacy
+  if (!session.isAdmin) {
+    for (const msg of messages) {
+      delete msg.views;
+    }
+  }
 
   // Check if there are older messages beyond what we returned
   const hasOlder = messages.length === COMMUNITY_CONFIG.PAGE_SIZE;

@@ -7,6 +7,12 @@ export interface IReplyRef {
   snippet: string;
 }
 
+export interface IView {
+  rollNumber: string;
+  name: string;
+  viewedAt: Date;
+}
+
 export interface IMessageDoc extends Document {
   authorId: string;       // rollNumber
   authorName: string;
@@ -14,6 +20,7 @@ export interface IMessageDoc extends Document {
   text: string;
   channel: string;
   replyTo?: IReplyRef;
+  views?: IView[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -27,6 +34,15 @@ const ReplyRefSchema = new Schema(
   { _id: false }
 );
 
+const ViewSchema = new Schema(
+  {
+    rollNumber: { type: String, required: true, uppercase: true, trim: true },
+    name:       { type: String, required: true, trim: true },
+    viewedAt:   { type: Date, default: Date.now },
+  },
+  { _id: false }
+);
+
 const MessageSchema = new Schema<IMessageDoc>(
   {
     authorId:   { type: String, required: true, trim: true, uppercase: true },
@@ -35,6 +51,7 @@ const MessageSchema = new Schema<IMessageDoc>(
     text:       { type: String, required: true, trim: true, maxlength: 2000 },
     channel:    { type: String, required: true, default: COMMUNITY_CONFIG.DEFAULT_CHANNEL, index: true },
     replyTo:    { type: ReplyRefSchema, default: undefined },
+    views:      { type: [ViewSchema], default: [] },
   },
   { timestamps: true, collection: COMMUNITY_CONFIG.COLLECTION }
 );

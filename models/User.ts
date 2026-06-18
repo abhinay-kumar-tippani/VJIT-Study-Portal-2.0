@@ -8,6 +8,7 @@ export interface IUserDoc extends Document {
   isSuperAdmin: boolean;
   createdAt: Date;
   lastActiveAt?: Date;
+  communityLastReadAt?: Date;
 }
 
 const UserSchema = new Schema<IUserDoc>(
@@ -18,6 +19,7 @@ const UserSchema = new Schema<IUserDoc>(
     isAdmin:           { type: Boolean, default: false },
     isSuperAdmin:      { type: Boolean, default: false },
     lastActiveAt:      { type: Date },
+    communityLastReadAt: { type: Date },
   },
   { timestamps: true }
 );

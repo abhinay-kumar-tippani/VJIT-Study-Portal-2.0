@@ -37,6 +37,7 @@ export function Sidebar() {
   const router   = useRouter();
   const [session, setSession] = useState<Session | null>(null);
   const [isOpenMobile, setIsOpenMobile] = useState(false);
+  const [unreadCount, setUnreadCount] = useState<number>(0);
 
   // Issue reporting states
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
@@ -56,6 +57,29 @@ export function Sidebar() {
       .then(setSession)
       .catch(() => setSession(null));
   }, [pathname]);
+
+  useEffect(() => {
+    if (!session) return;
+
+    const fetchUnreadCount = async () => {
+      try {
+        const res = await fetch('/api/messages/unread-count');
+        if (res.ok) {
+          const data = await res.json();
+          setUnreadCount(data.count || 0);
+        }
+      } catch (err) {
+        console.error('Failed to fetch unread count', err);
+      }
+    };
+
+    fetchUnreadCount();
+    const interval = setInterval(fetchUnreadCount, 10000); // Poll every 10 seconds
+
+    return () => clearInterval(interval);
+  }, [session, pathname]);
+
+  const displayUnread = pathname === '/community' ? 0 : unreadCount;
 
   useEffect(() => {
     const handleToggle = () => setIsOpenMobile((open) => !open);
@@ -237,6 +261,11 @@ export function Sidebar() {
                 )}
                 <item.icon className="w-4 h-4 flex-shrink-0" />
                 <span>{item.label}</span>
+                {item.href === '/community' && displayUnread > 0 && (
+                  <span className="ml-auto bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center shadow-sm">
+                    {displayUnread > 99 ? '99+' : displayUnread}
+                  </span>
+                )}
                 {isActive && <ChevronRight className="w-3.5 h-3.5 ml-auto opacity-70" />}
               </motion.div>
             </Link>

@@ -4,7 +4,7 @@ import { useEffect, useState, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Send, Loader2, Reply, X, Trash2, ChevronUp, ShieldCheck,
-  MessageCircle
+  MessageCircle, Eye
 } from 'lucide-react';
 import { COMMUNITY_CONFIG } from '@/lib/community';
 
@@ -15,6 +15,12 @@ interface ReplyRef {
   snippet: string;
 }
 
+interface ViewInfo {
+  rollNumber: string;
+  name: string;
+  viewedAt: string;
+}
+
 interface Message {
   _id: string;
   authorId: string;
@@ -22,6 +28,7 @@ interface Message {
   authorRole: 'student' | 'admin';
   text: string;
   replyTo?: ReplyRef;
+  views?: ViewInfo[];
   createdAt: string;
 }
 
@@ -133,11 +140,13 @@ function MessageBubble({
   currentUser,
   onReply,
   onDelete,
+  onShowViews,
 }: {
   msg: Message;
   currentUser: CurrentUser | null;
   onReply: (msg: Message) => void;
   onDelete: (id: string) => void;
+  onShowViews: (msg: Message) => void;
 }) {
   const [popover, setPopover] = useState<DOMRect | null>(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -191,13 +200,22 @@ function MessageBubble({
         <p className="text-sm text-secondary mt-0.5 break-words whitespace-pre-wrap">{msg.text}</p>
 
         {/* Actions (visible on hover) */}
-        <div className="flex items-center gap-2 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="flex items-center gap-2.5 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
           <button
             onClick={() => onReply(msg)}
             className="flex items-center gap-1 text-[11px] text-muted-custom hover:text-indigo-400 transition-colors"
           >
             <Reply className="w-3 h-3" /> Reply
           </button>
+
+          {currentUser?.isAdmin && msg.views && (
+            <button
+              onClick={() => onShowViews(msg)}
+              className="flex items-center gap-1 text-[11px] text-muted-custom hover:text-indigo-400 transition-colors"
+            >
+              <Eye className="w-3 h-3" /> {msg.views.length} {msg.views.length === 1 ? 'view' : 'views'}
+            </button>
+          )}
 
           {currentUser?.isAdmin && (
             <>
@@ -237,6 +255,7 @@ export default function CommunityPage() {
   const [hasOlder, setHasOlder] = useState(false);
   const [text, setText] = useState('');
   const [replyTo, setReplyTo] = useState<ReplyRef | null>(null);
+  const [viewingMessageDetails, setViewingMessageDetails] = useState<Message | null>(null);
 
   const feedRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -480,6 +499,7 @@ export default function CommunityPage() {
               currentUser={currentUser}
               onReply={handleReply}
               onDelete={handleDelete}
+              onShowViews={setViewingMessageDetails}
             />
           ))}
         </AnimatePresence>
@@ -544,6 +564,60 @@ export default function CommunityPage() {
           Press Enter to send · Shift+Enter for a new line
         </p>
       </div>
+
+      {/* Views Modal */}
+      <AnimatePresence>
+        {viewingMessageDetails && (
+          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="relative w-full max-w-md rounded-3xl glass-strong border border-custom bg-card-custom shadow-2xl p-6 overflow-hidden flex flex-col max-h-[80vh]"
+            >
+              {/* Header */}
+              <div className="flex items-center justify-between pb-3 border-b border-custom flex-shrink-0">
+                <div>
+                  <h3 className="text-base font-semibold text-primary">Message Viewers</h3>
+                  <p className="text-xs text-muted-custom mt-0.5">
+                    {viewingMessageDetails.views?.length || 0} {(viewingMessageDetails.views?.length || 0) === 1 ? 'person has' : 'people have'} seen this message
+                  </p>
+                </div>
+                <button
+                  onClick={() => setViewingMessageDetails(null)}
+                  className="p-1.5 rounded-lg text-secondary hover:text-primary hover:bg-card-custom border border-transparent hover:border-custom transition-all focus:outline-none"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Content */}
+              <div className="overflow-y-auto py-4 flex-1 space-y-3 pr-1">
+                {(!viewingMessageDetails.views || viewingMessageDetails.views.length === 0) ? (
+                  <div className="text-center py-6 text-muted-custom text-sm">
+                    No views recorded yet.
+                  </div>
+                ) : (
+                  viewingMessageDetails.views.map((viewer, idx) => (
+                    <div
+                      key={viewer.rollNumber + '-' + idx}
+                      className="flex items-center justify-between px-3 py-2 rounded-xl bg-card-custom/40 border border-custom/50"
+                    >
+                      <div>
+                        <p className="text-sm font-semibold text-primary">{viewer.name}</p>
+                        <p className="text-xs font-mono text-muted-custom mt-0.5">{viewer.rollNumber}</p>
+                      </div>
+                      <span className="text-[10px] text-muted-custom">
+                        {formatTime(viewer.viewedAt)}
+                      </span>
+                    </div>
+                  ))
+                )}
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
