@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
                         roll.startsWith('25915A12') ||
                         roll.startsWith('25915A67');
 
-    if (!isValidRoll  || isValidRoll.length > 10) {
+    if (!isValidRoll  || roll.length > 10) {
       return NextResponse.json({ error: 'Enter valid roll no' }, { status: 400 });
     }
     if (password.length < 6) {
