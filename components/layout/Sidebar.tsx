@@ -7,7 +7,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   LayoutDashboard, BookOpen, Users, Bot,
   ShieldCheck, LogOut, GraduationCap, ChevronRight, User,
-  AlertCircle, Upload, Loader2, CheckCircle2, Image as ImageIcon, X
+  AlertCircle, Upload, Loader2, CheckCircle2, Image as ImageIcon, X,
+  MessageCircle
 } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
 import { NotificationBell } from './NotificationBell';
@@ -22,12 +23,13 @@ interface Session {
 }
 
 const NAV_ITEMS = [
-  { href: '/dashboard', label: 'Dashboard',   icon: LayoutDashboard },
-  { href: '/branch',    label: 'My Subjects',  icon: BookOpen        },
-  { href: '/contribute', label: 'Contribute',   icon: Users           },
-  { href: '/ai',        label: 'JARVIS',       icon: Bot             },
+  { href: '/dashboard',    label: 'Dashboard',       icon: LayoutDashboard },
+  { href: '/branch',       label: 'My Subjects',     icon: BookOpen        },
+  { href: '/contribute',   label: 'Contribute',      icon: Users           },
+  { href: '/community',    label: 'Community',       icon: MessageCircle   },
+  { href: '/ai',           label: 'JARVIS',          icon: Bot             },
   { href: '#report-issue', label: 'Report an Issue', icon: AlertCircle, isAction: true },
-  { href: '/admin',     label: 'Admin Panel',  icon: ShieldCheck, adminOnly: true },
+  { href: '/admin',        label: 'Admin Panel',     icon: ShieldCheck, adminOnly: true },
 ];
 
 export function Sidebar() {
