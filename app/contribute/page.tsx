@@ -84,8 +84,8 @@ export default function ContributePage() {
 
   // Clear subject if no longer valid when branch/sem updates
   useEffect(() => {
-    const validLabels = activeSubjects.map((s) => s.label);
-    if (form.subject && !validLabels.includes(form.subject)) {
+    const validIds = activeSubjects.map((s) => s.id);
+    if (form.subject && !validIds.includes(form.subject)) {
       setForm((f) => ({ ...f, subject: '' }));
     }
   }, [form.branch, form.semester, activeSubjects]);
@@ -126,11 +126,14 @@ export default function ContributePage() {
     try {
       if (form.type === 'youtube') {
         // Save YouTube URL directly
+        const selectedSubject = activeSubjects.find((s) => s.id === form.subject);
+        const subjectLabel = selectedSubject ? selectedSubject.label : form.subject;
+
         await fetch('/api/resources', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            title: `${form.subject} — YouTube Resource`,
+            title: `${subjectLabel} — YouTube Resource`,
             type: form.type,
             branch: form.branch,
             semester: Number(form.semester),
@@ -256,7 +259,7 @@ export default function ContributePage() {
             >
               <option value="">Select a Subject...</option>
               {activeSubjects.map((sub) => (
-                <option key={sub.id} value={sub.label}>
+                <option key={sub.id} value={sub.id}>
                   {sub.label} ({sub.short})
                 </option>
               ))}
