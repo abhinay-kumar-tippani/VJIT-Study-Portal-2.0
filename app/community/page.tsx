@@ -289,6 +289,15 @@ export default function CommunityPage() {
       .catch((err) => console.error('[Community Auth]', err));
   }, []);
 
+  // Auto-resize the input textarea as the user types
+  useEffect(() => {
+    const textarea = inputRef.current;
+    if (!textarea) return;
+
+    textarea.style.height = 'auto';
+    textarea.style.height = `${textarea.scrollHeight}px`;
+  }, [text]);
+
   // Fetch messages
   const fetchMessages = useCallback(async () => {
     try {

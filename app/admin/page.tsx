@@ -200,8 +200,8 @@ export default function AdminPage() {
     fetchActiveUsers();
     fetchActivityLogs();
 
-    // Poll active user count every 5 minutes
-    const interval = setInterval(fetchActiveUsers, 5 * 60 * 1000);
+    // Poll active user count every 30 seconds
+    const interval = setInterval(fetchActiveUsers, 30 * 1000);
     return () => clearInterval(interval);
   }, []);
 
@@ -1274,14 +1274,14 @@ export default function AdminPage() {
               </div>
 
               <div className="text-xs text-secondary mb-1">
-                Showing students who interacted with the platform in the last 5 minutes.
+                Showing students who interacted with the platform in the last 30 seconds.
               </div>
 
               {/* Active Users List */}
               <div className="max-h-[350px] overflow-y-auto pr-1 space-y-2.5">
                 {activeUsersList.length === 0 ? (
                   <div className="text-center py-8 text-secondary text-sm">
-                    No active students online in the last 5 minutes.
+                    No active students online in the last 30 seconds.
                   </div>
                 ) : (
                   activeUsersList.map((user, i) => (
