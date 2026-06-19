@@ -297,7 +297,7 @@ export function Sidebar() {
         {session ? (
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-secondary hover:text-red-400 hover:bg-red-500/10 transition-all"
+            className="w-full flex items-center justify-center gap-2 px-3 py-3 rounded-xl text-sm font-semibold bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 hover:border-red-500/40 transition-all active:scale-[0.98]"
           >
             <LogOut className="w-4 h-4" /> Sign Out
           </button>

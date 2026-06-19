@@ -286,7 +286,7 @@ export default function DashboardPage() {
                   </div>
                   <div>
                     <div className="inline-flex items-center justify-center px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 font-mono text-[10px] font-bold uppercase tracking-wider mb-2">
-                      Practical
+                      Lab
                     </div>
                     <h3 className="font-bold text-sm text-primary group-hover:text-emerald-400 transition-colors leading-snug">
                       {s.label}
