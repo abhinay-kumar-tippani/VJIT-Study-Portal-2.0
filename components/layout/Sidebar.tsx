@@ -199,10 +199,13 @@ export function Sidebar() {
       )}
 
       <aside className={`
-        fixed left-0 top-0 h-screen w-64 glass-strong flex flex-col z-50 border-r border-custom
+        fixed left-0 top-0 w-64 glass-strong flex flex-col z-50 border-r border-custom
         transition-transform duration-300 ease-out
+        h-[100dvh] supports-[height:100dvh]:h-[100dvh]
         ${isOpenMobile ? 'translate-x-0 shadow-2xl shadow-indigo-500/5' : '-translate-x-full md:translate-x-0'}
-      `}>
+      `}
+      style={{ height: '100dvh' }}
+      >
       {/* Logo */}
       <div className="px-6 py-5 border-b border-custom flex items-center justify-between">
         <Link href="/dashboard" className="flex items-center gap-3">
