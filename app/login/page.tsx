@@ -54,7 +54,7 @@ export default function LoginPage() {
         transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
         className="w-full max-w-md"
       >
-        <div className="glass-strong rounded-2xl p-10 shadow-2xl">
+        <div className="glass-strong rounded-2xl p-6 sm:p-10 shadow-2xl">
           {/* Logo */}
           <div className="flex flex-col items-center mb-8">
             <div className="w-14 h-14 rounded-2xl gradient-accent glow-accent flex items-center justify-center mb-4">

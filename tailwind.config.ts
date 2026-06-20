@@ -15,7 +15,7 @@ const config: Config = {
         mono: ['JetBrains Mono', ...fontFamily.mono],
       },
       colors: {
-        border: 'rgb(var(--border) / <alpha-value>)',
+        border: 'rgb(var(--border) / var(--border-opacity, 1))',
         accent: 'rgb(var(--accent) / <alpha-value>)',
         'accent-emerald': 'rgb(var(--accent-emerald) / <alpha-value>)',
         background: 'rgb(var(--bg-primary) / <alpha-value>)',

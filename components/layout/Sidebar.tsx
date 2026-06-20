@@ -1,17 +1,18 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   LayoutDashboard, BookOpen, Users, Bot,
-  ShieldCheck, LogOut, GraduationCap, ChevronRight, User,
+  ShieldCheck, LogOut, GraduationCap, User,
   AlertCircle, Upload, Loader2, CheckCircle2, Image as ImageIcon, X,
   MessageCircle
 } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
 import { NotificationBell } from './NotificationBell';
+import { CommandPaletteTrigger } from '@/components/ui/CommandPalette';
 
 
 interface Session {
@@ -25,7 +26,7 @@ interface Session {
 const NAV_ITEMS = [
   { href: '/dashboard',    label: 'Dashboard',       icon: LayoutDashboard },
   { href: '/branch',       label: 'My Subjects',     icon: BookOpen        },
-  { href: '/contribute',   label: 'Contribute',      icon: Users           },
+  { href: '/contribute',   label: 'Contribute',      icon: Upload           },
   { href: '/community',    label: 'Community',       icon: MessageCircle   },
   { href: '/ai',           label: 'JARVIS',          icon: Bot             },
   { href: '#report-issue', label: 'Report an Issue', icon: AlertCircle, isAction: true },
@@ -208,7 +209,7 @@ export function Sidebar() {
       >
       {/* Logo */}
       <div className="px-6 py-5 border-b border-custom flex items-center justify-between">
-        <Link href="/dashboard" className="flex items-center gap-3">
+        <Link href="/dashboard" className="flex items-center gap-3 min-w-0">
           <div className="w-9 h-9 rounded-xl gradient-accent flex items-center justify-center glow-accent">
             <GraduationCap className="w-5 h-5 text-white" />
           </div>
@@ -217,13 +218,23 @@ export function Sidebar() {
             <p className="text-xs text-secondary mt-0.5">Study Platform 2.0</p>
           </div>
         </Link>
-        <div className="hidden md:block">
-          <NotificationBell />
+        <div className="flex items-center gap-1">
+          <div className="hidden md:block">
+            <NotificationBell />
+          </div>
+          <button
+            onClick={() => setIsOpenMobile(false)}
+            className="md:hidden min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl text-secondary hover:text-primary hover:bg-card-custom transition-all"
+            aria-label="Close navigation"
+          >
+            <X className="w-5 h-5" />
+          </button>
         </div>
       </div>
 
       {/* Nav */}
       <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+        <CommandPaletteTrigger />
         {NAV_ITEMS.filter((item) => !item.adminOnly || session?.isAdmin).map((item) => {
           if (item.isAction) {
             return (
@@ -231,12 +242,12 @@ export function Sidebar() {
                 key={item.href}
                 onClick={() => setIsReportModalOpen(true)}
                 className="
-                  w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium
+                  w-full flex items-center gap-3 px-3 py-3 min-h-[44px] rounded-xl text-sm font-medium
                   text-secondary hover:text-primary hover:bg-card-custom/50
                   transition-all duration-150 cursor-pointer focus:outline-none border border-transparent hover:border-custom/40
                 "
               >
-                <item.icon className="w-4 h-4 text-amber-400 flex-shrink-0" />
+                <item.icon className="w-4 h-4 text-[rgb(var(--accent-hover))] flex-shrink-0" />
                 <span>{item.label}</span>
               </button>
             );
@@ -249,27 +260,20 @@ export function Sidebar() {
               <motion.div
                 whileHover={{ x: 2 }} whileTap={{ scale: 0.98 }}
                 className={`
-                  relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium
-                  transition-all duration-150 cursor-pointer
-                  ${isActive ? 'text-white' : 'text-secondary hover:text-primary'}
+                  flex items-center gap-3 px-3 py-3 min-h-[44px] rounded-xl text-sm font-medium
+                  transition-all duration-150 cursor-pointer border-l-2
+                  ${isActive
+                    ? 'text-primary bg-[rgb(var(--accent)_/_0.08)] border-[rgb(var(--accent))]'
+                    : 'text-secondary hover:text-primary border-transparent hover:bg-card-custom/50'}
                 `}
               >
-                {isActive && (
-                  <motion.div
-                    layoutId="active-nav"
-                    className="absolute inset-0 gradient-accent rounded-xl opacity-90"
-                    style={{ zIndex: -1 }}
-                    transition={{ type: 'spring', bounce: 0.2, duration: 0.35 }}
-                  />
-                )}
-                <item.icon className="w-4 h-4 flex-shrink-0" />
+                <item.icon className={`w-4 h-4 flex-shrink-0 ${isActive ? 'text-[rgb(var(--accent-hover))]' : 'text-muted-custom'}`} />
                 <span>{item.label}</span>
                 {item.href === '/community' && displayUnread > 0 && (
                   <span className="ml-auto bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center shadow-sm">
                     {displayUnread > 99 ? '99+' : displayUnread}
                   </span>
                 )}
-                {isActive && <ChevronRight className="w-3.5 h-3.5 ml-auto opacity-70" />}
               </motion.div>
             </Link>
           );
@@ -278,19 +282,22 @@ export function Sidebar() {
 
       {/* Bottom */}
       <div className="px-3 pb-4 space-y-2 border-t border-custom pt-3">
-        <ThemeToggle />
+        {/* Theme toggle hidden until light mode is fully designed */}
+        <div className="hidden">
+          <ThemeToggle />
+        </div>
 
         {session && (
           <div className="px-3 py-2.5 rounded-xl bg-card-custom border border-custom">
             <div className="flex items-center gap-2 mb-0.5">
-              <div className="w-6 h-6 rounded-full bg-indigo-500/20 flex items-center justify-center flex-shrink-0">
-                <User className="w-3.5 h-3.5 text-indigo-400" />
+              <div className="w-6 h-6 rounded-full bg-[rgb(var(--accent)_/_0.15)] flex items-center justify-center flex-shrink-0">
+                <User className="w-3.5 h-3.5 text-[rgb(var(--accent-hover))]" />
               </div>
               <p className="text-xs font-semibold text-primary truncate">{session.name}</p>
             </div>
             <p className="text-[11px] font-mono text-muted-custom pl-8">{session.rollNumber}</p>
             {session.isSuperAdmin && (
-              <span className="mt-1 ml-8 inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-indigo-500/20 text-indigo-400 text-[10px] font-semibold">
+              <span className="mt-1 ml-8 inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-[rgb(var(--accent)_/_0.15)] text-[rgb(var(--accent-hover))] text-[10px] font-semibold">
                 <ShieldCheck className="w-2.5 h-2.5" /> Super Admin
               </span>
             )}
@@ -300,7 +307,7 @@ export function Sidebar() {
         {session ? (
           <button
             onClick={handleLogout}
-            className="w-full flex items-center justify-center gap-2 px-3 py-3 rounded-xl text-sm font-semibold bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 hover:border-red-500/40 transition-all active:scale-[0.98]"
+            className="w-full flex items-center justify-center gap-2 px-3 py-3 rounded-xl text-sm font-semibold bg-transparent text-secondary border border-custom hover:bg-[rgb(var(--bg-card-hover))] hover:text-primary transition-all active:scale-[0.98]"
           >
             <LogOut className="w-4 h-4" /> Sign Out
           </button>
@@ -320,7 +327,7 @@ export function Sidebar() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="relative w-full max-w-lg rounded-3xl glass-strong border border-custom bg-card-custom shadow-2xl p-6 overflow-hidden flex flex-col gap-4"
+            className="relative w-full max-w-lg max-h-[90dvh] rounded-3xl glass-strong border border-custom bg-card-custom shadow-2xl p-4 sm:p-6 overflow-y-auto flex flex-col gap-4"
           >
             {/* Close Button */}
             <button
@@ -333,7 +340,7 @@ export function Sidebar() {
 
             <div>
               <h3 className="text-lg font-bold text-primary flex items-center gap-2">
-                <AlertCircle className="w-5 h-5 text-amber-400" />
+                <AlertCircle className="w-5 h-5 text-[rgb(var(--accent-hover))]" />
                 Report an Issue
               </h3>
               <p className="text-xs text-secondary mt-1">Found a bug or missing something? Let the admin team know.</p>
@@ -349,7 +356,7 @@ export function Sidebar() {
                   required
                   value={issueType}
                   onChange={(e) => setIssueType(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-card-custom border border-custom text-primary text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all cursor-pointer"
+                  className="w-full px-4 py-2.5 rounded-xl bg-card-custom border border-custom text-primary text-sm focus:outline-none focus:border-[rgb(var(--accent))] focus:ring-2 focus:ring-[rgb(var(--accent)_/_0.2)] transition-all cursor-pointer"
                 >
                   <option value="">Select an issue type...</option>
                   <option value="Missing Study Material">Missing Study Material</option>
@@ -372,7 +379,7 @@ export function Sidebar() {
                   placeholder="e.g. OOPs through Java"
                   value={formSubject}
                   onChange={(e) => setFormSubject(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-card-custom border border-custom text-primary placeholder:text-muted-custom text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl bg-card-custom border border-custom text-primary placeholder:text-muted-custom text-sm focus:outline-none focus:border-[rgb(var(--accent))] focus:ring-2 focus:ring-[rgb(var(--accent)_/_0.2)] transition-all"
                 />
               </div>
 
@@ -387,7 +394,7 @@ export function Sidebar() {
                   placeholder="Describe the issue in detail..."
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-card-custom border border-custom text-primary placeholder:text-muted-custom text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all resize-none"
+                  className="w-full px-4 py-2.5 rounded-xl bg-card-custom border border-custom text-primary placeholder:text-muted-custom text-sm focus:outline-none focus:border-[rgb(var(--accent))] focus:ring-2 focus:ring-[rgb(var(--accent)_/_0.2)] transition-all resize-none"
                 />
               </div>
 
@@ -431,9 +438,9 @@ export function Sidebar() {
                     />
                     <label
                       htmlFor="screenshot-file-input"
-                      className="flex items-center justify-center gap-2 w-full py-4 rounded-xl border-2 border-dashed border-custom hover:border-indigo-500/50 hover:bg-indigo-500/5 cursor-pointer text-xs font-semibold text-secondary hover:text-primary transition-all"
+                      className="flex items-center justify-center gap-2 w-full py-4 rounded-xl border-2 border-dashed border-custom hover:border-[rgb(var(--accent)_/_0.3)] hover:bg-[rgb(var(--accent)_/_0.05)] cursor-pointer text-xs font-semibold text-secondary hover:text-primary transition-all"
                     >
-                      <ImageIcon className="w-4 h-4 text-amber-400" />
+                      <ImageIcon className="w-4 h-4 text-[rgb(var(--accent-hover))]" />
                       <span>Upload Screenshot (Image only)</span>
                     </label>
                   </div>

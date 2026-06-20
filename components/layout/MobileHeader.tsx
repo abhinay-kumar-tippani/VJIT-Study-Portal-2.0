@@ -18,7 +18,7 @@ export function MobileHeader() {
       <div className="flex items-center gap-3">
         <button
           onClick={toggleSidebar}
-          className="p-2 rounded-xl text-secondary hover:text-primary hover:bg-card-custom transition-all border border-transparent hover:border-custom active:scale-95"
+          className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl text-secondary hover:text-primary hover:bg-card-custom transition-all border border-transparent hover:border-custom active:scale-95"
           aria-label="Toggle Navigation"
         >
           <Menu className="w-5 h-5" />

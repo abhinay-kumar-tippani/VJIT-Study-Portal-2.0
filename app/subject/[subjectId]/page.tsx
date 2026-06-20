@@ -24,12 +24,12 @@ interface DriveFile {
 
 // ─── Tab config ───────────────────────────────────────────────────
 const TABS = [
-  { id: 'Notes',          label: 'Notes',          icon: FileText,    color: 'text-indigo-400'  },
-  { id: 'Question Banks', label: 'Question Banks', icon: HelpCircle,  color: 'text-emerald-400' },
-  { id: 'PYQs',           label: 'PYQs',           icon: Clock,       color: 'text-amber-400'   },
-  { id: 'Syllabus',       label: 'Syllabus',       icon: BookOpen,    color: 'text-sky-400'     },
-  { id: 'Textbooks',      label: 'Textbooks',      icon: Library,     color: 'text-purple-400'  },
-  { id: 'YouTube',        label: 'YouTube',        icon: Youtube,     color: 'text-red-400'     },
+  { id: 'Notes',          label: 'Notes',          icon: FileText    },
+  { id: 'Question Banks', label: 'Question Banks', icon: HelpCircle  },
+  { id: 'PYQs',           label: 'PYQs',           icon: Clock       },
+  { id: 'Syllabus',       label: 'Syllabus',       icon: BookOpen    },
+  { id: 'Textbooks',      label: 'Textbooks',      icon: Library     },
+  { id: 'YouTube',        label: 'YouTube',        icon: Youtube     },
 ] as const;
 
 type TabId = typeof TABS[number]['id'];
@@ -326,7 +326,7 @@ function SubjectPageContent() {
   const downloadUrl = (fileId: string) => `/api/proxy/file?id=${fileId}`;
 
   return (
-    <div className="px-8 py-10">
+    <div className="px-4 sm:px-6 md:px-8 py-6 sm:py-10">
       {/* Breadcrumb */}
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
         className="flex items-center gap-2 text-xs text-muted-custom mb-6 flex-wrap"
@@ -363,32 +363,26 @@ function SubjectPageContent() {
       )}
 
       {/* Header */}
-      <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
-        <h1 className="text-2xl font-bold text-primary">{label}</h1>
+      <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} className="mb-6 sm:mb-8">
+        <h1 className="text-page-h1 break-words">{label}</h1>
         <p className="text-secondary text-sm mt-1">{branch} · Semester {semester}</p>
       </motion.div>
 
       {/* ── Tab bar ── */}
-      <div className="flex items-center gap-1 p-1 rounded-2xl glass-strong border border-custom mb-8 overflow-x-auto w-fit max-w-full">
+      <div className="flex items-center gap-1 border-b border-custom mb-6 sm:mb-8 overflow-x-auto w-full max-w-full">
         {TABS.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`
-              relative flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap
-              transition-all duration-150
-              ${activeTab === tab.id ? 'text-white' : 'text-secondary hover:text-primary'}
+              flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2.5 min-h-[44px] text-xs sm:text-sm font-medium whitespace-nowrap flex-shrink-0
+              border-b-2 -mb-px transition-all duration-150
+              ${activeTab === tab.id
+                ? 'text-[rgb(var(--accent-hover))] border-[rgb(var(--accent))]'
+                : 'text-muted-custom border-transparent hover:text-primary'}
             `}
           >
-            {activeTab === tab.id && (
-              <motion.div
-                layoutId="tab-active-sub"
-                className="absolute inset-0 gradient-accent rounded-xl"
-                style={{ zIndex: -1 }}
-                transition={{ type: 'spring', bounce: 0.2, duration: 0.3 }}
-              />
-            )}
-            <tab.icon className={`w-4 h-4 ${activeTab === tab.id ? 'text-white' : tab.color}`} />
+            <tab.icon className="w-4 h-4" />
             {tab.label}
           </button>
         ))}
@@ -499,7 +493,7 @@ function SubjectPageContent() {
                       return (
                         <div
                           key={res._id}
-                          className="card p-5 flex flex-col justify-between border border-custom bg-card-custom hover:border-indigo-500/20 transition-all duration-200"
+                          className="card p-5 flex flex-col justify-between border border-custom bg-card-custom hover:border-[rgb(var(--border-hover-opacity))] transition-all duration-200"
                         >
                           <div>
                             <div className="flex items-center justify-between mb-2.5">
@@ -507,18 +501,18 @@ function SubjectPageContent() {
                                 Submitted by {res.uploadedBy}
                               </span>
                               {isPending && (
-                                <span className="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 text-[10px] font-bold">
-                                  ⏳ Pending Approval
+                                <span className="px-2 py-0.5 rounded bg-[rgb(var(--accent)_/_0.1)] text-[rgb(var(--accent-hover))] text-[10px] font-bold">
+                                  Pending Approval
                                 </span>
                               )}
                               {isRejected && (
-                                <span className="px-2 py-0.5 rounded bg-rose-500/10 text-rose-400 text-[10px] font-bold">
-                                  ❌ Rejected
+                                <span className="px-2 py-0.5 rounded bg-red-500/10 text-red-400 text-[10px] font-bold">
+                                  Rejected
                                 </span>
                               )}
                               {!isPending && !isRejected && (
                                 <span className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 text-[10px] font-bold">
-                                  Approved Contribution
+                                  Approved
                                 </span>
                               )}
                             </div>
@@ -547,12 +541,18 @@ function SubjectPageContent() {
           {/* ── File list (all other tabs) ── */}
           {!loading && activeTab !== 'YouTube' && (
             (files.length === 0 && contributedResources.length === 0) ? (
-              <div className="card p-12 text-center">
+              <div className="py-16 text-center">
                 <FileText className="w-10 h-10 text-muted-custom mx-auto mb-3" />
                 <p className="text-secondary font-medium">No {activeTab} uploaded yet</p>
-                <p className="text-xs text-muted-custom mt-1">
+                <p className="text-body mt-1">
                   Add files to the <code className="bg-card-custom px-1 rounded">{activeTab}/</code> folder in Drive or contribute one!
                 </p>
+                <Link
+                  href="/contribute"
+                  className="inline-flex items-center gap-1 text-xs text-[rgb(var(--accent-hover))] font-semibold mt-4 hover:underline"
+                >
+                  Contribute a resource →
+                </Link>
               </div>
             ) : (
               <div className="space-y-3">
@@ -563,7 +563,6 @@ function SubjectPageContent() {
                   const isImage = file.mimeType.includes('image');
                   const isDocx  = file.mimeType.includes('word') || file.mimeType.includes('document');
                   const fileLabel = isPDF ? 'PDF' : isImage ? 'Image' : isDocx ? 'DOCX' : 'File';
-                  const labelColor = isPDF ? 'text-indigo-400' : isImage ? 'text-sky-400' : isDocx ? 'text-emerald-400' : 'text-zinc-400';
                   return (
                     <motion.div
                       key={file.id}
@@ -573,13 +572,13 @@ function SubjectPageContent() {
                       className="card-hover p-4 flex flex-col sm:flex-row sm:items-center gap-4 group"
                     >
                       <div className="flex items-center gap-3 w-full sm:w-auto flex-1">
-                        <div className="w-10 h-10 rounded-xl bg-card-custom border border-custom flex items-center justify-center flex-shrink-0">
-                          <Icon className="w-4 h-4 text-indigo-400" />
+                        <div className="w-10 h-10 rounded-xl bg-[rgb(var(--accent)_/_0.1)] border border-[rgb(var(--accent)_/_0.2)] flex items-center justify-center flex-shrink-0">
+                          <Icon className="w-4 h-4 text-[rgb(var(--accent-hover))]" />
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="font-medium text-sm text-primary truncate">{file.name}</div>
                           <div className="text-xs text-muted-custom mt-0.5 flex items-center gap-2 flex-wrap">
-                            <span className={`uppercase font-mono font-semibold ${labelColor}`}>{fileLabel}</span>
+                            <span className="uppercase font-mono font-semibold text-[rgb(var(--accent-hover))]">{fileLabel}</span>
                             {file.size && <span>{formatSize(file.size)}</span>}
                             {file.modifiedTime && (
                               <span>{new Date(file.modifiedTime).toLocaleDateString('en-IN')}</span>
@@ -593,17 +592,14 @@ function SubjectPageContent() {
                           href={previewUrl(file.id)}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex-1 sm:flex-none px-3 py-1.5 rounded-lg text-xs font-medium gradient-accent text-white flex items-center justify-center gap-1.5"
-                          // className="flex-1 sm:flex-none px-3 py-1.5 rounded-lg text-xs font-medium glass border border-custom text-secondary hover:text-primary transition-all flex items-center justify-center gap-1.5"
+                          className="flex-1 sm:flex-none px-3 py-2.5 min-h-[44px] sm:min-h-0 sm:py-1.5 rounded-lg text-xs font-medium gradient-accent text-white flex items-center justify-center gap-1.5"
                         >
                           <Eye className="w-3.5 h-3.5" /> View 
                         </a>
-                        <div style={{  gap: '25px' }}></div>
-                        {/* Download — forces save-as */}
                         <a
                           href={downloadUrl(file.id)}
                           download={file.name}
-                          className="flex-1 sm:flex-none px-3 py-1.5 rounded-lg text-xs font-medium gradient-accent text-white flex items-center justify-center gap-1.5"
+                          className="flex-1 sm:flex-none px-3 py-2.5 min-h-[44px] sm:min-h-0 sm:py-1.5 rounded-lg text-xs font-medium gradient-accent text-white flex items-center justify-center gap-1.5"
                         >
                           <Download className="w-3.5 h-3.5" /> Download
                         </a>
@@ -627,20 +623,20 @@ function SubjectPageContent() {
                       className="card-hover p-4 flex flex-col sm:flex-row sm:items-center gap-4 group"
                     >
                       <div className="flex items-center gap-3 w-full sm:w-auto flex-1">
-                        <div className="w-10 h-10 rounded-xl bg-card-custom border border-custom flex items-center justify-center flex-shrink-0">
-                          <Icon className="w-4 h-4 text-emerald-400" />
+                        <div className="w-10 h-10 rounded-xl bg-[rgb(var(--accent)_/_0.1)] border border-[rgb(var(--accent)_/_0.2)] flex items-center justify-center flex-shrink-0">
+                          <Icon className="w-4 h-4 text-[rgb(var(--accent-hover))]" />
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="font-medium text-sm text-primary truncate flex items-center gap-2 flex-wrap">
                             <span>{res.title}</span>
                             {isPending && (
-                              <span className="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 text-[10px] font-bold">
-                                ⏳ Waiting for Admin Approval
+                              <span className="px-2 py-0.5 rounded bg-[rgb(var(--accent)_/_0.1)] text-[rgb(var(--accent-hover))] text-[10px] font-bold">
+                                Waiting for Approval
                               </span>
                             )}
                             {isRejected && (
-                              <span className="px-2 py-0.5 rounded bg-rose-500/10 text-rose-400 text-[10px] font-bold">
-                                ❌ Rejected
+                              <span className="px-2 py-0.5 rounded bg-red-500/10 text-red-400 text-[10px] font-bold">
+                                Rejected
                               </span>
                             )}
                             {!isPending && !isRejected && (
@@ -650,10 +646,10 @@ function SubjectPageContent() {
                             )}
                           </div>
                           {isRejected && res.rejectionReason && (
-                            <p className="text-xs text-rose-400 mt-1 font-medium">Rejection Reason: {res.rejectionReason}</p>
+                            <p className="text-xs text-red-400 mt-1 font-medium">Rejection Reason: {res.rejectionReason}</p>
                           )}
                           <div className="text-xs text-muted-custom mt-0.5 flex items-center gap-2 flex-wrap">
-                            <span className="uppercase font-mono font-semibold text-emerald-400">{res.fileType}</span>
+                            <span className="uppercase font-mono font-semibold text-[rgb(var(--accent-hover))]">{res.fileType}</span>
                             <span>Contributed by {res.uploadedBy}</span>
                             {res.createdAt && (
                               <span>{new Date(res.createdAt).toLocaleDateString('en-IN')}</span>
@@ -667,7 +663,7 @@ function SubjectPageContent() {
                           href={res.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex-1 sm:flex-none px-4 py-1.5 rounded-lg text-xs font-medium gradient-accent text-white flex items-center justify-center gap-1.5"
+                          className="flex-1 sm:flex-none px-4 py-2.5 min-h-[44px] sm:min-h-0 sm:py-1.5 rounded-lg text-xs font-medium gradient-accent text-white flex items-center justify-center gap-1.5"
                         >
                           <ExternalLink className="w-3.5 h-3.5" /> Preview / Download
                         </a>
@@ -689,7 +685,7 @@ function SubjectPageContent() {
 export default function SubjectPage() {
   return (
     <Suspense fallback={
-      <div className="px-8 py-10 space-y-8 animate-pulse">
+      <div className="px-4 sm:px-6 md:px-8 py-6 sm:py-10 space-y-6 sm:space-y-8 animate-pulse">
         <div className="space-y-3">
           <div className="skeleton h-4 w-32 rounded" />
           <div className="skeleton h-8 w-64 rounded-xl" />

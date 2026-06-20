@@ -11,7 +11,7 @@ const ToastViewport = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <ToastPrimitives.Viewport
     ref={ref}
-    className={`fixed bottom-0 right-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px] ${className ?? ''}`}
+    className={`fixed top-0 right-0 z-[100] flex max-h-screen w-full flex-col p-4 sm:max-w-[420px] ${className ?? ''}`}
     {...props}
   />
 ));
@@ -19,14 +19,18 @@ ToastViewport.displayName = ToastPrimitives.Viewport.displayName;
 
 const Toast = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Root>,
-  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Root>
->(({ className, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Root> & { variant?: 'default' | 'success' | 'error' }
+>(({ className, variant = 'default', ...props }, ref) => (
   <ToastPrimitives.Root
     ref={ref}
     className={`
       group pointer-events-auto relative flex w-full items-center justify-between
       space-x-4 overflow-hidden rounded-xl border border-custom p-4 pr-8
-      shadow-lg transition-all glass-strong
+      shadow-lg transition-all bg-[rgb(var(--bg-card))]
+      border-l-4
+      ${variant === 'success' ? 'border-l-emerald-500' : ''}
+      ${variant === 'error' ? 'border-l-red-500' : ''}
+      ${variant === 'default' ? 'border-l-[rgb(var(--accent))]' : ''}
       data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)]
       data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)]
       data-[state=open]:animate-slide-in-right data-[state=closed]:opacity-0
@@ -85,6 +89,7 @@ type ToasterToast = ToastProps & {
   id: string;
   title?: React.ReactNode;
   description?: React.ReactNode;
+  variant?: 'default' | 'success' | 'error';
 };
 
 let count = 0;
@@ -116,6 +121,8 @@ function reducer(state: State, action: Action): State {
     }
     case 'REMOVE':
       return { toasts: state.toasts.filter((t) => t.id !== action.toastId) };
+    default:
+      return state;
   }
 }
 
@@ -129,7 +136,16 @@ function dispatch(action: Action) {
 
 export function toast(props: Omit<ToasterToast, 'id'>) {
   const id = genId();
-  dispatch({ type: 'ADD', toast: { ...props, id, open: true, onOpenChange: (open) => { if (!open) dispatch({ type: 'DISMISS', toastId: id }); } } });
+  dispatch({
+    type: 'ADD',
+    toast: {
+      ...props,
+      id,
+      open: true,
+      onOpenChange: (open) => { if (!open) dispatch({ type: 'DISMISS', toastId: id }); },
+    },
+  });
+  setTimeout(() => dispatch({ type: 'DISMISS', toastId: id }), TOAST_REMOVE_DELAY);
   return { id };
 }
 
@@ -146,8 +162,8 @@ export function Toaster() {
   const { toasts } = useToast();
   return (
     <ToastProvider>
-      {toasts.map(({ id, title, description, ...props }) => (
-        <Toast key={id} {...props}>
+      {toasts.map(({ id, title, description, variant, ...props }) => (
+        <Toast key={id} variant={variant} {...props}>
           <div className="grid gap-1">
             {title && <ToastTitle>{title}</ToastTitle>}
             {description && <ToastDescription>{description}</ToastDescription>}

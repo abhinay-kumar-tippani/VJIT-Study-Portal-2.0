@@ -6,6 +6,7 @@ import { MobileHeader } from '@/components/layout/MobileHeader';
 import { MainWrapper } from '@/components/layout/MainWrapper';
 import { AIChatPanel } from '@/components/layout/AIChatPanel';
 import { Toaster } from '@/components/ui/toaster';
+import { CommandPalette } from '@/components/ui/CommandPalette';
 import { ActiveUserTracker } from '@/components/layout/ActiveUserTracker';
 
 export const metadata: Metadata = {
@@ -32,6 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <AIChatPanel />
           </div>
           <Toaster />
+          <CommandPalette />
         </ThemeProvider>
       </body>
     </html>

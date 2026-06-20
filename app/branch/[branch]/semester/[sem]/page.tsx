@@ -3,46 +3,14 @@
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ChevronRight, FlaskConical, BookOpen, ArrowRight, Clock } from 'lucide-react';
+import { ChevronRight, FlaskConical, BookOpen, Clock } from 'lucide-react';
 
-import { ACTIVE_SEM, SEM4_SUBJECTS, type Subject } from '@/lib/subjects';
+import { ACTIVE_SEM, SEM4_SUBJECTS } from '@/lib/subjects';
+import { SubjectCard } from '@/components/ui/SubjectCard';
 
 // ─── Helpers ───────────────────────────────────────────────────────────────────
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.07 } } };
-const item = {
-  hidden: { opacity: 0, y: 16 },
-  show:   { opacity: 1, y: 0,  transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } },
-};
 
-function SubjectCard({
-  subject, branch, sem, index,
-}: {
-  subject: Subject; branch: string; sem: number; index: number;
-}) {
-  return (
-    <motion.div variants={item}>
-      <Link
-        href={`/subject/${subject.id}?branch=${branch}&semester=${sem}&label=${encodeURIComponent(subject.label)}`}
-      >
-        <motion.div
-          whileHover={{ y: -3, scale: 1.01 }}
-          className="card-hover p-5 cursor-pointer group flex items-center justify-between"
-        >
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl gradient-accent flex items-center justify-center text-white font-bold text-xs flex-shrink-0">
-              {index + 1}
-            </div>
-            <div>
-              <div className="font-bold text-sm text-primary tracking-wide">{subject.short}</div>
-              <div className="text-xs text-secondary mt-0.5 leading-snug">{subject.label}</div>
-            </div>
-          </div>
-          <ArrowRight className="w-4 h-4 text-muted-custom group-hover:text-indigo-400 transition-all group-hover:translate-x-1" />
-        </motion.div>
-      </Link>
-    </motion.div>
-  );
-}
 
 // ─── Page ──────────────────────────────────────────────────────────────────────
 export default function SemesterPage() {
@@ -53,7 +21,7 @@ export default function SemesterPage() {
   const hasLabs   = !!subjects?.lab?.length;
 
   return (
-    <div className="px-8 py-10">
+    <div className="px-4 sm:px-6 md:px-8 py-6 sm:py-10">
       {/* Breadcrumb */}
       <motion.div
         initial={{ opacity: 0 }} animate={{ opacity: 1 }}
@@ -68,8 +36,8 @@ export default function SemesterPage() {
 
       {/* Header */}
       <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} className="mb-10">
-        <h1 className="text-3xl font-bold text-primary">
-          Semester {semester} — <span className="gradient-text">{branch}</span>
+        <h1 className="text-page-h1">
+          Semester {semester} — {branch}
         </h1>
         <p className="text-secondary mt-1">
           {isActive && subjects
@@ -85,19 +53,19 @@ export default function SemesterPage() {
           <div className={hasLabs ? 'mb-8' : ''}>
             {hasLabs && (
               <div className="flex items-center gap-2 mb-4">
-                <BookOpen className="w-4 h-4 text-indigo-400" />
-                <h2 className="text-sm font-bold text-secondary uppercase tracking-wider">Theory Subjects</h2>
-                <span className="px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-400 text-xs font-medium">
+                <BookOpen className="w-4 h-4 text-[rgb(var(--accent-hover))]" />
+                <h2 className="text-eyebrow text-secondary">Theory Subjects</h2>
+                <span className="px-2 py-0.5 rounded-full bg-[rgb(var(--accent)_/_0.1)] text-[rgb(var(--accent-hover))] text-xs font-medium">
                   {subjects.theory.length}
                 </span>
               </div>
             )}
             <motion.div
               variants={container} initial="hidden" animate="show"
-              className="grid grid-cols-1 md:grid-cols-2 gap-4"
+              className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4"
             >
               {subjects.theory.map((s, i) => (
-                <SubjectCard key={s.id} subject={s} branch={branch} sem={semester} index={i} />
+                <SubjectCard key={s.id} id={s.id} label={s.label} short={s.short} branch={branch} semester={semester} type="theory" index={i + 1} />
               ))}
             </motion.div>
           </div>
@@ -106,18 +74,18 @@ export default function SemesterPage() {
           {hasLabs && (
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <FlaskConical className="w-4 h-4 text-emerald-400" />
-                <h2 className="text-sm font-bold text-secondary uppercase tracking-wider">Lab Subjects</h2>
-                <span className="px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 text-xs font-medium">
+                <FlaskConical className="w-4 h-4 text-[rgb(var(--accent-hover))]" />
+                <h2 className="text-eyebrow text-secondary">Lab Subjects</h2>
+                <span className="px-2 py-0.5 rounded-full bg-[rgb(var(--accent)_/_0.1)] text-[rgb(var(--accent-hover))] text-xs font-medium">
                   {subjects.lab!.length}
                 </span>
               </div>
               <motion.div
                 variants={container} initial="hidden" animate="show"
-                className="grid grid-cols-1 md:grid-cols-2 gap-4"
+                className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4"
               >
                 {subjects.lab!.map((s, i) => (
-                  <SubjectCard key={s.id} subject={s} branch={branch} sem={semester} index={i} />
+                  <SubjectCard key={s.id} id={s.id} label={s.label} short={s.short} branch={branch} semester={semester} type="lab" index={i + 1} />
                 ))}
               </motion.div>
             </div>
@@ -136,7 +104,7 @@ export default function SemesterPage() {
           <h2 className="text-2xl font-bold text-primary mb-2">Coming Soon</h2>
           <p className="text-secondary max-w-sm">
             Resources for{' '}
-            <span className="text-indigo-400 font-medium">{branch} Semester {semester}</span>{' '}
+            <span className="text-[rgb(var(--accent-hover))] font-medium">{branch} Semester {semester}</span>{' '}
             are being organized and will be uploaded shortly.
           </p>
           <Link href={`/branch/${branch}`}>

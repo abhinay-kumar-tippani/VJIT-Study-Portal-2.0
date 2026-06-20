@@ -14,7 +14,7 @@ import {
   X, CheckCircle2, ArrowUpDown
 } from 'lucide-react';
 import type { AdminUserRow } from '@/types';
-import { getBranchFromRollNumber, getBranchLabel, getBranchColor } from '@/lib/branch';
+import { getBranchFromRollNumber, getBranchLabel } from '@/lib/branch';
 
 // Lucide icon helper
 import { FileText, FileImage, FileType2, Youtube } from 'lucide-react';
@@ -297,18 +297,18 @@ export default function AdminPage() {
             <h1 className="text-2xl font-bold text-primary">Admin Panel</h1>
             <div className="flex items-center gap-2 mt-0.5">
               {isSuperAdmin && (
-                <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 text-[10px] font-bold">
+                <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-[rgb(var(--accent)_/_0.15)] text-[rgb(var(--accent-hover))] text-[10px] font-bold">
                   <Crown className="w-2.5 h-2.5" /> SUPER ADMIN
                 </span>
               )}
               <span className="text-xs text-secondary">
                 {activeTab === 'users'
-                  ? `${users.length} registered students`
+                  ? `${users.length} registered student${users.length !== 1 ? 's' : ''}`
                   : activeTab === 'pending'
-                  ? `${pendingList.length} pending materials`
+                  ? `${pendingList.length} pending material${pendingList.length !== 1 ? 's' : ''}`
                   : activeTab === 'issues'
-                  ? `${issuesList.length} reported issues`
-                  : `${activityLogs.reduce((acc, log) => acc + log.count, 0)} student visits recorded`}
+                  ? `${issuesList.length} reported issue${issuesList.length !== 1 ? 's' : ''}`
+                  : `${activityLogs.reduce((acc, log) => acc + log.count, 0)} student visit${activityLogs.reduce((acc, log) => acc + log.count, 0) !== 1 ? 's' : ''} recorded`}
               </span>
               {activeUsersCount !== null && (
                 <span 
@@ -333,92 +333,32 @@ export default function AdminPage() {
 
       {/* Tab bar */}
       <div className="flex items-center gap-1 p-1 rounded-2xl glass border border-custom mb-6 overflow-x-auto w-fit max-w-full">
-        <button
-          onClick={() => setActiveTab('users')}
-          className={`
-            relative flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap
-            transition-all duration-150
-            ${activeTab === 'users' ? 'text-white' : 'text-secondary hover:text-primary'}
-          `}
-        >
-          {activeTab === 'users' && (
-            <motion.div
-              layoutId="admin-tab-active"
-              className="absolute inset-0 gradient-accent rounded-xl"
-              style={{ zIndex: -1 }}
-              transition={{ type: 'spring', bounce: 0.2, duration: 0.3 }}
-            />
-          )}
-          <Users className="w-4 h-4" />
-          Registered Students
-        </button>
-        <button
-          onClick={() => setActiveTab('pending')}
-          className={`
-            relative flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap
-            transition-all duration-150
-            ${activeTab === 'pending' ? 'text-white' : 'text-secondary hover:text-primary'}
-          `}
-        >
-          {activeTab === 'pending' && (
-            <motion.div
-              layoutId="admin-tab-active"
-              className="absolute inset-0 gradient-accent rounded-xl"
-              style={{ zIndex: -1 }}
-              transition={{ type: 'spring', bounce: 0.2, duration: 0.3 }}
-            />
-          )}
-          <ShieldCheck className="w-4 h-4" />
-          Pending Approvals
-          {pendingList.length > 0 && (
-            <span className="ml-1.5 px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-rose-500 text-white animate-pulse">
-              {pendingList.length}
-            </span>
-          )}
-        </button>
-        <button
-          onClick={() => setActiveTab('issues')}
-          className={`
-            relative flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap
-            transition-all duration-150
-            ${activeTab === 'issues' ? 'text-white' : 'text-secondary hover:text-primary'}
-          `}
-        >
-          {activeTab === 'issues' && (
-            <motion.div
-              layoutId="admin-tab-active"
-              className="absolute inset-0 gradient-accent rounded-xl"
-              style={{ zIndex: -1 }}
-              transition={{ type: 'spring', bounce: 0.2, duration: 0.3 }}
-            />
-          )}
-          <AlertCircle className="w-4 h-4" />
-          Issues
-          {issuesList.filter((i) => i.status === 'pending').length > 0 && (
-            <span className="ml-1.5 px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-rose-500 text-white animate-pulse">
-              {issuesList.filter((i) => i.status === 'pending').length}
-            </span>
-          )}
-        </button>
-        <button
-          onClick={() => setActiveTab('activity')}
-          className={`
-            relative flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap
-            transition-all duration-150
-            ${activeTab === 'activity' ? 'text-white' : 'text-secondary hover:text-primary'}
-          `}
-        >
-          {activeTab === 'activity' && (
-            <motion.div
-              layoutId="admin-tab-active"
-              className="absolute inset-0 gradient-accent rounded-xl"
-              style={{ zIndex: -1 }}
-              transition={{ type: 'spring', bounce: 0.2, duration: 0.3 }}
-            />
-          )}
-          <Calendar className="w-4 h-4" />
-          Daily Activity
-        </button>
+        {([
+          { id: 'users' as const, label: 'Registered Students', icon: Users, badge: null },
+          { id: 'pending' as const, label: 'Pending Approvals', icon: ShieldCheck, badge: pendingList.length },
+          { id: 'issues' as const, label: 'Issues', icon: AlertCircle, badge: issuesList.filter((i) => i.status === 'pending').length },
+          { id: 'activity' as const, label: 'Daily Activity', icon: Calendar, badge: null },
+        ]).map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={`
+              flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap
+              transition-all duration-150
+              ${activeTab === tab.id
+                ? 'bg-[rgb(var(--accent)_/_0.15)] text-primary'
+                : 'text-secondary hover:text-primary hover:bg-card-custom/50'}
+            `}
+          >
+            <tab.icon className="w-4 h-4" />
+            {tab.label}
+            {tab.badge != null && tab.badge > 0 && (
+              <span className="ml-1.5 px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-red-500 text-white">
+                {tab.badge}
+              </span>
+            )}
+          </button>
+        ))}
       </div>
 
       <AnimatePresence mode="wait">
@@ -442,7 +382,7 @@ export default function AdminPage() {
                   className="
                     w-full pl-9 pr-4 py-2.5 rounded-xl bg-card-custom border border-custom
                     text-primary placeholder:text-muted-custom text-sm
-                    focus:outline-none focus:border-indigo-500 transition-all
+                    focus:outline-none focus:border-[rgb(var(--accent))] transition-all
                   "
                 />
               </div>
@@ -469,7 +409,7 @@ export default function AdminPage() {
             <div className="card overflow-hidden">
               {loading ? (
                 <div className="p-12 text-center">
-                  <Loader2 className="w-8 h-8 animate-spin text-indigo-400 mx-auto mb-3" />
+                  <Loader2 className="w-8 h-8 animate-spin text-[rgb(var(--accent-hover))] mx-auto mb-3" />
                   <p className="text-secondary text-sm">Loading users...</p>
                 </div>
               ) : (
@@ -481,7 +421,7 @@ export default function AdminPage() {
                         <th className="px-5 py-3 text-left text-xs font-semibold text-secondary uppercase tracking-wider">Roll No.</th>
                         <th className="px-5 py-3 text-left text-xs font-semibold text-secondary uppercase tracking-wider">Name</th>
                         {isSuperAdmin && (
-                          <th className={`px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider ${SHOW_BRANCH_INSTEAD_OF_PASSWORD ? 'text-indigo-400' : 'text-amber-400'}`}>
+                          <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-[rgb(var(--accent-hover))]">
                             {SHOW_BRANCH_INSTEAD_OF_PASSWORD ? (
                               <button
                                 onClick={() => {
@@ -494,9 +434,9 @@ export default function AdminPage() {
                                 className="flex items-center gap-1.5 hover:text-white transition-colors focus:outline-none"
                               >
                                 <GraduationCap className="w-3.5 h-3.5" /> Branch
-                                <ArrowUpDown className={`w-3.5 h-3.5 transition-transform ${branchSortDir ? 'text-white' : 'text-indigo-400/50'}`} />
+                                <ArrowUpDown className={`w-3.5 h-3.5 transition-transform ${branchSortDir ? 'text-white' : 'text-[rgb(var(--accent-hover))]/50'}`} />
                                 {branchSortDir && (
-                                  <span className="text-[9px] lowercase bg-indigo-500/20 px-1 py-0.2 rounded font-normal text-indigo-300">
+                                  <span className="text-[9px] lowercase bg-[rgb(var(--accent)_/_0.15)] px-1 py-0.2 rounded font-normal text-[rgb(var(--accent-hover))]">
                                     {branchSortDir}
                                   </span>
                                 )}
@@ -535,23 +475,22 @@ export default function AdminPage() {
                                   (() => {
                                     const b = getBranchFromRollNumber(user.rollNumber);
                                     const bLabel = getBranchLabel(b);
-                                    const bColor = getBranchColor(b);
                                     return (
-                                      <span className={`inline-block px-2.5 py-1 text-xs font-bold rounded-lg bg-gradient-to-r ${bColor} text-white shadow-sm`}>
+                                      <span className="inline-block px-2.5 py-1 text-xs font-bold rounded-lg bg-[rgb(var(--accent)_/_0.1)] text-[rgb(var(--accent-hover))] border border-[rgb(var(--accent)_/_0.2)]">
                                         {bLabel}
                                       </span>
                                     );
                                   })()
                                 ) : (
                                   <div className="flex items-center gap-2">
-                                    <span className="font-mono text-sm text-amber-300">
+                                    <span className="font-mono text-sm text-secondary">
                                       {visiblePasswords.has(user._id)
                                         ? user.plainPassword
                                         : '•'.repeat(Math.min(user.plainPassword?.length ?? 8, 10))}
                                     </span>
                                     <button
                                       onClick={() => togglePassword(user._id)}
-                                      className="p-1 rounded text-muted-custom hover:text-amber-400 transition-colors"
+                                      className="p-1 rounded text-muted-custom hover:text-[rgb(var(--accent-hover))] transition-colors"
                                       title={visiblePasswords.has(user._id) ? 'Hide' : 'Show'}
                                     >
                                       {visiblePasswords.has(user._id)
@@ -566,11 +505,11 @@ export default function AdminPage() {
                             <td className="px-5 py-4">
                               <div className="flex items-center gap-1.5">
                                 {user.isSuperAdmin ? (
-                                  <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 text-[10px] font-bold flex items-center gap-1">
+                                  <span className="px-2 py-0.5 rounded-full bg-[rgb(var(--accent)_/_0.15)] text-[rgb(var(--accent-hover))] text-[10px] font-bold flex items-center gap-1">
                                     <Crown className="w-2.5 h-2.5" /> Super
                                   </span>
                                 ) : user.isAdmin ? (
-                                  <span className="px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-400 text-[10px] font-bold">
+                                  <span className="px-2 py-0.5 rounded-full border border-custom text-secondary text-[10px] font-bold">
                                     Admin
                                   </span>
                                 ) : (
@@ -588,7 +527,7 @@ export default function AdminPage() {
                                 <div className="flex items-center gap-2">
                                   <button
                                     onClick={() => toggleAdmin(user._id, !user.isAdmin)}
-                                    className="px-2.5 py-1 rounded-lg text-xs font-medium border border-custom text-secondary hover:text-primary hover:border-indigo-500/50 transition-all"
+                                    className="px-2.5 py-1 rounded-lg text-xs font-medium border border-custom text-secondary hover:text-primary hover:border-[rgb(var(--accent)_/_0.3)] transition-all"
                                   >
                                     {user.isAdmin ? 'Revoke Admin' : 'Make Admin'}
                                   </button>
@@ -649,7 +588,7 @@ export default function AdminPage() {
             {/* Pending Materials Grid */}
             {pendingLoading ? (
               <div className="card p-12 text-center">
-                <Loader2 className="w-8 h-8 animate-spin text-indigo-400 mx-auto mb-3" />
+                <Loader2 className="w-8 h-8 animate-spin text-[rgb(var(--accent-hover))] mx-auto mb-3" />
                 <p className="text-secondary text-sm">Loading pending resources...</p>
               </div>
             ) : pendingList.length === 0 ? (
@@ -671,19 +610,19 @@ export default function AdminPage() {
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.95, y: 15 }}
                         transition={{ duration: 0.2 }}
-                        className="card p-6 flex flex-col justify-between border border-custom bg-card-custom hover:border-indigo-500/30 transition-all duration-200"
+                        className="card p-6 flex flex-col justify-between border border-custom bg-card-custom hover:border-[rgb(var(--accent)_/_0.3)] transition-all duration-200"
                       >
                         <div>
                           {/* File Details Header */}
                           <div className="flex items-start gap-4 mb-4">
-                            <div className="w-11 h-11 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center flex-shrink-0">
-                              <FileIcon className="w-5 h-5 text-indigo-400" />
+                            <div className="w-11 h-11 rounded-xl bg-[rgb(var(--accent)_/_0.1)] border border-[rgb(var(--accent)_/_0.2)] flex items-center justify-center flex-shrink-0">
+                              <FileIcon className="w-5 h-5 text-[rgb(var(--accent-hover))]" />
                             </div>
                             <div className="flex-1 min-w-0">
                               <h3 className="font-bold text-primary text-base truncate" title={res.title}>
                                 {res.title}
                               </h3>
-                              <span className="inline-block px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-400 text-[10px] font-bold uppercase tracking-wider mt-1">
+                              <span className="inline-block px-2 py-0.5 rounded bg-[rgb(var(--accent)_/_0.1)] text-[rgb(var(--accent-hover))] text-[10px] font-bold uppercase tracking-wider mt-1">
                                 {res.type === 'qbank' ? 'Question Bank' : res.type === 'pyq' ? 'PYQ' : res.type}
                               </span>
                             </div>
@@ -768,7 +707,7 @@ export default function AdminPage() {
                                   onChange={(e) =>
                                     setRejectionReasons((prev) => ({ ...prev, [res._id]: e.target.value }))
                                   }
-                                  className="w-full px-3.5 py-2.5 rounded-xl bg-card-custom border border-custom text-primary placeholder:text-muted-custom text-sm focus:outline-none focus:border-indigo-500 transition-all"
+                                  className="w-full px-3.5 py-2.5 rounded-xl bg-card-custom border border-custom text-primary placeholder:text-muted-custom text-sm focus:outline-none focus:border-[rgb(var(--accent))] transition-all"
                                 />
                               </div>
                               <div className="flex gap-2 justify-end">
@@ -831,7 +770,7 @@ export default function AdminPage() {
             {/* Issues List */}
             {issuesLoading ? (
               <div className="card p-12 text-center">
-                <Loader2 className="w-8 h-8 animate-spin text-indigo-400 mx-auto mb-3" />
+                <Loader2 className="w-8 h-8 animate-spin text-[rgb(var(--accent-hover))] mx-auto mb-3" />
                 <p className="text-secondary text-sm">Loading issues...</p>
               </div>
             ) : issuesList.length === 0 ? (
@@ -851,7 +790,7 @@ export default function AdminPage() {
                       return 'bg-red-500/10 text-red-400 border-red-500/20';
                     }
                     if (t.includes('broken') || t.includes('wrong') || t.includes('youtube')) {
-                      return 'bg-amber-500/10 text-amber-400 border-amber-500/20';
+                      return 'bg-[rgb(var(--accent)_/_0.1)] text-[rgb(var(--accent-hover))] border-[rgb(var(--accent)_/_0.2)]';
                     }
                     return 'bg-blue-500/10 text-blue-400 border-blue-500/20';
                   };
@@ -859,7 +798,7 @@ export default function AdminPage() {
                   return (
                     <motion.div
                       key={iss._id}
-                      className="card p-5 flex flex-col md:flex-row md:items-center justify-between gap-5 border border-custom bg-card-custom hover:border-indigo-500/25 transition-all duration-200"
+                      className="card p-5 flex flex-col md:flex-row md:items-center justify-between gap-5 border border-custom bg-card-custom hover:border-[rgb(var(--accent)_/_0.3)] transition-all duration-200"
                     >
                       {/* Left: Student & Issue Details */}
                       <div className="flex-1 space-y-3 min-w-0">
@@ -941,7 +880,7 @@ export default function AdminPage() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="space-y-4"
+            className="space-y-4 max-w-4xl"
           >
             {/* Toolbar equivalent */}
             <div className="flex items-center gap-3 mb-6">
@@ -967,7 +906,7 @@ export default function AdminPage() {
             {/* Logs List */}
             {activityLoading ? (
               <div className="card p-12 text-center">
-                <Loader2 className="w-8 h-8 animate-spin text-indigo-400 mx-auto mb-3" />
+                <Loader2 className="w-8 h-8 animate-spin text-[rgb(var(--accent-hover))] mx-auto mb-3" />
                 <p className="text-secondary text-sm">Loading activity logs...</p>
               </div>
             ) : activityLogs.length === 0 ? (
@@ -999,7 +938,7 @@ export default function AdminPage() {
                       >
                         <div className="flex items-center gap-3">
                           <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
-                            isToday ? 'bg-indigo-500/15 text-indigo-400 border border-indigo-500/25' : 'bg-zinc-800 text-secondary border border-custom'
+                            isToday ? 'bg-[rgb(var(--accent)_/_0.15)] text-[rgb(var(--accent-hover))] border border-[rgb(var(--accent)_/_0.25)]' : 'bg-zinc-800 text-secondary border border-custom'
                           }`}>
                             <Calendar className="w-5 h-5" />
                           </div>
@@ -1009,7 +948,7 @@ export default function AdminPage() {
                                 {formattedDate}
                               </h4>
                               {isToday && (
-                                <span className="px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-400 text-[9px] font-bold uppercase tracking-wider animate-pulse">
+                                <span className="text-eyebrow px-2 py-0.5 rounded-full border border-[rgb(var(--accent)_/_0.25)] text-[rgb(var(--accent-hover))]">
                                   Today
                                 </span>
                               )}
@@ -1020,7 +959,7 @@ export default function AdminPage() {
                           </div>
                         </div>
                         <div className="text-secondary hover:text-primary transition-all">
-                          <span className={`text-xs font-semibold px-3 py-1.5 rounded-xl border border-custom bg-card-custom hover:border-indigo-500/30 transition-all`}>
+                          <span className={`text-xs font-semibold px-3 py-1.5 rounded-xl border border-custom bg-card-custom hover:border-[rgb(var(--accent)_/_0.3)] transition-all`}>
                             {isExpanded ? 'Hide Students' : 'View Students'}
                           </span>
                         </div>
@@ -1056,7 +995,6 @@ export default function AdminPage() {
                                       {dayLog.users.map((user: any, index: number) => {
                                         const branch = getBranchFromRollNumber(user.rollNumber);
                                         const branchLabel = getBranchLabel(branch);
-                                        const branchColor = getBranchColor(branch);
 
                                         return (
                                           <tr
@@ -1067,7 +1005,7 @@ export default function AdminPage() {
                                             <td className="px-5 py-3.5 text-sm font-semibold text-primary">{user.name}</td>
                                             <td className="px-5 py-3.5 text-sm font-mono text-secondary">{user.rollNumber}</td>
                                             <td className="px-5 py-3.5">
-                                              <span className={`inline-block px-2.5 py-0.5 text-[10px] font-bold rounded bg-gradient-to-r ${branchColor} text-white shadow-sm`}>
+                                              <span className="inline-block px-2.5 py-0.5 text-[10px] font-bold rounded bg-[rgb(var(--accent)_/_0.1)] text-[rgb(var(--accent-hover))] border border-[rgb(var(--accent)_/_0.2)]">
                                                 {branchLabel}
                                               </span>
                                             </td>
@@ -1145,7 +1083,7 @@ export default function AdminPage() {
                   <span className="text-xs font-semibold text-secondary uppercase tracking-wider block mb-1">
                     Subject context
                   </span>
-                  <span className="px-3 py-1.5 rounded-xl bg-zinc-800 text-indigo-400 font-semibold border border-custom inline-block">
+                  <span className="px-3 py-1.5 rounded-xl bg-zinc-800 text-[rgb(var(--accent-hover))] font-semibold border border-custom inline-block">
                     {selectedIssue.subject}
                   </span>
                 </div>
@@ -1290,7 +1228,7 @@ export default function AdminPage() {
                       className="flex items-center justify-between p-3.5 rounded-2xl bg-card-custom/40 border border-custom hover:bg-card-custom transition-colors"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-xl bg-indigo-500/10 border border-indigo-500/25 flex items-center justify-center text-indigo-400 font-bold text-xs">
+                        <div className="w-8 h-8 rounded-xl bg-[rgb(var(--accent)_/_0.1)] border border-[rgb(var(--accent)_/_0.25)] flex items-center justify-center text-[rgb(var(--accent-hover))] font-bold text-xs">
                           {i + 1}
                         </div>
                         <div>
@@ -1320,7 +1258,7 @@ export default function AdminPage() {
                 <button
                   onClick={fetchActiveUsers}
                   disabled={activeUsersLoading}
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 hover:bg-indigo-500/20 transition-all focus:outline-none disabled:opacity-50 select-none"
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold bg-[rgb(var(--accent)_/_0.1)] border border-[rgb(var(--accent)_/_0.2)] text-[rgb(var(--accent-hover))] hover:bg-[rgb(var(--accent)_/_0.15)] transition-all focus:outline-none disabled:opacity-50 select-none"
                 >
                   <RefreshCw className={`w-3.5 h-3.5 ${activeUsersLoading ? 'animate-spin' : ''}`} />
                   {activeUsersLoading ? 'Refreshing...' : 'Refresh List'}

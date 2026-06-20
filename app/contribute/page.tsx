@@ -8,8 +8,9 @@ import {
   FileText, FileImage, FileType2, X, Loader2
 } from 'lucide-react';
 import { SEM4_SUBJECTS } from '@/lib/subjects';
+import { toast } from '@/components/ui/toaster';
 
-const BRANCHES = ['CSE', 'CSE-AIML', 'CSE-DS', 'IT'];
+
 const TYPES = [
   { value: 'notes', label: 'Notes' },
   { value: 'qbank', label: 'Question Bank' },
@@ -162,6 +163,11 @@ export default function ContributePage() {
           if (!uploadRes.ok) {
             const data = await uploadRes.json();
             setError(data.error || 'Failed to upload file to Google Cloud Storage.');
+            toast({
+              variant: 'error',
+              title: 'Upload failed',
+              description: data.error || 'Failed to upload file.',
+            });
             setFiles((f) =>
               f.map((item, idx) => idx === i ? { ...item, status: 'error', progress: 0 } : item)
             );
@@ -193,9 +199,19 @@ export default function ContributePage() {
 
       setStatus('success');
       setFiles([]);
-    } catch (err) {
+      toast({
+        variant: 'success',
+        title: 'Upload submitted!',
+        description: 'Pending admin approval.',
+      });
+    } catch {
       setStatus('error');
       setError('Upload failed — check your connection or Google Cloud Storage configuration');
+      toast({
+        variant: 'error',
+        title: 'Upload failed',
+        description: 'Check your connection or storage configuration.',
+      });
     } finally {
       setSubmitting(false);
     }
@@ -204,14 +220,14 @@ export default function ContributePage() {
   const inputClass = `
     w-full px-4 py-2.5 rounded-xl bg-card-custom border border-custom
     text-primary placeholder:text-muted-custom text-sm
-    focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20
+    focus:outline-none focus:border-[rgb(var(--accent))] focus:ring-2 focus:ring-[rgb(var(--accent)_/_0.2)]
     transition-all duration-150
   `;
 
   return (
-    <div className="px-8 py-10 max-w-3xl">
+    <div className="px-4 sm:px-6 md:px-8 py-6 sm:py-10 max-w-3xl mx-auto w-full">
       <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
-        <h1 className="text-3xl font-bold text-primary">Contribute Resources</h1>
+        <h1 className="text-page-h1">Contribute Resources</h1>
         <p className="text-secondary mt-1">Upload & share study materials with your batch</p>
       </motion.div>
 
@@ -223,21 +239,17 @@ export default function ContributePage() {
         className="space-y-6"
       >
         {/* Metadata */}
-        <div className="card p-6 space-y-5">
+        <div className="card p-4 sm:p-6 space-y-5">
           <h2 className="font-semibold text-primary">Resource Details</h2>
 
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-3">
             <div>
               <label className="text-xs font-semibold text-secondary uppercase tracking-wider mb-1.5 block">Branch</label>
-              <div className={`${inputClass} bg-card-custom/50 cursor-not-allowed select-none flex items-center`}>
-                {form.branch || 'Loading...'}
-              </div>
+              <p className="text-sm font-semibold text-primary py-1">{form.branch || 'Loading...'}</p>
             </div>
             <div>
               <label className="text-xs font-semibold text-secondary uppercase tracking-wider mb-1.5 block">Semester</label>
-              <div className={`${inputClass} bg-card-custom/50 cursor-not-allowed select-none flex items-center`}>
-                Sem {form.semester || 'Loading...'}
-              </div>
+              <p className="text-sm font-semibold text-primary py-1">Sem {form.semester || '...'}</p>
             </div>
             <div>
               <label className="text-xs font-semibold text-secondary uppercase tracking-wider mb-1.5 block">Type *</label>
@@ -283,16 +295,16 @@ export default function ContributePage() {
 
         {/* Drop zone */}
         {form.type !== 'youtube' && (
-          <div className="card p-6">
+          <div className="card p-4 sm:p-6">
             <h2 className="font-semibold text-primary mb-4">Upload Files</h2>
             <div
               {...getRootProps()}
               className={`
-                border-2 border-dashed rounded-2xl p-10 text-center cursor-pointer
+                border-2 border-dashed rounded-2xl p-6 sm:p-10 text-center cursor-pointer
                 transition-all duration-200
                 ${isDragActive
-                  ? 'border-indigo-500 bg-indigo-500/10'
-                  : 'border-custom hover:border-indigo-500/50 hover:bg-indigo-500/5'
+                  ? 'border-[rgb(var(--accent))] bg-[rgb(var(--accent)_/_0.1)]'
+                  : 'border-custom hover:border-[rgb(var(--accent)_/_0.5)] hover:bg-[rgb(var(--accent)_/_0.05)]'
                 }
               `}
             >
@@ -301,7 +313,7 @@ export default function ContributePage() {
                 animate={isDragActive ? { scale: 1.1 } : { scale: 1 }}
                 className="flex flex-col items-center gap-3"
               >
-                <CloudUpload className={`w-10 h-10 ${isDragActive ? 'text-indigo-400' : 'text-muted-custom'}`} />
+                <CloudUpload className={`w-10 h-10 ${isDragActive ? 'text-[rgb(var(--accent-hover))]' : 'text-muted-custom'}`} />
                 <div>
                   <p className="font-semibold text-primary">
                     {isDragActive ? 'Drop files here' : 'Drag & drop files here'}
@@ -329,14 +341,14 @@ export default function ContributePage() {
                         exit={{ opacity: 0, x: -8 }}
                         className="flex items-center gap-3 p-3 rounded-xl bg-card-custom border border-custom"
                       >
-                        <Icon className="w-4 h-4 text-indigo-400 flex-shrink-0" />
+                        <Icon className="w-4 h-4 text-[rgb(var(--accent-hover))] flex-shrink-0" />
                         <div className="flex-1 min-w-0">
                           <div className="text-sm font-medium text-primary truncate">{f.file.name}</div>
                           <div className="text-xs text-muted-custom">
                             {(f.file.size / 1024 / 1024).toFixed(2)} MB
                           </div>
                         </div>
-                        {f.status === 'uploading' && <Loader2 className="w-4 h-4 animate-spin text-indigo-400" />}
+                        {f.status === 'uploading' && <Loader2 className="w-4 h-4 animate-spin text-[rgb(var(--accent-hover))]" />}
                         {f.status === 'done' && <CheckCircle2 className="w-4 h-4 text-emerald-400" />}
                         {f.status === 'pending' && (
                           <button
@@ -384,7 +396,7 @@ export default function ContributePage() {
           disabled={submitting}
           whileHover={{ scale: 1.01 }}
           whileTap={{ scale: 0.99 }}
-          className="w-full py-3 rounded-xl gradient-accent text-white font-semibold flex items-center justify-center gap-2 glow-accent disabled:opacity-60 cursor-pointer"
+          className="w-full py-3 rounded-xl gradient-accent text-white font-semibold flex items-center justify-center gap-2 glow-accent disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
         >
           {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
           {submitting ? 'Uploading...' : 'Submit Upload'}

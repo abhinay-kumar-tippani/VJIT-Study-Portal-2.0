@@ -7,6 +7,7 @@ import {
   MessageCircle, Eye
 } from 'lucide-react';
 import { COMMUNITY_CONFIG } from '@/lib/community';
+import { toast } from '@/components/ui/toaster';
 
 // ─── Types ─────────────────────────────────────────────────────────
 interface ReplyRef {
@@ -39,6 +40,14 @@ interface CurrentUser {
 }
 
 // ─── Helpers ───────────────────────────────────────────────────────
+function titleCase(name: string): string {
+  return name
+    .split(' ')
+    .filter(Boolean)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .join(' ');
+}
+
 function getInitials(name: string): string {
   return name
     .split(' ')
@@ -47,6 +56,15 @@ function getInitials(name: string): string {
     .map((w) => w[0])
     .join('')
     .toUpperCase();
+}
+
+/** Deterministic hue from authorId so each user always gets the same avatar color. */
+function getAvatarHue(authorId: string): number {
+  let hash = 0;
+  for (let i = 0; i < authorId.length; i++) {
+    hash = authorId.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return Math.abs(hash) % 360;
 }
 
 function formatTime(iso: string): string {
@@ -82,10 +100,12 @@ function Avatar({
   authorId: string;
   onClick: (e: React.MouseEvent) => void;
 }) {
+  const hue = getAvatarHue(authorId);
   return (
     <button
       onClick={onClick}
-      className="w-9 h-9 rounded-full gradient-accent flex items-center justify-center text-white text-xs font-bold flex-shrink-0 cursor-pointer hover:scale-105 transition-transform"
+      className="w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0 cursor-pointer hover:scale-105 transition-transform"
+      style={{ background: `hsl(${hue}, 55%, 45%)` }}
       title="Click to see roll number"
     >
       {getInitials(name)}
@@ -181,13 +201,13 @@ function MessageBubble({
         <div className="flex items-center gap-2 flex-wrap">
           <span
             onClick={handleAvatarClick}
-            className="text-sm font-semibold text-primary cursor-pointer hover:text-indigo-400 transition-colors"
+            className="text-sm font-semibold text-primary cursor-pointer hover:text-[rgb(var(--accent-hover))] transition-colors"
             title="Click to see roll number"
           >
-            {msg.authorName}
+            {titleCase(msg.authorName)}
           </span>
           {msg.authorRole === 'admin' && (
-            <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-md bg-indigo-500/20 text-indigo-400 text-[10px] font-semibold">
+            <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-md bg-[rgb(var(--accent)_/_0.15)] text-[rgb(var(--accent-hover))] text-[10px] font-semibold">
               <ShieldCheck className="w-2.5 h-2.5" /> Admin
             </span>
           )}
@@ -196,30 +216,33 @@ function MessageBubble({
 
         {/* Reply reference */}
         {msg.replyTo && (
-          <div className="mt-1 mb-1 pl-3 border-l-2 border-indigo-500/40 text-xs text-secondary">
-            <span className="font-medium text-indigo-400">{msg.replyTo.authorName}</span>
+          <div className="mt-1 mb-1 pl-3 border-l-2 border-[rgb(var(--accent)_/_0.4)] text-xs text-secondary">
+            <span className="font-medium text-[rgb(var(--accent-hover))]">{msg.replyTo.authorName}</span>
             <span className="text-muted-custom ml-1">— {msg.replyTo.snippet}</span>
           </div>
         )}
 
         {/* Message text */}
-        <p className="text-sm text-secondary mt-0.5 break-words whitespace-pre-wrap">{msg.text}</p>
+        <p className="text-sm text-secondary mt-0.5 break-words whitespace-pre-wrap max-w-[85%]">{msg.text}</p>
 
-        {/* Actions (visible on hover) */}
-        <div className="flex items-center gap-2.5 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        {/* Actions — always visible on touch devices */}
+        <div className="flex items-center gap-1 mt-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100 transition-opacity">
           <button
             onClick={() => onReply(msg)}
-            className="flex items-center gap-1 text-[11px] text-muted-custom hover:text-indigo-400 transition-colors"
+            className="min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 md:w-7 md:h-7 rounded-lg flex items-center justify-center text-muted-custom hover:text-[rgb(var(--accent-hover))] hover:bg-[rgb(var(--accent)_/_0.1)] transition-all"
+            title="Reply"
           >
-            <Reply className="w-3 h-3" /> Reply
+            <Reply className="w-4 h-4" />
           </button>
 
           {currentUser?.isAdmin && msg.views && (
             <button
               onClick={() => onShowViews(msg)}
-              className="flex items-center gap-1 text-[11px] text-muted-custom hover:text-indigo-400 transition-colors"
+              className="min-h-[44px] md:min-h-0 md:h-7 px-2 rounded-lg flex items-center gap-1 text-muted-custom hover:text-[rgb(var(--accent-hover))] hover:bg-[rgb(var(--accent)_/_0.1)] transition-all text-[11px] font-medium"
+              title={`${msg.views.length} ${msg.views.length === 1 ? 'view' : 'views'}`}
             >
-              <Eye className="w-3 h-3" /> {msg.views.length} {msg.views.length === 1 ? 'view' : 'views'}
+              <Eye className="w-4 h-4" />
+              <span>{msg.views.length}</span>
             </button>
           )}
 
@@ -231,16 +254,18 @@ function MessageBubble({
                     onDelete(msg._id);
                     setConfirmDelete(false);
                   }}
-                  className="flex items-center gap-1 text-[11px] text-red-400 hover:text-red-300 transition-colors font-medium"
+                  className="min-h-[44px] md:min-h-0 md:h-7 px-3 rounded-lg flex items-center gap-1 text-red-400 bg-red-500/10 hover:bg-red-500/20 transition-all text-[11px] font-medium"
+                  title="Confirm delete"
                 >
-                  <Trash2 className="w-3 h-3" /> Confirm delete?
+                  <Trash2 className="w-4 h-4" /> Confirm?
                 </button>
               ) : (
                 <button
                   onClick={() => setConfirmDelete(true)}
-                  className="flex items-center gap-1 text-[11px] text-muted-custom hover:text-red-400 transition-colors"
+                  className="min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 md:w-7 md:h-7 rounded-lg flex items-center justify-center text-muted-custom hover:text-red-400 hover:bg-red-500/10 transition-all"
+                  title="Delete message"
                 >
-                  <Trash2 className="w-3 h-3" /> Delete
+                  <Trash2 className="w-4 h-4" />
                 </button>
               )}
             </>
@@ -386,12 +411,23 @@ export default function CommunityPage() {
       if (res.ok) {
         setText('');
         setReplyTo(null);
-        // Refetch to get the new message in the feed
         await fetchMessages();
         setTimeout(() => scrollToBottom('smooth'), 50);
+      } else {
+        const data = await res.json().catch(() => ({}));
+        toast({
+          variant: 'error',
+          title: 'Failed to send message',
+          description: data.error || 'Please try again.',
+        });
       }
     } catch (err) {
       console.error('[Community Send]', err);
+      toast({
+        variant: 'error',
+        title: 'Failed to send message',
+        description: 'Network error — please try again.',
+      });
     } finally {
       setSending(false);
       inputRef.current?.focus();
@@ -428,21 +464,27 @@ export default function CommunityPage() {
     }
   };
 
+  const SUGGESTED_PROMPTS = [
+    'Anyone have DBMS PYQs?',
+    'Tips for Sem 4 exams?',
+    'Where can I find OS notes?',
+  ];
+
   return (
-    <div className="flex flex-col h-[calc(100vh-4rem)] md:h-screen">
+    <div className="flex flex-col h-[calc(100dvh-4rem)] md:h-screen min-h-0">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -12 }}
         animate={{ opacity: 1, y: 0 }}
-        className="px-6 pt-6 pb-4 flex-shrink-0 border-b border-custom"
+        className="px-4 sm:px-6 pt-4 sm:pt-6 pb-3 sm:pb-4 flex-shrink-0 border-b border-custom"
       >
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl gradient-accent flex items-center justify-center glow-accent">
+        <div className="max-w-2xl mx-auto w-full flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl gradient-accent flex items-center justify-center">
             <MessageCircle className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-primary">Community</h1>
-            <p className="text-xs text-secondary">
+            <h1 className="text-page-h1">Community</h1>
+            <p className="text-body">
               Share tips, ask questions, help each other out
             </p>
           </div>
@@ -453,15 +495,16 @@ export default function CommunityPage() {
       <div
         ref={feedRef}
         onScroll={handleScroll}
-        className="flex-1 overflow-y-auto px-2 py-3 space-y-0.5"
+        className="flex-1 overflow-y-auto py-3 space-y-0.5"
       >
+        <div className="max-w-2xl mx-auto w-full px-4">
         {/* Load older button */}
         {hasOlder && (
           <div className="flex justify-center py-2">
             <button
               onClick={loadOlder}
               disabled={loadingOlder}
-              className="flex items-center gap-1.5 px-4 py-1.5 rounded-xl text-xs font-medium text-secondary hover:text-primary glass border border-custom hover:border-indigo-500/30 transition-all disabled:opacity-50"
+              className="flex items-center gap-1.5 px-4 py-1.5 rounded-xl text-xs font-medium text-secondary hover:text-primary glass border border-custom hover:border-[rgb(var(--accent)_/_0.3)] transition-all disabled:opacity-50"
             >
               {loadingOlder ? (
                 <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -499,10 +542,34 @@ export default function CommunityPage() {
               <MessageCircle className="w-8 h-8 text-muted-custom" />
             </div>
             <h3 className="text-lg font-semibold text-primary mb-1">No messages yet</h3>
-            <p className="text-sm text-secondary max-w-xs">
+            <p className="text-body max-w-xs">
               Be the first one to start a conversation. Say hi!
             </p>
           </motion.div>
+        )}
+
+        {/* Welcome prompts when feed is sparse */}
+        {!loading && messages.length > 0 && messages.length < 3 && (
+          <div className="mb-4">
+            <div className="card p-4 border border-custom">
+              <p className="text-body mb-3">Be the first to ask a question about this semester</p>
+              <div className="flex flex-wrap gap-2">
+                {SUGGESTED_PROMPTS.map((prompt) => (
+                  <button
+                    key={prompt}
+                    type="button"
+                    onClick={() => {
+                      setText(prompt);
+                      inputRef.current?.focus();
+                    }}
+                    className="px-3 py-1.5 rounded-lg text-xs font-medium bg-[rgb(var(--accent)_/_0.08)] border border-[rgb(var(--accent)_/_0.2)] text-[rgb(var(--accent-hover))] hover:bg-[rgb(var(--accent)_/_0.15)] transition-colors"
+                  >
+                    {prompt}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
         )}
 
         {/* Messages */}
@@ -520,10 +587,12 @@ export default function CommunityPage() {
         </AnimatePresence>
 
         <div ref={bottomRef} />
+        </div>
       </div>
 
       {/* Input bar — fixed at the bottom */}
-      <div className="flex-shrink-0 px-4 py-3 border-t border-custom bg-card-custom/50 backdrop-blur-md">
+      <div className="flex-shrink-0 px-3 sm:px-4 py-3 border-t border-custom bg-card-custom/50 backdrop-blur-md pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+        <div className="max-w-2xl mx-auto w-full">
         {/* Reply preview */}
         <AnimatePresence>
           {replyTo && (
@@ -531,18 +600,18 @@ export default function CommunityPage() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="flex items-center justify-between mb-2 px-3 py-2 rounded-lg bg-indigo-500/10 border border-indigo-500/20"
+              className="flex items-center justify-between mb-2 px-3 py-2 rounded-lg bg-[rgb(var(--accent)_/_0.1)] border border-[rgb(var(--accent)_/_0.2)]"
             >
               <div className="flex items-center gap-2 min-w-0">
-                <Reply className="w-3.5 h-3.5 text-indigo-400 flex-shrink-0" />
+                <Reply className="w-3.5 h-3.5 text-[rgb(var(--accent-hover))] flex-shrink-0" />
                 <div className="truncate text-xs">
-                  <span className="font-medium text-indigo-400">{replyTo.authorName}</span>
+                  <span className="font-medium text-[rgb(var(--accent-hover))]">{replyTo.authorName}</span>
                   <span className="text-muted-custom ml-1.5">— {replyTo.snippet}</span>
                 </div>
               </div>
               <button
                 onClick={() => setReplyTo(null)}
-                className="p-1 rounded hover:bg-indigo-500/20 text-secondary hover:text-primary transition-colors flex-shrink-0 ml-2"
+                className="p-1 rounded hover:bg-[rgb(var(--accent)_/_0.15)] text-secondary hover:text-primary transition-colors flex-shrink-0 ml-2"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -558,15 +627,15 @@ export default function CommunityPage() {
             onKeyDown={handleKeyDown}
             placeholder="Type a message..."
             rows={1}
-            className="flex-1 resize-none rounded-xl px-4 py-2.5 text-sm bg-card-custom border border-custom focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/20 outline-none text-primary placeholder:text-muted-custom transition-all max-h-32 overflow-y-auto"
-            style={{ minHeight: '42px' }}
+            className="flex-1 resize-none rounded-xl px-4 py-3 text-sm bg-card-custom border border-custom focus:border-[rgb(var(--accent)_/_0.5)] focus:ring-1 focus:ring-[rgb(var(--accent)_/_0.2)] outline-none text-primary placeholder:text-muted-custom transition-all max-h-32 overflow-y-auto"
+            style={{ minHeight: '44px' }}
           />
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={handleSend}
             disabled={!text.trim() || sending}
-            className="flex items-center justify-center w-10 h-10 rounded-xl gradient-accent text-white disabled:opacity-40 disabled:cursor-not-allowed transition-opacity glow-accent"
+            className="flex items-center justify-center min-w-[44px] min-h-[44px] rounded-xl gradient-accent text-white disabled:opacity-40 disabled:cursor-not-allowed transition-opacity flex-shrink-0"
           >
             {sending ? (
               <Loader2 className="w-4 h-4 animate-spin" />
@@ -578,6 +647,7 @@ export default function CommunityPage() {
         <p className="text-[10px] text-muted-custom mt-1.5 px-1">
           Press Enter to send · Shift+Enter for a new line
         </p>
+        </div>
       </div>
 
       {/* Views Modal */}

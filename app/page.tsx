@@ -5,55 +5,42 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Code2, Brain, BarChart3, Monitor, ArrowRight, Sparkles } from 'lucide-react';
 
+function pluralStudents(count: number): string {
+  return `${count} student${count !== 1 ? 's' : ''}`;
+}
+
 const BRANCHES = [
   {
     id: 'CSE',
     label: 'Computer Science',
     short: 'CSE',
     icon: Code2,
-    color: 'from-indigo-500 to-violet-600',
-    glow: 'rgba(99,102,241,0.25)',
     desc: 'Core CS — DS, Algorithms, OS, Networks, DBMS',
-    students: '240+',
   },
   {
     id: 'CSE-AIML',
     label: 'Artificial Intelligence & Machine Learning',
     short: 'CSE-AIML',
     icon: Brain,
-    color: 'from-emerald-500 to-teal-600',
-    glow: 'rgba(16,185,129,0.25)',
     desc: 'ML, Deep Learning, NLP, Computer Vision',
-    students: '180+',
   },
   {
     id: 'CSE-DS',
     label: 'Data Science',
     short: 'CSE-DS',
     icon: BarChart3,
-    color: 'from-orange-500 to-amber-600',
-    glow: 'rgba(249,115,22,0.25)',
     desc: 'Statistics, Big Data, Analytics, Visualization',
-    students: '120+',
   },
   {
     id: 'IT',
     label: 'Information Technology',
     short: 'IT',
     icon: Monitor,
-    color: 'from-sky-500 to-blue-600',
-    glow: 'rgba(14,165,233,0.25)',
     desc: 'Web Tech, Networking, Cloud, Security',
-    students: '180+',
   },
 ];
 
-const BRANCH_HIGHLIGHTS: Record<string, string> = {
-  'CSE': 'bg-indigo-500/15 border-indigo-500/30 text-indigo-300',
-  'CSE-AIML': 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300',
-  'CSE-DS': 'bg-orange-500/15 border-orange-500/30 text-orange-300',
-  'IT': 'bg-sky-500/15 border-sky-500/30 text-sky-300',
-};
+const BRANCH_HIGHLIGHT = 'bg-[rgb(var(--accent)_/_0.1)] border-[rgb(var(--accent)_/_0.25)] text-[rgb(var(--accent-hover))]';
 
 const container = {
   hidden: {},
@@ -90,61 +77,56 @@ export default function HomePage() {
     };
 
     fetchStats();
-    // Poll every 10 seconds for real time updates
     const interval = setInterval(fetchStats, 10000);
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <div className="flex-1 px-8 py-12 bg-grid-pattern flex flex-col justify-center">
+    <div className="flex-1 px-4 sm:px-6 md:px-8 py-4 sm:py-6 bg-grid-pattern flex flex-col justify-center">
       {/* Hero */}
       <motion.div
         initial={{ opacity: 0, y: -16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="mb-16 text-center max-w-2xl mx-auto"
+        className="mb-6 sm:mb-8 text-center max-w-2xl mx-auto px-1"
       >
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass border border-custom text-xs font-medium text-secondary mb-6">
-          <Sparkles className="w-3 h-3 text-indigo-400" />
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass border border-custom text-eyebrow mb-4">
+          <Sparkles className="w-3 h-3 text-[rgb(var(--accent-hover))]" />
           Academic Resource Hub
         </div>
-        <h1 className="text-5xl font-bold text-primary mb-4 leading-tight">
-          VJIT Study Portal 2.0 —{' '}
-          <span className="gradient-text">all the resources at one place</span>
+        <p className="text-eyebrow text-[rgb(var(--accent-hover))] mb-1">VJIT Study Portal 2.0</p>
+        <h1 className="text-hero mb-2">
+          <span className="gradient-text">All your resources in one place</span>
         </h1>
-        <p className="text-secondary text-lg">
+        <p className="text-secondary text-base sm:text-lg px-2">
           Notes, PYQs, Question Banks, and AI-powered study assistance.
         </p>
 
-        {/* Real-time User Joined Counter */}
         {userCount !== null && (
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="inline-flex items-center gap-2 mt-4 px-4 py-1.5 rounded-full glass border border-indigo-500/20 bg-indigo-500/5 text-indigo-400 text-xs font-semibold shadow-inner"
+            className="inline-flex items-center gap-2 mt-4 px-4 py-1.5 rounded-full glass border border-custom text-[rgb(var(--accent-hover))] text-xs font-semibold"
           >
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-            </span>
-            <span>{userCount} students joined the portal</span>
+            <span className="h-2 w-2 rounded-full bg-[rgb(var(--accent-emerald))]" />
+            <span>{pluralStudents(userCount)} joined the portal</span>
           </motion.div>
         )}
-        <div className="mt-6 flex gap-3 justify-center">
-          <Link href="/login">
+        <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center items-stretch sm:items-center px-2">
+          <Link href="/login" className="w-full sm:w-auto">
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="px-6 py-2.5 rounded-xl gradient-accent text-white font-semibold text-sm glow-accent"
+              className="w-full sm:w-auto px-6 py-3 min-h-[44px] rounded-xl gradient-accent text-white font-semibold text-sm glow-accent disabled:opacity-60"
             >
               Sign In
             </motion.button>
           </Link>
-          <Link href="/signup">
+          <Link href="/signup" className="w-full sm:w-auto">
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="px-6 py-2.5 rounded-xl glass border border-custom text-primary font-semibold text-sm"
+              className="w-full sm:w-auto px-6 py-3 min-h-[44px] rounded-xl bg-white/5 border border-white/[0.12] text-primary font-semibold text-sm hover:bg-white/10 hover:border-white/20 transition-all"
             >
               Create Account
             </motion.button>
@@ -157,51 +139,34 @@ export default function HomePage() {
         variants={container}
         initial="hidden"
         animate="show"
-        className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto items-stretch"
+        className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 max-w-4xl mx-auto items-stretch w-full"
       >
         {BRANCHES.map((branch) => (
           <motion.div key={branch.id} variants={item} className="h-full">
             <Link href={`/branch/${branch.id}`} className="h-full block">
               <motion.div
-                whileHover={{ y: -4, scale: 1.01 }}
+                whileHover={{ y: -2 }}
                 whileTap={{ scale: 0.99 }}
-                className="card-hover p-7 cursor-pointer group h-full flex flex-col"
-                style={{ '--glow-color': branch.glow } as React.CSSProperties}
+                className="card-hover p-4 sm:p-5 cursor-pointer group h-full flex flex-col"
               >
-                <div className="flex items-start justify-between mb-5 flex-shrink-0">
-                  <div
-                    className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${branch.color} flex items-center justify-center shadow-lg`}
-                  >
+                <div className="flex items-start justify-between mb-3 flex-shrink-0">
+                  <div className="w-12 h-12 rounded-2xl gradient-accent flex items-center justify-center shadow-lg">
                     <branch.icon className="w-6 h-6 text-white" />
                   </div>
-                  <ArrowRight className="w-4 h-4 text-muted-custom group-hover:text-indigo-400 transition-all duration-200 group-hover:translate-x-1" />
+                  <ArrowRight className="w-4 h-4 text-muted-custom group-hover:text-[rgb(var(--accent-hover))] transition-all duration-150 group-hover:translate-x-1" />
                 </div>
 
                 <div className="flex-grow">
                   <div className="flex items-center gap-2 mb-1">
-                    <span
-                      className={`font-mono text-xs font-bold bg-gradient-to-r ${branch.color} bg-clip-text text-transparent`}
-                    >
+                    <span className="font-mono text-xs font-bold text-[rgb(var(--accent-hover))]">
                       {branch.short}
                     </span>
-                    <span className={`px-2 py-0.5 rounded-full border text-[10px] font-bold shadow-sm flex items-center gap-1.5 ${BRANCH_HIGHLIGHTS[branch.id] || 'bg-indigo-500/15 border-indigo-500/30 text-indigo-300'}`}>
-                      <span className="relative flex h-1.5 w-1.5">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-current opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-current"></span>
-                      </span>
-                      {branchCounts[branch.id] ?? 0} students
+                    <span className={`px-2 py-0.5 rounded-full border text-[10px] font-bold shadow-sm flex items-center gap-1.5 ${BRANCH_HIGHLIGHT}`}>
+                      <span className="h-1.5 w-1.5 rounded-full bg-current" />
+                      {pluralStudents(branchCounts[branch.id] ?? 0)}
                     </span>
                   </div>
-                  <h2 className="text-xl font-bold text-primary mb-2">{branch.label}</h2>
-                </div>
-
-                <div className="mt-auto pt-4 border-t border-custom flex items-center gap-4 text-xs text-muted-custom flex-shrink-0">
-                  {['Notes', 'PYQs', 'Q-Banks', 'Syllabus'].map((tag) => (
-                    <span key={tag} className="flex items-center gap-1">
-                      <span className="w-1 h-1 rounded-full bg-indigo-400" />
-                      {tag}
-                    </span>
-                  ))}
+                  <h2 className="text-section mb-2">{branch.label}</h2>
                 </div>
               </motion.div>
             </Link>
