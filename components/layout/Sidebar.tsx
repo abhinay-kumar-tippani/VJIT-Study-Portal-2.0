@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -13,6 +13,7 @@ import {
 import { ThemeToggle } from './ThemeToggle';
 import { NotificationBell } from './NotificationBell';
 import { CommandPaletteTrigger } from '@/components/ui/CommandPalette';
+import { useFocusTrap } from '@/lib/hooks/useFocusTrap';
 
 
 interface Session {
@@ -51,6 +52,9 @@ export function Sidebar() {
   const [submitting, setSubmitting] = useState(false);
   const [reportError, setReportError] = useState('');
   const [reportSuccess, setReportSuccess] = useState(false);
+  const reportModalRef = useRef<HTMLDivElement>(null);
+
+  useFocusTrap(reportModalRef, isReportModalOpen);
 
   useEffect(() => {
     fetch('/api/auth/me')
@@ -105,6 +109,19 @@ export function Sidebar() {
       setFormSubject('');
     }
   }, [pathname, isReportModalOpen]);
+
+  // Keyboard close support
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsReportModalOpen(false);
+      }
+    };
+    if (isReportModalOpen) {
+      window.addEventListener('keydown', handleEsc);
+    }
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [isReportModalOpen]);
 
   const handleLogout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' });
@@ -282,8 +299,7 @@ export function Sidebar() {
 
       {/* Bottom */}
       <div className="px-3 pb-4 space-y-2 border-t border-custom pt-3">
-        {/* Theme toggle hidden until light mode is fully designed */}
-        <div className="hidden">
+        <div>
           <ThemeToggle />
         </div>
 
@@ -324,6 +340,7 @@ export function Sidebar() {
       {isReportModalOpen && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <motion.div
+            ref={reportModalRef}
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
@@ -334,6 +351,7 @@ export function Sidebar() {
               onClick={() => setIsReportModalOpen(false)}
               className="absolute right-4 top-4 p-1.5 rounded-lg text-secondary hover:text-primary hover:bg-card-custom border border-transparent hover:border-custom transition-all focus:outline-none"
               title="Close"
+              aria-label="Close report issue dialog"
             >
               <X className="w-4 h-4" />
             </button>
@@ -423,6 +441,7 @@ export function Sidebar() {
                       }}
                       className="p-1 rounded text-muted-custom hover:text-red-400 transition-colors focus:outline-none"
                       title="Remove image"
+                      aria-label="Remove uploaded screenshot"
                     >
                       <X className="w-4 h-4" />
                     </button>

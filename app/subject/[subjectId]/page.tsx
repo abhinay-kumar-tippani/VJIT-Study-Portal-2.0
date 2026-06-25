@@ -369,23 +369,31 @@ function SubjectPageContent() {
       </motion.div>
 
       {/* ── Tab bar ── */}
-      <div className="flex items-center gap-1 border-b border-custom mb-6 sm:mb-8 overflow-x-auto w-full max-w-full">
-        {TABS.map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={`
-              flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2.5 min-h-[44px] text-xs sm:text-sm font-medium whitespace-nowrap flex-shrink-0
-              border-b-2 -mb-px transition-all duration-150
-              ${activeTab === tab.id
-                ? 'text-[rgb(var(--accent-hover))] border-[rgb(var(--accent))]'
-                : 'text-muted-custom border-transparent hover:text-primary'}
-            `}
-          >
-            <tab.icon className="w-4 h-4" />
-            {tab.label}
-          </button>
-        ))}
+      <div className="flex items-center gap-1 border-b border-custom mb-6 sm:mb-8 overflow-x-auto w-full max-w-full relative">
+        {TABS.map((tab) => {
+          const isActive = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`
+                relative flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2.5 min-h-[44px] text-xs sm:text-sm font-medium whitespace-nowrap flex-shrink-0
+                -mb-px transition-all duration-150 outline-none
+                ${isActive ? 'text-[rgb(var(--accent-hover))] font-semibold' : 'text-muted-custom hover:text-primary'}
+              `}
+            >
+              <tab.icon className="w-4 h-4 z-10" />
+              <span className="z-10">{tab.label}</span>
+              {isActive && (
+                <motion.div
+                  layoutId="activeTab"
+                  className="absolute bottom-0 left-0 right-0 h-[2px] bg-[rgb(var(--accent))]"
+                  transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                />
+              )}
+            </button>
+          );
+        })}
       </div>
 
       {/* ── Content ── */}
@@ -469,13 +477,24 @@ function SubjectPageContent() {
 
               {/* Empty placeholder */}
               {!ytLink && (!subjectConfig?.youtube || subjectConfig.youtube.length === 0) && (!error && contributedResources.length === 0) ? (
-                <div className="card p-12 text-center">
-                  <Youtube className="w-10 h-10 text-muted-custom mx-auto mb-3" />
-                  <p className="text-secondary font-medium">No playlist added yet</p>
-                  <p className="text-xs text-muted-custom mt-1">
-                    Add a <code className="bg-card-custom px-1 rounded">YouTube/playlist.txt</code> file in Drive for this subject.
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3 }}
+                  className="p-12 text-center rounded-3xl border border-custom glass-strong bg-card-custom/20 max-w-lg mx-auto relative overflow-hidden"
+                >
+                  <div className="w-16 h-16 rounded-2xl bg-red-500/10 border border-red-500/25 flex items-center justify-center mx-auto mb-5 shadow-lg shadow-red-500/5 animate-float">
+                    <Youtube className="w-8 h-8 text-red-500" />
+                  </div>
+                  <h3 className="text-base font-bold text-primary mb-1">No Curated Playlists Found</h3>
+                  <p className="text-xs text-secondary leading-relaxed max-w-xs mx-auto mb-4">
+                    There are no reference playlists synced from Drive for this subject. Try adding a Youtube link to contribute!
                   </p>
-                </div>
+                  <Link href="/contribute" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/15 transition-all">
+                    <Play className="w-3.5 h-3.5 fill-current" />
+                    <span>Contribute Video Link</span>
+                  </Link>
+                </motion.div>
               ) : null}
 
               {/* Student Contributed YouTube Videos */}
@@ -541,19 +560,26 @@ function SubjectPageContent() {
           {/* ── File list (all other tabs) ── */}
           {!loading && activeTab !== 'YouTube' && (
             (files.length === 0 && contributedResources.length === 0) ? (
-              <div className="py-16 text-center">
-                <FileText className="w-10 h-10 text-muted-custom mx-auto mb-3" />
-                <p className="text-secondary font-medium">No {activeTab} uploaded yet</p>
-                <p className="text-body mt-1">
-                  Add files to the <code className="bg-card-custom px-1 rounded">{activeTab}/</code> folder in Drive or contribute one!
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3 }}
+                className="py-16 px-6 text-center rounded-3xl border border-custom glass-strong bg-card-custom/20 max-w-lg mx-auto"
+              >
+                <div className="w-16 h-16 rounded-2xl bg-[rgb(var(--accent)_/_0.1)] border border-[rgb(var(--accent)_/_0.2)] flex items-center justify-center mx-auto mb-5 shadow-lg shadow-indigo-500/5 animate-float">
+                  <FileText className="w-8 h-8 text-[rgb(var(--accent-hover))]" />
+                </div>
+                <h3 className="text-base font-bold text-primary mb-1">No {activeTab} Found</h3>
+                <p className="text-xs text-secondary leading-relaxed max-w-xs mx-auto mb-5">
+                  Reference resources for this topic haven&apos;t been synced yet. Be the first to upload one for your class!
                 </p>
                 <Link
                   href="/contribute"
-                  className="inline-flex items-center gap-1 text-xs text-[rgb(var(--accent-hover))] font-semibold mt-4 hover:underline"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-[rgb(var(--accent)_/_0.08)] border border-[rgb(var(--accent)_/_0.15)] text-[rgb(var(--accent-hover))] hover:bg-[rgb(var(--accent-hover))] hover:text-white hover:border-transparent transition-all"
                 >
-                  Contribute a resource →
+                  Contribute {activeTab} →
                 </Link>
-              </div>
+              </motion.div>
             ) : (
               <div className="space-y-3">
                 {/* 1. Drive Files List */}
@@ -563,45 +589,78 @@ function SubjectPageContent() {
                   const isImage = file.mimeType.includes('image');
                   const isDocx  = file.mimeType.includes('word') || file.mimeType.includes('document');
                   const fileLabel = isPDF ? 'PDF' : isImage ? 'Image' : isDocx ? 'DOCX' : 'File';
+                  
+                  // Color themes for icons
+                  let badgeColors = "bg-[rgb(var(--accent)_/_0.1)] border-[rgb(var(--accent)_/_0.2)] text-[rgb(var(--accent-hover))]";
+                  if (isPDF) badgeColors = "bg-red-500/10 border-red-500/20 text-red-500";
+                  if (isImage) badgeColors = "bg-emerald-500/10 border-emerald-500/20 text-emerald-500";
+                  if (isDocx) badgeColors = "bg-blue-500/10 border-blue-500/20 text-blue-500";
+
                   return (
                     <motion.div
                       key={file.id}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.04 }}
-                      className="card-hover p-4 flex flex-col sm:flex-row sm:items-center gap-4 group"
+                      className="card-hover p-4 flex items-center justify-between gap-4 group w-full overflow-hidden"
                     >
-                      <div className="flex items-center gap-3 w-full sm:w-auto flex-1">
-                        <div className="w-10 h-10 rounded-xl bg-[rgb(var(--accent)_/_0.1)] border border-[rgb(var(--accent)_/_0.2)] flex items-center justify-center flex-shrink-0">
-                          <Icon className="w-4 h-4 text-[rgb(var(--accent-hover))]" />
+                      <div className="flex items-center gap-3.5 min-w-0 flex-1">
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${badgeColors}`}>
+                          <Icon className="w-5 h-5" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <div className="font-medium text-sm text-primary truncate">{file.name}</div>
-                          <div className="text-xs text-muted-custom mt-0.5 flex items-center gap-2 flex-wrap">
-                            <span className="uppercase font-mono font-semibold text-[rgb(var(--accent-hover))]">{fileLabel}</span>
-                            {file.size && <span>{formatSize(file.size)}</span>}
+                          <div className="font-semibold text-sm text-primary truncate" title={file.name}>
+                            {file.name}
+                          </div>
+                          <div className="text-xs text-muted-custom mt-1 flex items-center gap-2 flex-wrap font-medium">
+                            <span className="uppercase font-mono font-bold text-[10px] tracking-wider">{fileLabel}</span>
+                            {file.size && (
+                              <>
+                                <span className="text-[8px] opacity-40">•</span>
+                                <span>{formatSize(file.size)}</span>
+                              </>
+                            )}
                             {file.modifiedTime && (
-                              <span>{new Date(file.modifiedTime).toLocaleDateString('en-IN')}</span>
+                              <>
+                                <span className="text-[8px] opacity-40">•</span>
+                                <span>{new Date(file.modifiedTime).toLocaleDateString('en-IN')}</span>
+                              </>
                             )}
                           </div>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2 flex-shrink-0 sm:w-auto w-full">
-                        {/* Preview — opens in a new browser tab */}
+
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        {/* Secondary: Download (revealed on desktop hover, always shown on mobile) */}
+                        <a
+                          href={downloadUrl(file.id)}
+                          download={file.name}
+                          className="
+                            w-9 h-9 rounded-xl border border-custom bg-card-custom text-secondary hover:text-primary hover:bg-card-custom/80
+                            flex items-center justify-center transition-all duration-200 flex-shrink-0 shadow-sm
+                            md:opacity-0 md:scale-90 md:w-0 md:group-hover:opacity-100 md:group-hover:scale-100 md:group-hover:w-9
+                          "
+                          title="Download file"
+                          aria-label={`Download ${file.name}`}
+                        >
+                          <Download className="w-4 h-4" />
+                        </a>
+                        
+                        {/* Primary Action: View (always visible) */}
                         <a
                           href={previewUrl(file.id)}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex-1 sm:flex-none px-3 py-2.5 min-h-[44px] sm:min-h-0 sm:py-1.5 rounded-lg text-xs font-medium gradient-accent text-white flex items-center justify-center gap-1.5"
+                          className="
+                            px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 flex-shrink-0
+                            bg-[rgb(var(--accent)_/_0.08)] border border-[rgb(var(--accent)_/_0.15)] text-[rgb(var(--accent-hover))]
+                            hover:bg-[rgb(var(--accent-hover))] hover:text-white hover:border-transparent hover:shadow-md hover:shadow-indigo-500/10
+                          "
+                          title="View file"
+                          aria-label={`View ${file.name}`}
                         >
-                          <Eye className="w-3.5 h-3.5" /> View 
-                        </a>
-                        <a
-                          href={downloadUrl(file.id)}
-                          download={file.name}
-                          className="flex-1 sm:flex-none px-3 py-2.5 min-h-[44px] sm:min-h-0 sm:py-1.5 rounded-lg text-xs font-medium gradient-accent text-white flex items-center justify-center gap-1.5"
-                        >
-                          <Download className="w-3.5 h-3.5" /> Download
+                          <Eye className="w-3.5 h-3.5" />
+                          <span>View</span>
                         </a>
                       </div>
                     </motion.div>
@@ -613,6 +672,16 @@ function SubjectPageContent() {
                   const Icon = getFileIconForContributed(res.fileType);
                   const isPending = res.status === 'pending';
                   const isRejected = res.status === 'rejected';
+                  const isPDF = res.fileType === 'pdf';
+                  const isImage = res.fileType === 'image';
+                  const isDocx = res.fileType === 'docx';
+                  const isYT = res.fileType === 'youtube';
+
+                  let badgeColors = "bg-[rgb(var(--accent)_/_0.1)] border-[rgb(var(--accent)_/_0.2)] text-[rgb(var(--accent-hover))]";
+                  if (isPDF) badgeColors = "bg-red-500/10 border-red-500/20 text-red-500";
+                  if (isImage) badgeColors = "bg-emerald-500/10 border-emerald-500/20 text-emerald-500";
+                  if (isDocx) badgeColors = "bg-blue-500/10 border-blue-500/20 text-blue-500";
+                  if (isYT) badgeColors = "bg-rose-500/10 border-rose-500/20 text-rose-500";
 
                   return (
                     <motion.div
@@ -620,52 +689,59 @@ function SubjectPageContent() {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: (files.length + i) * 0.04 }}
-                      className="card-hover p-4 flex flex-col sm:flex-row sm:items-center gap-4 group"
+                      className="card-hover p-4 flex items-center justify-between gap-4 group w-full overflow-hidden"
                     >
-                      <div className="flex items-center gap-3 w-full sm:w-auto flex-1">
-                        <div className="w-10 h-10 rounded-xl bg-[rgb(var(--accent)_/_0.1)] border border-[rgb(var(--accent)_/_0.2)] flex items-center justify-center flex-shrink-0">
-                          <Icon className="w-4 h-4 text-[rgb(var(--accent-hover))]" />
+                      <div className="flex items-center gap-3.5 min-w-0 flex-1">
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${badgeColors}`}>
+                          <Icon className="w-5 h-5" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <div className="font-medium text-sm text-primary truncate flex items-center gap-2 flex-wrap">
-                            <span>{res.title}</span>
+                          <div className="font-semibold text-sm text-primary truncate flex items-center gap-2" title={res.title}>
+                            <span className="truncate">{res.title}</span>
                             {isPending && (
-                              <span className="px-2 py-0.5 rounded bg-[rgb(var(--accent)_/_0.1)] text-[rgb(var(--accent-hover))] text-[10px] font-bold">
-                                Waiting for Approval
+                              <span className="px-2 py-0.5 rounded bg-[rgb(var(--accent)_/_0.1)] text-[rgb(var(--accent-hover))] text-[9px] font-bold uppercase tracking-wider flex-shrink-0">
+                                Pending
                               </span>
                             )}
                             {isRejected && (
-                              <span className="px-2 py-0.5 rounded bg-red-500/10 text-red-400 text-[10px] font-bold">
+                              <span className="px-2 py-0.5 rounded bg-red-500/10 text-red-400 text-[9px] font-bold uppercase tracking-wider flex-shrink-0">
                                 Rejected
-                              </span>
-                            )}
-                            {!isPending && !isRejected && (
-                              <span className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 text-[10px] font-bold">
-                                Community
                               </span>
                             )}
                           </div>
                           {isRejected && res.rejectionReason && (
-                            <p className="text-xs text-red-400 mt-1 font-medium">Rejection Reason: {res.rejectionReason}</p>
+                            <p className="text-xs text-red-400 mt-1 font-semibold">Reason: {res.rejectionReason}</p>
                           )}
-                          <div className="text-xs text-muted-custom mt-0.5 flex items-center gap-2 flex-wrap">
-                            <span className="uppercase font-mono font-semibold text-[rgb(var(--accent-hover))]">{res.fileType}</span>
-                            <span>Contributed by {res.uploadedBy}</span>
+                          <div className="text-xs text-muted-custom mt-1 flex items-center gap-2 flex-wrap font-medium">
+                            <span className="uppercase font-mono font-bold text-[10px] tracking-wider">{res.fileType}</span>
+                            <span className="text-[8px] opacity-40">•</span>
+                            <span>By {res.uploadedBy}</span>
                             {res.createdAt && (
-                              <span>{new Date(res.createdAt).toLocaleDateString('en-IN')}</span>
+                              <>
+                                <span className="text-[8px] opacity-40">•</span>
+                                <span>{new Date(res.createdAt).toLocaleDateString('en-IN')}</span>
+                              </>
                             )}
                           </div>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2 flex-shrink-0 sm:w-auto w-full">
-                        {/* Preview/Download Button */}
+
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        {/* Primary Action: Open / Download */}
                         <a
                           href={res.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex-1 sm:flex-none px-4 py-2.5 min-h-[44px] sm:min-h-0 sm:py-1.5 rounded-lg text-xs font-medium gradient-accent text-white flex items-center justify-center gap-1.5"
+                          className="
+                            px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 flex-shrink-0
+                            bg-[rgb(var(--accent)_/_0.08)] border border-[rgb(var(--accent)_/_0.15)] text-[rgb(var(--accent-hover))]
+                            hover:bg-[rgb(var(--accent-hover))] hover:text-white hover:border-transparent hover:shadow-md hover:shadow-indigo-500/10
+                          "
+                          title="Open Resource"
+                          aria-label={`Open ${res.title}`}
                         >
-                          <ExternalLink className="w-3.5 h-3.5" /> Preview / Download
+                          <ExternalLink className="w-3.5 h-3.5" />
+                          <span>Open</span>
                         </a>
                       </div>
                     </motion.div>

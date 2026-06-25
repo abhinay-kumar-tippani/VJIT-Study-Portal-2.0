@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { COMMUNITY_CONFIG } from '@/lib/community';
 import { toast } from '@/components/ui/toaster';
+import { useFocusTrap } from '@/lib/hooks/useFocusTrap';
 
 // ─── Types ─────────────────────────────────────────────────────────
 interface ReplyRef {
@@ -31,6 +32,7 @@ interface Message {
   replyTo?: ReplyRef;
   views?: ViewInfo[];
   createdAt: string;
+  status?: 'sending' | 'sent' | 'error';
 }
 
 interface CurrentUser {
@@ -107,6 +109,7 @@ function Avatar({
       className="w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0 cursor-pointer hover:scale-105 transition-transform"
       style={{ background: `hsl(${hue}, 55%, 45%)` }}
       title="Click to see roll number"
+      aria-label={`View roll number for ${name}`}
     >
       {getInitials(name)}
     </button>
@@ -161,12 +164,14 @@ function MessageBubble({
   onReply,
   onDelete,
   onShowViews,
+  onRetry,
 }: {
   msg: Message;
   currentUser: CurrentUser | null;
   onReply: (msg: Message) => void;
   onDelete: (id: string) => void;
   onShowViews: (msg: Message) => void;
+  onRetry: (msg: Message) => void;
 }) {
   const [popover, setPopover] = useState<DOMRect | null>(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -176,13 +181,17 @@ function MessageBubble({
     setPopover(popover ? null : rect);
   };
 
+  const isLocalOnly = msg.status === 'sending' || msg.status === 'error';
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -8 }}
       transition={{ duration: 0.2 }}
-      className="group flex gap-3 px-4 py-2.5 hover:bg-card-custom/30 transition-colors rounded-xl"
+      className={`group flex gap-3 px-4 py-2.5 hover:bg-card-custom/30 transition-colors rounded-xl ${
+        msg.status === 'sending' ? 'opacity-65 select-none' : ''
+      }`}
     >
       <Avatar name={msg.authorName} authorId={msg.authorId} onClick={handleAvatarClick} />
 
@@ -211,7 +220,12 @@ function MessageBubble({
               <ShieldCheck className="w-2.5 h-2.5" /> Admin
             </span>
           )}
-          <span className="text-[11px] text-muted-custom">{formatTime(msg.createdAt)}</span>
+          <span className="text-[11px] text-muted-custom">
+            {msg.status === 'sending' ? 'Sending...' : formatTime(msg.createdAt)}
+          </span>
+          {msg.status === 'sending' && (
+            <Loader2 className="w-3 h-3 text-[rgb(var(--accent))] animate-spin" />
+          )}
         </div>
 
         {/* Reply reference */}
@@ -223,54 +237,74 @@ function MessageBubble({
         )}
 
         {/* Message text */}
-        <p className="text-sm text-secondary mt-0.5 break-words whitespace-pre-wrap max-w-[85%]">{msg.text}</p>
-
-        {/* Actions — always visible on touch devices */}
-        <div className="flex items-center gap-1 mt-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100 transition-opacity">
-          <button
-            onClick={() => onReply(msg)}
-            className="min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 md:w-7 md:h-7 rounded-lg flex items-center justify-center text-muted-custom hover:text-[rgb(var(--accent-hover))] hover:bg-[rgb(var(--accent)_/_0.1)] transition-all"
-            title="Reply"
-          >
-            <Reply className="w-4 h-4" />
-          </button>
-
-          {currentUser?.isAdmin && msg.views && (
-            <button
-              onClick={() => onShowViews(msg)}
-              className="min-h-[44px] md:min-h-0 md:h-7 px-2 rounded-lg flex items-center gap-1 text-muted-custom hover:text-[rgb(var(--accent-hover))] hover:bg-[rgb(var(--accent)_/_0.1)] transition-all text-[11px] font-medium"
-              title={`${msg.views.length} ${msg.views.length === 1 ? 'view' : 'views'}`}
-            >
-              <Eye className="w-4 h-4" />
-              <span>{msg.views.length}</span>
-            </button>
-          )}
-
-          {currentUser?.isAdmin && (
-            <>
-              {confirmDelete ? (
-                <button
-                  onClick={() => {
-                    onDelete(msg._id);
-                    setConfirmDelete(false);
-                  }}
-                  className="min-h-[44px] md:min-h-0 md:h-7 px-3 rounded-lg flex items-center gap-1 text-red-400 bg-red-500/10 hover:bg-red-500/20 transition-all text-[11px] font-medium"
-                  title="Confirm delete"
-                >
-                  <Trash2 className="w-4 h-4" /> Confirm?
-                </button>
-              ) : (
-                <button
-                  onClick={() => setConfirmDelete(true)}
-                  className="min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 md:w-7 md:h-7 rounded-lg flex items-center justify-center text-muted-custom hover:text-red-400 hover:bg-red-500/10 transition-all"
-                  title="Delete message"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              )}
-            </>
+        <div className="flex flex-col items-start gap-1">
+          <p className="text-sm text-secondary mt-0.5 break-words whitespace-pre-wrap max-w-[85%]">{msg.text}</p>
+          
+          {msg.status === 'error' && (
+            <div className="flex items-center gap-2 mt-1">
+              <span className="text-xs text-red-500 font-semibold">Failed to send</span>
+              <button
+                onClick={() => onRetry(msg)}
+                className="text-xs text-[rgb(var(--accent))] hover:underline font-bold cursor-pointer"
+              >
+                Retry
+              </button>
+            </div>
           )}
         </div>
+
+        {/* Actions — hidden/disabled for sending/failed messages */}
+        {!isLocalOnly && (
+          <div className="flex items-center gap-1 mt-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100 transition-opacity">
+            <button
+              onClick={() => onReply(msg)}
+              className="min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 md:w-7 md:h-7 rounded-lg flex items-center justify-center text-muted-custom hover:text-[rgb(var(--accent-hover))] hover:bg-[rgb(var(--accent)_/_0.1)] transition-all"
+              title="Reply"
+              aria-label={`Reply to message from ${msg.authorName}`}
+            >
+              <Reply className="w-4 h-4" />
+            </button>
+
+            {currentUser?.isAdmin && msg.views && (
+              <button
+                onClick={() => onShowViews(msg)}
+                className="min-h-[44px] md:min-h-0 md:h-7 px-2 rounded-lg flex items-center gap-1 text-muted-custom hover:text-[rgb(var(--accent-hover))] hover:bg-[rgb(var(--accent)_/_0.1)] transition-all text-[11px] font-medium"
+                title={`${msg.views.length} ${msg.views.length === 1 ? 'view' : 'views'}`}
+                aria-label={`View viewers of message from ${msg.authorName}`}
+              >
+                <Eye className="w-4 h-4" />
+                <span>{msg.views.length}</span>
+              </button>
+            )}
+
+            {currentUser?.isAdmin && (
+              <>
+                {confirmDelete ? (
+                  <button
+                    onClick={() => {
+                      onDelete(msg._id);
+                      setConfirmDelete(false);
+                    }}
+                    className="min-h-[44px] md:min-h-0 md:h-7 px-3 rounded-lg flex items-center gap-1 text-red-400 bg-red-500/10 hover:bg-red-500/20 transition-all text-[11px] font-medium"
+                    title="Confirm delete"
+                    aria-label="Confirm deletion of message"
+                  >
+                    <Trash2 className="w-4 h-4" /> Confirm?
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => setConfirmDelete(true)}
+                    className="min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 md:w-7 md:h-7 rounded-lg flex items-center justify-center text-muted-custom hover:text-red-400 hover:bg-red-500/10 transition-all"
+                    title="Delete message"
+                    aria-label={`Delete message from ${msg.authorName}`}
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                )}
+              </>
+            )}
+          </div>
+        )}
       </div>
     </motion.div>
   );
@@ -291,7 +325,23 @@ export default function CommunityPage() {
   const feedRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const viewersModalRef = useRef<HTMLDivElement>(null);
   const isNearBottom = useRef(true);
+
+  useFocusTrap(viewersModalRef, !!viewingMessageDetails);
+
+  // Escape key close support for message details modal
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setViewingMessageDetails(null);
+      }
+    };
+    if (viewingMessageDetails) {
+      window.addEventListener('keydown', handleEsc);
+    }
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [viewingMessageDetails]);
 
   // Track if user is near the bottom of the feed
   const handleScroll = useCallback(() => {
@@ -319,6 +369,19 @@ export default function CommunityPage() {
       })
       .catch((err) => console.error('[Community Auth]', err));
   }, []);
+
+  // Keyboard Escape key support to close modal
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setViewingMessageDetails(null);
+      }
+    };
+    if (viewingMessageDetails) {
+      window.addEventListener('keydown', handleEsc);
+    }
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [viewingMessageDetails]);
 
   // Auto-resize the input textarea as the user types
   useEffect(() => {
@@ -393,45 +456,90 @@ export default function CommunityPage() {
     }
   };
 
-  // Send a message
-  const handleSend = async () => {
-    if (!text.trim() || sending) return;
-
-    setSending(true);
+  // Perform message send to API and reconcile state
+  const performSendMessage = async (tempId: string, textToSend: string, replyToInfo: ReplyRef | null) => {
     try {
       const res = await fetch('/api/messages', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          text: text.trim(),
-          replyTo: replyTo || undefined,
+          text: textToSend,
+          replyTo: replyToInfo || undefined,
         }),
       });
 
       if (res.ok) {
-        setText('');
-        setReplyTo(null);
-        await fetchMessages();
-        setTimeout(() => scrollToBottom('smooth'), 50);
+        // Reconcile messages by loading the actual list from server
+        const listRes = await fetch('/api/messages');
+        if (listRes.ok) {
+          const listData = await listRes.json();
+          setMessages(listData.messages);
+          setHasOlder(listData.hasOlder);
+        }
       } else {
-        const data = await res.json().catch(() => ({}));
-        toast({
-          variant: 'error',
-          title: 'Failed to send message',
-          description: data.error || 'Please try again.',
-        });
+        // Mark the temporary message with error status
+        setMessages((prev) =>
+          prev.map((m) =>
+            m._id === tempId ? { ...m, status: 'error' as const } : m
+          )
+        );
       }
     } catch (err) {
-      console.error('[Community Send]', err);
-      toast({
-        variant: 'error',
-        title: 'Failed to send message',
-        description: 'Network error — please try again.',
-      });
-    } finally {
-      setSending(false);
-      inputRef.current?.focus();
+      console.error('[Community Send Error]', err);
+      setMessages((prev) =>
+        prev.map((m) =>
+          m._id === tempId ? { ...m, status: 'error' as const } : m
+        )
+      );
     }
+  };
+
+  // Send a message (Optimistic Update)
+  const handleSend = async () => {
+    const trimmedText = text.trim();
+    if (!trimmedText) return;
+
+    const tempId = `temp-${Date.now()}`;
+    const newOptimisticMsg: Message = {
+      _id: tempId,
+      authorId: currentUser?.rollNumber || 'unknown',
+      authorName: currentUser?.name || 'Guest Student',
+      authorRole: currentUser?.isAdmin ? 'admin' : 'student',
+      text: trimmedText,
+      replyTo: replyTo || undefined,
+      createdAt: new Date().toISOString(),
+      status: 'sending',
+    };
+
+    // Update state instantly (0 perceived latency)
+    setMessages((prev) => [...prev, newOptimisticMsg]);
+    setText('');
+    setReplyTo(null);
+
+    // Focus input back and reset height
+    setTimeout(() => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+        inputRef.current.style.height = 'auto';
+      }
+    }, 10);
+
+    // Smooth scroll down
+    isNearBottom.current = true;
+    scrollToBottom('smooth');
+
+    // Run send in background
+    await performSendMessage(tempId, trimmedText, replyTo);
+  };
+
+  const handleRetry = async (msg: Message) => {
+    // Reset status back to 'sending'
+    setMessages((prev) =>
+      prev.map((m) =>
+        m._id === msg._id ? { ...m, status: 'sending' as const } : m
+      )
+    );
+    await performSendMessage(msg._id, msg.text, msg.replyTo || null);
   };
 
   // Delete a message (admin only)
@@ -534,17 +642,24 @@ export default function CommunityPage() {
         {/* Empty state */}
         {!loading && messages.length === 0 && (
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex flex-col items-center justify-center py-20 text-center"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
+            className="flex flex-col items-center justify-center py-20 text-center max-w-md mx-auto"
           >
-            <div className="w-16 h-16 rounded-2xl bg-card-custom border border-custom flex items-center justify-center mb-4">
-              <MessageCircle className="w-8 h-8 text-muted-custom" />
+            <div className="w-20 h-20 rounded-3xl bg-[rgb(var(--accent)_/_0.1)] border border-[rgb(var(--accent)_/_0.2)] flex items-center justify-center mb-6 shadow-lg shadow-indigo-500/5 animate-float">
+              <MessageCircle className="w-10 h-10 text-[rgb(var(--accent-hover))]" />
             </div>
-            <h3 className="text-lg font-semibold text-primary mb-1">No messages yet</h3>
-            <p className="text-body max-w-xs">
-              Be the first one to start a conversation. Say hi!
+            <h3 className="text-lg font-bold text-primary mb-1">Join the Conversation</h3>
+            <p className="text-xs text-secondary leading-relaxed max-w-xs mb-6">
+              Ask about mid-term portions, exam formats, or collaborate on lecture topics with your classmates.
             </p>
+            <button
+              onClick={() => inputRef.current?.focus()}
+              className="px-5 py-2.5 rounded-xl text-xs font-bold gradient-accent text-white shadow-md glow-accent cursor-pointer flex items-center gap-1.5"
+            >
+              <Send className="w-3.5 h-3.5" /> Start Discussion
+            </button>
           </motion.div>
         )}
 
@@ -582,6 +697,7 @@ export default function CommunityPage() {
               onReply={handleReply}
               onDelete={handleDelete}
               onShowViews={setViewingMessageDetails}
+              onRetry={handleRetry}
             />
           ))}
         </AnimatePresence>
@@ -636,6 +752,7 @@ export default function CommunityPage() {
             onClick={handleSend}
             disabled={!text.trim() || sending}
             className="flex items-center justify-center min-w-[44px] min-h-[44px] rounded-xl gradient-accent text-white disabled:opacity-40 disabled:cursor-not-allowed transition-opacity flex-shrink-0"
+            aria-label="Send message"
           >
             {sending ? (
               <Loader2 className="w-4 h-4 animate-spin" />
@@ -655,6 +772,7 @@ export default function CommunityPage() {
         {viewingMessageDetails && (
           <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
             <motion.div
+              ref={viewersModalRef}
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
@@ -671,6 +789,7 @@ export default function CommunityPage() {
                 <button
                   onClick={() => setViewingMessageDetails(null)}
                   className="p-1.5 rounded-lg text-secondary hover:text-primary hover:bg-card-custom border border-transparent hover:border-custom transition-all focus:outline-none"
+                  aria-label="Close message details dialog"
                 >
                   <X className="w-4 h-4" />
                 </button>

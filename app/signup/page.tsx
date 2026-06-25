@@ -61,9 +61,9 @@ export default function SignupPage() {
   };
 
   const inputClass = `
-    w-full px-4 py-3 rounded-xl bg-zinc-800/60 border border-zinc-700
-    text-white placeholder:text-zinc-500 text-sm
-    focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20
+    w-full px-4 py-3 rounded-xl bg-card-custom border border-custom
+    text-primary placeholder:text-muted-custom text-sm
+    focus:outline-none focus:border-[rgb(var(--accent))] focus:ring-2 focus:ring-[rgb(var(--accent)_/_0.2)]
     transition-all duration-150
   `;
 

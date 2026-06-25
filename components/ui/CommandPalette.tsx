@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, X, FlaskConical, ArrowRight } from 'lucide-react';
 import { SEM4_SUBJECTS, ACTIVE_SEM } from '@/lib/subjects';
+import { useFocusTrap } from '@/lib/hooks/useFocusTrap';
 
 interface SearchResult {
   id: string;
@@ -63,7 +64,10 @@ export function CommandPalette() {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+
+  useFocusTrap(modalRef, open);
 
   const allResults = useMemo(() => buildIndex(), []);
 
@@ -139,6 +143,7 @@ export function CommandPalette() {
           onClick={() => setOpen(false)}
         >
           <motion.div
+            ref={modalRef}
             initial={{ opacity: 0, scale: 0.95, y: -10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -10 }}
@@ -176,33 +181,50 @@ export function CommandPalette() {
                   No subjects match &ldquo;{query}&rdquo;
                 </div>
               )}
-              {filtered.map((result, i) => (
-                <button
-                  key={`${result.id}-${result.branch}-${result.type}`}
-                  onClick={() => navigate(result)}
-                  onMouseEnter={() => setSelectedIndex(i)}
-                  className={`
-                    w-full flex items-center gap-3 px-4 py-3 sm:py-2.5 min-h-[44px] sm:min-h-0 text-left transition-colors
-                    ${i === selectedIndex ? 'bg-[rgb(var(--accent)_/_0.1)]' : 'hover:bg-card-custom/50'}
-                  `}
-                >
-                  <div className="w-8 h-8 rounded-lg gradient-accent flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0 relative">
-                    {result.short.slice(0, 2)}
-                    {result.type === 'lab' && (
-                      <FlaskConical className="absolute -bottom-0.5 -right-0.5 w-3 h-3 text-white/80" />
+              {filtered.map((result, i) => {
+                const isFirstTheory = result.type === 'theory' && filtered.findIndex((r) => r.type === 'theory') === i;
+                const isFirstLab = result.type === 'lab' && filtered.findIndex((r) => r.type === 'lab') === i;
+
+                return (
+                  <div key={`${result.id}-${result.branch}-${result.type}`}>
+                    {isFirstTheory && (
+                      <div className="px-4 pt-2.5 pb-1 text-[10px] font-bold uppercase tracking-wider text-muted-custom select-none">
+                        Theory Subjects
+                      </div>
                     )}
+                    {isFirstLab && (
+                      <div className="px-4 pt-3 pb-1 text-[10px] font-bold uppercase tracking-wider text-muted-custom select-none border-t border-custom/40 mt-1">
+                        Lab Subjects
+                      </div>
+                    )}
+
+                    <button
+                      onClick={() => navigate(result)}
+                      onMouseEnter={() => setSelectedIndex(i)}
+                      className={`
+                        w-full flex items-center gap-3 px-4 py-3 sm:py-2.5 min-h-[44px] sm:min-h-0 text-left transition-colors
+                        ${i === selectedIndex ? 'bg-[rgb(var(--accent)_/_0.1)]' : 'hover:bg-card-custom/50'}
+                      `}
+                    >
+                      <div className="w-8 h-8 rounded-lg gradient-accent flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0 relative">
+                        {result.short.slice(0, 2)}
+                        {result.type === 'lab' && (
+                          <FlaskConical className="absolute -bottom-0.5 -right-0.5 w-3 h-3 text-white/80" />
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-medium text-primary truncate">{result.label}</div>
+                        <div className="flex items-center gap-2 text-[11px] text-muted-custom mt-0.5">
+                          <span>{result.branchLabel}</span>
+                          <span>·</span>
+                          <span className="capitalize">{result.type}</span>
+                        </div>
+                      </div>
+                      <ArrowRight className={`w-3.5 h-3.5 flex-shrink-0 transition-opacity ${i === selectedIndex ? 'text-[rgb(var(--accent-hover))] opacity-100' : 'opacity-0'}`} />
+                    </button>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="text-sm font-medium text-primary truncate">{result.label}</div>
-                    <div className="flex items-center gap-2 text-[11px] text-muted-custom mt-0.5">
-                      <span>{result.branchLabel}</span>
-                      <span>·</span>
-                      <span className="capitalize">{result.type}</span>
-                    </div>
-                  </div>
-                  <ArrowRight className={`w-3.5 h-3.5 flex-shrink-0 transition-opacity ${i === selectedIndex ? 'text-[rgb(var(--accent-hover))] opacity-100' : 'opacity-0'}`} />
-                </button>
-              ))}
+                );
+              })}
             </div>
 
             {/* Footer hint */}

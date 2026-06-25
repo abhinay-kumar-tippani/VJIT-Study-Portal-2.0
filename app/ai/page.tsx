@@ -31,7 +31,7 @@ function renderMarkdown(text: string): string {
     .replace(/^# (.*$)/gim, '<h1>$1</h1>')
     .replace(/^\* (.+)/gm, '<li>$1</li>')
     .replace(/^- (.+)/gm, '<li>$1</li>')
-    .replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>')
+    .replace(/(<li>[\s\S]*<\/li>)/, '<ul>$1</ul>')
     .replace(/\n\n/g, '<br><br>');
 }
 
