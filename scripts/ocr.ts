@@ -362,6 +362,7 @@ async function main() {
           subject: item.subject,
           pageNumber: item.pageNumber,
           text,
+          isScanned: true,
         };
 
         const rawChunks = chunkPages([pageItem]);

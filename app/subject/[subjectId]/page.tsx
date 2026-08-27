@@ -10,7 +10,7 @@ import {
   FileImage, FileType2, Download, AlertCircle, Play, X
 } from 'lucide-react';
 
-import { SEM4_SUBJECTS } from '@/lib/subjects';
+import { getBranchSubjects, ACTIVE_SEM } from '@/lib/subjects';
 
 
 // ─── Types ────────────────────────────────────────────────────────
@@ -216,7 +216,8 @@ function SubjectPageContent() {
   const semester = searchParams.get('semester')  ?? '4';
   const label    = searchParams.get('label')     ?? decodeURIComponent(subjectId);
 
-  const branchConfig = SEM4_SUBJECTS[branch];
+  const semesterNum = Number(semester) || ACTIVE_SEM;
+  const branchConfig = getBranchSubjects(branch, semesterNum);
   const subjectConfig = branchConfig
     ? [...(branchConfig.theory || []), ...(branchConfig.lab || [])].find(
         (s) => s.id === decodeURIComponent(subjectId)

@@ -3,7 +3,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDriveClient, ROOT_FOLDER_ID, FOLDER_MIME } from '@/lib/drive';
 import { verifyToken, COOKIE_NAME } from '@/lib/auth';
-import { SEM4_SUBJECTS } from '@/lib/subjects';
+import { getBranchSubjects, ACTIVE_SEM } from '@/lib/subjects';
 
 /**
  * GET /api/drive/files?branch=CSE-AIML&semester=4&subject=DM&tab=Notes
@@ -148,8 +148,9 @@ export async function GET(req: NextRequest) {
   // Look up the subject configuration to find the correct Google Drive folder name and label
   let driveFolderName = subject;
   let searchLabel = label;
-  if (branch && SEM4_SUBJECTS[branch]) {
-    const branchConfig = SEM4_SUBJECTS[branch];
+  const semNum = Number(semester) || ACTIVE_SEM;
+  const branchConfig = getBranchSubjects(branch, semNum);
+  if (branchConfig) {
     const foundSubject = [...(branchConfig.theory || []), ...(branchConfig.lab || [])]
       .find((s) => s.id === subject || s.label === subject);
     if (foundSubject) {

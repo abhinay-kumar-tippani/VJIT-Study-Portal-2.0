@@ -33,7 +33,7 @@ async function main() {
         model: m,
         contents: 'Test embedding query',
       });
-      console.log(`✅ Model '${m}' SUCCESS! Length: ${res.embedding?.values?.length}`);
+      console.log(`✅ Model '${m}' SUCCESS! Length: ${res.embeddings?.[0]?.values?.length}`);
       break;
     } catch (err: any) {
       console.error(`❌ Model '${m}' FAILED: ${err.message}`);

@@ -359,7 +359,7 @@ async function evaluateMode(
   const resultFilePath = path.join(outDir, `${timestamp}_${configLabel}.json`);
   const outputData = {
     evalTimestamp: new Date().toISOString(),
-    datasetLabel,
+    datasetLabel: 'vjit-eval-set',
     configLabel,
     retrievalMode: mode,
     embedProvider: 'jina',

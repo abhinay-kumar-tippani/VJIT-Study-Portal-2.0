@@ -194,7 +194,7 @@ export default function AIPage() {
     }
   };
 
-  const handleFeedback = async (msgIdx: number, queryLogId: string | undefined, verdict: 'up' | 'down') => {
+  const handleFeedback = async (msgIdx: number, queryLogId: string | null | undefined, verdict: 'up' | 'down') => {
     if (!queryLogId) return;
 
     setMessages((prev) =>

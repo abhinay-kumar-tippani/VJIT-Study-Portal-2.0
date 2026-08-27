@@ -5,15 +5,14 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ChevronRight, BookOpen, Clock } from 'lucide-react';
 
-// Semester 4 is live for all branches — everything else is Coming Soon
+import { ACTIVE_SEM, getBranchSubjects } from '@/lib/subjects';
+
 const BRANCH_META: Record<string, { label: string }> = {
   'CSE':      { label: 'Computer Science Engineering' },
   'CSE-AIML': { label: 'CSE — AI & Machine Learning' },
   'CSE-DS':   { label: 'CSE — Data Science' },
   'IT':       { label: 'Information Technology' },
 };
-
-const ACTIVE_SEM = 4; // Only Semester 4 is live across all branches
 
 const SEM_LABELS: Record<number, string> = {
   1: '1st Sem', 2: '2nd Sem', 3: '3rd Sem', 4: '4th Sem',
@@ -49,7 +48,7 @@ export default function BranchPage() {
         </div>
         <h1 className="text-page-h1">{meta.label}</h1>
         <p className="text-secondary mt-1">
-          Semester 4 is available — other semesters coming soon
+          Semesters 4 & 5 are available — other semesters coming soon
         </p>
       </motion.div>
 
@@ -59,7 +58,8 @@ export default function BranchPage() {
         className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-5"
       >
         {Array.from({ length: 8 }, (_, i) => i + 1).map((sem) => {
-          const isActive = sem === ACTIVE_SEM;
+          const hasSubjects = !!getBranchSubjects(branch, sem);
+          const isActive = sem === 4 || sem === 5 || hasSubjects;
           return (
             <motion.div key={sem} variants={item}>
               {isActive ? (

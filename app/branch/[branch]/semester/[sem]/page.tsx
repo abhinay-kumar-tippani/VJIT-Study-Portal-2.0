@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ChevronRight, FlaskConical, BookOpen, Clock } from 'lucide-react';
 
-import { ACTIVE_SEM, SEM4_SUBJECTS } from '@/lib/subjects';
+import { ACTIVE_SEM, getBranchSubjects } from '@/lib/subjects';
 import { SubjectCard } from '@/components/ui/SubjectCard';
 
 // ─── Helpers ───────────────────────────────────────────────────────────────────
@@ -16,8 +16,8 @@ const container = { hidden: {}, show: { transition: { staggerChildren: 0.07 } } 
 export default function SemesterPage() {
   const { branch, sem } = useParams<{ branch: string; sem: string }>();
   const semester  = Number(sem);
-  const isActive  = semester === ACTIVE_SEM;
-  const subjects  = SEM4_SUBJECTS[branch];
+  const subjects  = getBranchSubjects(branch, semester);
+  const isActive  = !!subjects && (subjects.theory.length > 0 || (subjects.lab?.length ?? 0) > 0);
   const hasLabs   = !!subjects?.lab?.length;
 
   return (

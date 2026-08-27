@@ -13,6 +13,7 @@ import {
 import { ThemeToggle } from './ThemeToggle';
 import { NotificationBell } from './NotificationBell';
 import { CommandPaletteTrigger } from '@/components/ui/CommandPalette';
+import { ACTIVE_SEM } from '@/lib/subjects';
 import { useFocusTrap } from '@/lib/hooks/useFocusTrap';
 
 
@@ -270,7 +271,7 @@ export function Sidebar() {
             );
           }
 
-          const finalHref = item.href === '/branch' ? `/branch/${session?.branch ?? 'CSE-AIML'}/semester/4` : item.href;
+          const finalHref = item.href === '/branch' ? `/branch/${session?.branch ?? 'CSE-AIML'}/semester/${ACTIVE_SEM}` : item.href;
           const isActive = pathname === finalHref || pathname.startsWith(finalHref + '/');
           return (
             <Link key={item.href} href={finalHref}>

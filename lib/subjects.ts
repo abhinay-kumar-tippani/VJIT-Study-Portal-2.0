@@ -6,13 +6,38 @@ export interface Subject {
   youtube?: { title: string; url: string; }[];
 }
 
-export const ACTIVE_SEM = 4;
+export const ACTIVE_SEM = 5;
 
 export const SEM_LABELS: Record<number, string> = {
   1: '1st Sem', 2: '2nd Sem', 3: '3rd Sem', 4: '4th Sem',
   5: '5th Sem', 6: '6th Sem', 7: '7th Sem', 8: '8th Sem',
 };
 
+// ─── SEMESTER 5 SUBJECTS ──────────────────────────────────────────
+export const SEM5_SUBJECTS: Record<string, { theory: Subject[]; lab?: Subject[] }> = {
+  // ── CSE-AIML (Semester 5) ────────────────────────────────────────
+  'CSE-AIML': {
+    theory: [
+      { id: 'CN',      label: 'Computer Networks',                   short: 'CN',     driveFolder: 'CN'      },
+      { id: 'DAA',     label: 'Design and Analysis of Algorithms',   short: 'DAA',    driveFolder: 'DAA'     },
+      { id: 'EML',     label: 'Essentials of Machine Learning',       short: 'EML',    driveFolder: 'EML'     },
+      { id: 'GS',      label: 'Gender Sensitization',                short: 'GS',     driveFolder: 'GS'      },
+      { id: 'PE-IDS',  label: 'Introduction to Data Science (PE)',    short: 'IDS',    driveFolder: 'PE-IDS'  },
+      { id: 'PE-CS',   label: 'Cyber Security (PE)',                 short: 'CS',     driveFolder: 'PE-CS'   },
+      { id: 'PE-OOAD', label: 'Object Oriented Analysis and Design (PE)', short: 'OOAD', driveFolder: 'PE-OOAD' },
+      { id: 'OE-DM',   label: 'Disaster Management (OE)',            short: 'DM',     driveFolder: 'OE-DM'   },
+      { id: 'OE-SE',   label: 'Sustainable Energy (OE)',             short: 'SE',     driveFolder: 'OE-SE'   },
+      { id: 'OE-EOM',  label: 'Essentials of Marketing (OE)',        short: 'EoM',    driveFolder: 'OE-EOM'  },
+    ],
+    lab: [
+      { id: 'Flutter-Lab', label: 'Flutter Lab',            short: 'Flutter', driveFolder: 'Flutter Lab' },
+      { id: 'CN-Lab',      label: 'Computer Networks Lab',  short: 'CN Lab',  driveFolder: 'CN Lab'      },
+      { id: 'ML-Lab',      label: 'Machine Learning Lab',   short: 'ML Lab',  driveFolder: 'ML Lab'      },
+    ],
+  },
+};
+
+// ─── SEMESTER 4 SUBJECTS ──────────────────────────────────────────
 export const SEM4_SUBJECTS: Record<string, { theory: Subject[]; lab?: Subject[] }> = {
   // ── CSE-AIML ────────────────────────────────────────────────
   'CSE-AIML': {
@@ -160,20 +185,25 @@ export const SEM4_SUBJECTS: Record<string, { theory: Subject[]; lab?: Subject[] 
   },
 };
 
+export const ALL_SUBJECTS: Record<number, Record<string, { theory: Subject[]; lab?: Subject[] }>> = {
+  4: SEM4_SUBJECTS,
+  5: SEM5_SUBJECTS,
+};
+
+export function getBranchSubjects(branch: string, semester: number = ACTIVE_SEM): { theory: Subject[]; lab?: Subject[] } | undefined {
+  return ALL_SUBJECTS[semester]?.[branch] ?? ALL_SUBJECTS[4]?.[branch];
+}
+
 /**
  * Returns all branch codes that share a given subjectId for the specified semester.
- * Used to enable cross-branch resource visibility for common subjects
- * (e.g. Operating Systems is shared by CSE, CSE-DS, and IT).
- *
- * @param subjectId - The subject ID (e.g. "OS", "DAA", "OOPs-Java")
- * @param semester  - The semester number (currently only 4 is supported)
- * @returns Array of branch codes that have that subject (e.g. ["CSE", "CSE-DS", "IT"])
+ * Used to enable cross-branch resource visibility for common subjects.
  */
-export function getSharedBranches(subjectId: string, semester: number): string[] {
-  if (semester !== ACTIVE_SEM) return [];
+export function getSharedBranches(subjectId: string, semester: number = ACTIVE_SEM): string[] {
+  const configMap = ALL_SUBJECTS[semester] ?? ALL_SUBJECTS[4];
+  if (!configMap) return [];
 
   const sharedBranches: string[] = [];
-  for (const [branch, config] of Object.entries(SEM4_SUBJECTS)) {
+  for (const [branch, config] of Object.entries(configMap)) {
     const allSubjects = [...(config.theory || []), ...(config.lab || [])];
     if (allSubjects.some((s) => s.id === subjectId)) {
       sharedBranches.push(branch);

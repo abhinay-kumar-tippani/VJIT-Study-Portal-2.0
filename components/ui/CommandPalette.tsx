@@ -4,7 +4,7 @@ import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, X, FlaskConical, ArrowRight } from 'lucide-react';
-import { SEM4_SUBJECTS, ACTIVE_SEM } from '@/lib/subjects';
+import { ALL_SUBJECTS, ACTIVE_SEM } from '@/lib/subjects';
 import { useFocusTrap } from '@/lib/hooks/useFocusTrap';
 
 interface SearchResult {
@@ -24,34 +24,36 @@ const BRANCH_LABELS: Record<string, string> = {
   'IT': 'IT',
 };
 
-/** Build search index from SEM4_SUBJECTS. */
+/** Build search index from ALL_SUBJECTS across semesters. */
 function buildIndex(): SearchResult[] {
   const results: SearchResult[] = [];
-  for (const [branch, config] of Object.entries(SEM4_SUBJECTS)) {
-    for (const s of config.theory) {
-      results.push({
-        id: s.id,
-        label: s.label,
-        short: s.short,
-        branch,
-        branchLabel: BRANCH_LABELS[branch] || branch,
-        type: 'theory',
-        href: `/subject/${s.id}?branch=${branch}&semester=${ACTIVE_SEM}&label=${encodeURIComponent(s.label)}`,
-      });
-    }
-    for (const s of config.lab || []) {
-      results.push({
-        id: s.id,
-        label: s.label,
-        short: s.short,
-        branch,
-        branchLabel: BRANCH_LABELS[branch] || branch,
-        type: 'lab',
-        href: `/subject/${s.id}?branch=${branch}&semester=${ACTIVE_SEM}&label=${encodeURIComponent(s.label)}`,
-      });
+  for (const [semStr, branchMap] of Object.entries(ALL_SUBJECTS)) {
+    const semNum = Number(semStr);
+    for (const [branch, config] of Object.entries(branchMap)) {
+      for (const s of config.theory) {
+        results.push({
+          id: s.id,
+          label: s.label,
+          short: s.short,
+          branch,
+          branchLabel: BRANCH_LABELS[branch] || branch,
+          type: 'theory',
+          href: `/subject/${s.id}?branch=${branch}&semester=${semNum}&label=${encodeURIComponent(s.label)}`,
+        });
+      }
+      for (const s of config.lab || []) {
+        results.push({
+          id: s.id,
+          label: s.label,
+          short: s.short,
+          branch,
+          branchLabel: BRANCH_LABELS[branch] || branch,
+          type: 'lab',
+          href: `/subject/${s.id}?branch=${branch}&semester=${semNum}&label=${encodeURIComponent(s.label)}`,
+        });
+      }
     }
   }
-  // Deduplicate by id+branch (same subject in multiple branches stays separate)
   return results;
 }
 

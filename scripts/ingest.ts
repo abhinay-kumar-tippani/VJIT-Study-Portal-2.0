@@ -60,13 +60,17 @@ const filterBranch = getArgVal('--branch');
 const limitVal = getArgVal('--limit');
 const fileLimit = limitVal ? parseInt(limitVal, 10) : Infinity;
 
+const semArg = getArgVal('--semester');
+const SEMESTER = semArg ? parseInt(semArg, 10) : 5;
+
 const DEFAULT_BRANCHES = ['CSE-AIML', 'CSE', 'CSE-DS', 'IT'];
 const TARGET_BRANCHES = filterBranch ? [filterBranch] : DEFAULT_BRANCHES;
 
-const DEFAULT_SUBJECT_IDS = ['IAI', 'PC', 'OOPs-Java', 'DBMS'];
+const DEFAULT_SUBJECT_IDS = SEMESTER === 5
+  ? ['CN', 'DAA', 'EML', 'GS', 'PE-IDS', 'PE-CS', 'PE-OOAD', 'OE-DM', 'OE-SE', 'OE-EOM', 'Flutter-Lab', 'CN-Lab', 'ML-Lab']
+  : ['IAI', 'PC', 'OOPs-Java', 'DBMS', 'DM', 'ATCD', 'OS', 'SE', 'FIoT', 'QMLR'];
 const TARGET_SUBJECT_IDS = filterSubject ? [filterSubject] : DEFAULT_SUBJECT_IDS;
 
-const SEMESTER = 4;
 const TABS = ['Notes', 'PYQs', 'Question Banks', 'Syllabus'];
 
 const FOLDER_MIME = 'application/vnd.google-apps.folder';
@@ -196,14 +200,24 @@ async function main() {
       continue;
     }
 
+  const { getBranchSubjects, ACTIVE_SEM } = await import('../lib/subjects');
+  const targetSem = SEMESTER;
+
+  // ...
     const semChildren = await listChildren(branchId);
     const semEntry = semChildren.find((f: any) => {
       const fn = norm(f.name ?? '');
-      return ['semester4', 'sem4', '4'].some((c) => fn === c || fn.includes(c));
+      return [
+        `semester${targetSem}`,
+        `sem${targetSem}`,
+        `semester ${targetSem}`,
+        `sem ${targetSem}`,
+        String(targetSem),
+      ].some((c) => fn === c || fn.includes(c));
     });
 
     if (!semEntry?.id) {
-      console.log(`   ⚠️ Semester 4 folder not found in ${branch}. Skipping.`);
+      console.log(`   ⚠️ Semester ${targetSem} folder not found in ${branch}. Skipping.`);
       continue;
     }
     const semId =
@@ -211,7 +225,7 @@ async function main() {
         ? semEntry.shortcutDetails?.targetId ?? semEntry.id
         : semEntry.id;
 
-    const branchSubjects = SEM4_SUBJECTS[branch];
+    const branchSubjects = getBranchSubjects(branch, targetSem);
     if (!branchSubjects) continue;
     const allSubjects = [...(branchSubjects.theory || []), ...(branchSubjects.lab || [])];
 

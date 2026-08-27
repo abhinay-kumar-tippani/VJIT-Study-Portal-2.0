@@ -8,7 +8,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { getBranchFromRollNumber, getBranchLabel } from '@/lib/branch';
-import { SEM4_SUBJECTS, ACTIVE_SEM } from '@/lib/subjects';
+import { getBranchSubjects, ACTIVE_SEM } from '@/lib/subjects';
 import { SubjectCard, SubjectCardSkeleton } from '@/components/ui/SubjectCard';
 
 interface Session {
@@ -136,7 +136,7 @@ export default function DashboardPage() {
   const branch = session?.branch ?? getBranchFromRollNumber(rollNumber);
   const branchLabel = getBranchLabel(branch);
 
-  const subjects = SEM4_SUBJECTS[branch] ?? SEM4_SUBJECTS['CSE-AIML'];
+  const subjects = getBranchSubjects(branch, ACTIVE_SEM) ?? getBranchSubjects('CSE-AIML', ACTIVE_SEM)!;
 
   // Other branches list for exploration
   const OTHER_BRANCHES = [
@@ -213,7 +213,7 @@ export default function DashboardPage() {
           </div>
           <span className="text-xs font-semibold text-[rgb(var(--accent-emerald))] mt-1 flex items-center gap-1">
             <span className="w-2 h-2 rounded-full bg-[rgb(var(--accent-emerald))] animate-pulse" />
-            Semester 4 Active
+            Semester {ACTIVE_SEM} Active
           </span>
         </div>
       </motion.div>
@@ -223,7 +223,7 @@ export default function DashboardPage() {
         <div className="flex items-center justify-between gap-2 flex-wrap">
           <div className="flex items-center gap-2">
             <BookMarked className="w-5 h-5 text-[rgb(var(--accent-hover))]" />
-            <h2 className="text-section">Your Subjects (Semester 4)</h2>
+            <h2 className="text-section">Your Subjects (Semester {ACTIVE_SEM})</h2>
           </div>
           <span className="text-xs text-muted-custom bg-card-custom px-2.5 py-1 rounded-full border border-custom font-semibold">
             {subjects.theory.length + (subjects.lab?.length ?? 0)} Total

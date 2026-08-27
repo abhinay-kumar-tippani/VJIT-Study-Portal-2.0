@@ -7,7 +7,7 @@ import {
   Upload, CloudUpload, CheckCircle2, AlertCircle,
   FileText, FileImage, FileType2, X, Loader2
 } from 'lucide-react';
-import { SEM4_SUBJECTS } from '@/lib/subjects';
+import { getBranchSubjects } from '@/lib/subjects';
 import { toast } from '@/components/ui/toaster';
 
 
@@ -64,8 +64,8 @@ export default function ContributePage() {
 
   const getSubjectsList = (branch: string, semStr: string) => {
     const sem = Number(semStr);
-    if (sem === 4 && branch && SEM4_SUBJECTS[branch]) {
-      const data = SEM4_SUBJECTS[branch];
+    const data = getBranchSubjects(branch, sem);
+    if (data) {
       return [...data.theory, ...(data.lab || [])];
     }
     // Fallback default subjects for other semesters
