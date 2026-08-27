@@ -6,7 +6,27 @@ import User from '@/models/User';
 
 export async function POST(req: NextRequest) {
   try {
-    const { rollNumber, password } = await req.json();
+    // Read raw body first so we can log malformed requests for debugging
+    const rawBody = await req.text();
+    let body: any = {};
+    try {
+      body = rawBody ? JSON.parse(rawBody) : {};
+    } catch (parseErr) {
+      console.error('[login] invalid JSON body:', rawBody);
+      const truncated = rawBody?.length > 1000 ? rawBody.slice(0, 1000) + '...(truncated)' : rawBody;
+      return NextResponse.json(
+        {
+          error: 'Server error',
+          detail:
+            process.env.NODE_ENV !== 'production'
+              ? `Invalid JSON body: ${parseErr instanceof Error ? parseErr.message : String(parseErr)}; raw=${truncated}`
+              : undefined,
+        },
+        { status: 500 }
+      );
+    }
+
+    const { rollNumber, password } = body;
 
     if (!rollNumber || !password) {
       return NextResponse.json({ error: 'Roll number and password are required' }, { status: 400 });

@@ -1,0 +1,2132 @@
+{
+  "config": {
+    "configLabel": "phase1-baseline-vector-only",
+    "chunkSize": 1500,
+    "overlap": 300,
+    "embedModel": "gemini-embedding-001",
+    "numCandidates": 100,
+    "limit": 5,
+    "threshold": 0.6,
+    "chunkCount": 1918,
+    "questionCount": 58
+  },
+  "timestamp": "2026-07-28T10:51:05.534Z",
+  "summary": {
+    "totalQuestions": 58,
+    "selfRetrievalRatePct": 60.3,
+    "fileRecallTop5Pct": 82.8,
+    "thresholdLossRatePct": 0,
+    "mrr": 0.756,
+    "avgLatencyMs": 2016,
+    "faithfulnessPct": 88.8,
+    "citationRatePct": 100,
+    "scoreDistribution": {
+      "all": {
+        "min": 0.8296374082565308,
+        "p10": 0.839617133140564,
+        "p25": 0.8516716957092285,
+        "median": 0.8698753714561462,
+        "p75": 0.8787399530410767,
+        "max": 0.9113279581069946
+      },
+      "missed": {
+        "min": 0.8296374082565308,
+        "p10": 0.8296374082565308,
+        "p25": 0.8330723643302917,
+        "median": 0.8516716957092285,
+        "p75": 0.8600897789001465,
+        "max": 0.8804581165313721
+      }
+    }
+  },
+  "results": [
+    {
+      "question": "what are the logical rules called that define rational behavior when dealing with uncertainty?",
+      "subject": "IAI",
+      "expectedFileName": "Unit-4.pdf",
+      "sourceChunkId": "6a684ce29688f92f9ecdc3dd",
+      "retrievedChunkIds": [
+        "6a684ce29688f92f9ecdc3dd",
+        "6a684c8a9688f92f9ecdc3a7",
+        "6a68647c6ddf1c26379e5c81",
+        "6a684c8a9688f92f9ecdc3a8",
+        "6a684ce29688f92f9ecdc3de"
+      ],
+      "retrievedFileNames": [
+        "Unit-4.pdf",
+        "Unit-3.pdf",
+        "AI unit-3 (1).pptx",
+        "Unit-3.pdf",
+        "Unit-4.pdf"
+      ],
+      "retrievedScores": [
+        0.872809886932373,
+        0.8675694465637207,
+        0.8654801249504089,
+        0.8604153394699097,
+        0.8569779396057129
+      ],
+      "top1Score": 0.872809886932373,
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 1,
+      "latencyMs": 4582,
+      "llmAnswer": "Hey! Based on your study materials (`Unit-4.pdf`, Page 6), these logical rules are called the **axioms of rational preferences**. \n\nThey define how a rational agent should behave when comparing different uncertain outcomes and ensure that decisions are consistent and meaningful. If an agent follows these axioms, their preferences can be represented using a utility function, and they will always behave as if they are maximizing expected utility.\n\nThe axioms listed in your notes are:\n1. **Orderability** – The agent can compare any two outcomes ($A > B$, $B > A$, or $A = B$).\n2. **Transitivity** – If $A > B$ and $B > C$, then $A > C$ (which avoids contradictory decisions).\n3. **Continuity** – If $A > B > C$, then $B$ is equivalent to a lottery between $A$ and $C$ (ensures smooth preference transitions).\n4. **Substitutability** – If $A = B$, they can replace each other in any lottery.\n5. **Monotonicity** – A higher probability of a better outcome is preferred.\n6. **Decomposability** – Complex lotteries can be simplified into simpler ones.",
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How do self-driving cars use AI to navigate and drive on their own?",
+      "subject": "IAI",
+      "expectedFileName": "UNIT-1.docx",
+      "sourceChunkId": "6a684c439688f92f9ecdc33d",
+      "retrievedChunkIds": [
+        "6a684c439688f92f9ecdc34b",
+        "6a684c439688f92f9ecdc33d",
+        "6a684c439688f92f9ecdc34a",
+        "6a684c439688f92f9ecdc33a",
+        "6a684c439688f92f9ecdc337"
+      ],
+      "retrievedFileNames": [
+        "UNIT-1.docx",
+        "UNIT-1.docx",
+        "UNIT-1.docx",
+        "UNIT-1.docx",
+        "UNIT-1.docx"
+      ],
+      "retrievedScores": [
+        0.8412840366363525,
+        0.840690016746521,
+        0.8357738256454468,
+        0.8323631286621094,
+        0.8289005160331726
+      ],
+      "top1Score": 0.8412840366363525,
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 1,
+      "latencyMs": 746,
+      "llmAnswer": "Based on your notes (`UNIT-1.docx`, Page 1), self-driving cars use AI and machine learning to navigate and make real-time decisions through several key mechanisms:\n\n* **Environmental Perception:** They use a combination of sensors, cameras, and radar to understand their surroundings. For instance, Tesla's Autopilot system uses **computer vision** algorithms to recognize road signs, pedestrians, lanes, and other vehicles to help the car navigate safely.\n* **Data Processing:** Machine learning algorithms process this real-time sensor data to detect obstacles, traffic signs, and pedestrians.\n* **Real-Time Decision Making:** Based on the data analyzed by the system, the vehicle makes immediate driving choices—such as steering, braking, and managing adaptive cruise control or automatic parking.",
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How do learning agents manage to get better at tasks over time?",
+      "subject": "IAI",
+      "expectedFileName": "UNIT-1.docx",
+      "sourceChunkId": "6a684c439688f92f9ecdc356",
+      "retrievedChunkIds": [
+        "6a684c439688f92f9ecdc356",
+        "6a6864866ddf1c26379e5ccf",
+        "6a684c439688f92f9ecdc355",
+        "6a6864866ddf1c26379e5cce",
+        "6a684ce29688f92f9ecdc3ee"
+      ],
+      "retrievedFileNames": [
+        "UNIT-1.docx",
+        "AI_UNIT-5.pptx",
+        "UNIT-1.docx",
+        "AI_UNIT-5.pptx",
+        "Unit-4.pdf"
+      ],
+      "retrievedScores": [
+        0.8500853776931763,
+        0.8484023809432983,
+        0.8472185134887695,
+        0.8448472023010254,
+        0.8400968313217163
+      ],
+      "top1Score": 0.8500853776931763,
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 1,
+      "latencyMs": 2892,
+      "llmAnswer": "Hey there! Let me break this down for you based on your notes. \n\nBased on your notes (`UNIT-1.docx`, Page 1), **Learning Agents** get better over time by learning from experience using a feedback mechanism. They don't just blindly follow a fixed set of rules; instead, they actually modify their behavior by observing the consequences of what they do, adjusting their internal models, and tweaking their decision-making to get better outcomes in future interactions.\n\nHere are the key components that make this happen:\n* **Learning element:** Responsible for updating the agent's knowledge based on past actions.\n* **Performance element:** Executes the actual actions based on its current knowledge.\n* **Critic:** Evaluates how well the agent is performing.\n* **Problem generator:** Suggests new actions to help improve learning.\n\nA classic real-world example of this is a spam email filter that gets more accurate the more data it processes, or chatbots that learn straight from user interactions!",
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How do you calculate the total cost in A* search?",
+      "subject": "IAI",
+      "expectedFileName": "UNIT-2-1.pdf",
+      "sourceChunkId": "6a684c6c9688f92f9ecdc38c",
+      "retrievedChunkIds": [
+        "6a684c6c9688f92f9ecdc38c",
+        "6a684c6c9688f92f9ecdc38d",
+        "6a684c6c9688f92f9ecdc38f",
+        "6a684c6c9688f92f9ecdc38e",
+        "6a684c6c9688f92f9ecdc390"
+      ],
+      "retrievedFileNames": [
+        "UNIT-2-1.pdf",
+        "UNIT-2-1.pdf",
+        "UNIT-2-1.pdf",
+        "UNIT-2-1.pdf",
+        "UNIT-2-1.pdf"
+      ],
+      "retrievedScores": [
+        0.8690050840377808,
+        0.8476808071136475,
+        0.8464869260787964,
+        0.8456994295120239,
+        0.844914436340332
+      ],
+      "top1Score": 0.8690050840377808,
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 1,
+      "latencyMs": 2041,
+      "llmAnswer": "Based on your study notes (`UNIT-2-1.pdf`, Page 31 & 37), the total cost in A* search is represented by the evaluation function $f(x)$ (or $f(n)$), which is calculated as the sum of two components:\n\n$$f(x) = g(x) + h(x)$$\n\nWhere:\n* **$g(x)$ (Backward Cost):** The cumulative cost of reaching the current node from the root/start node.\n* **$h(x)$ (Forward Cost / Heuristic):** An estimate of the distance (or remaining cost) from the current node to the goal node.\n\nAt each step in the search space, the algorithm chooses and expands the node that has the lowest $f(x)$ value.",
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "What happens at node E during alpha-beta pruning that causes the right successor to be skipped?",
+      "subject": "IAI",
+      "expectedFileName": "UNIT-2-1.pdf",
+      "sourceChunkId": "6a684c6c9688f92f9ecdc39d",
+      "retrievedChunkIds": [
+        "6a684c6c9688f92f9ecdc39d",
+        "6a684c6c9688f92f9ecdc39e",
+        "6a684c6c9688f92f9ecdc39c",
+        "6a684c6c9688f92f9ecdc39b",
+        "6a684c6c9688f92f9ecdc39a"
+      ],
+      "retrievedFileNames": [
+        "UNIT-2-1.pdf",
+        "UNIT-2-1.pdf",
+        "UNIT-2-1.pdf",
+        "UNIT-2-1.pdf",
+        "UNIT-2-1.pdf"
+      ],
+      "retrievedScores": [
+        0.8938053846359253,
+        0.8784301280975342,
+        0.8713474273681641,
+        0.8711575269699097,
+        0.8499524593353271
+      ],
+      "top1Score": 0.8938053846359253,
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 1,
+      "latencyMs": 947,
+      "llmAnswer": "Based on your notes (`UNIT-2-1.pdf`, Page 48):\n\nAt node E, it is the MAX player's turn, so the value of alpha ($\\alpha$) gets updated. The current value of alpha ($-\\infty$) is compared with the node value $5$, giving $\\max(-\\infty, 5) = 5$. \n\nThis results in $\\alpha = 5$ and $\\beta = 3$. Because this satisfies the pruning condition where **$\\alpha \\ge \\beta$** ($5 \\ge 3$), the right successor of node E is pruned (skipped) and the algorithm does not traverse it.",
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "What is the final route and total distance when going from Arad to Bucharest?",
+      "subject": "IAI",
+      "expectedFileName": "Romania Map Problem",
+      "sourceChunkId": "6a684c3a9688f92f9ecdc331",
+      "retrievedChunkIds": [
+        "6a684c3a9688f92f9ecdc331",
+        "6a684c6c9688f92f9ecdc391",
+        "6a684c3a9688f92f9ecdc330",
+        "6a684c6c9688f92f9ecdc382",
+        "6a684c6c9688f92f9ecdc390"
+      ],
+      "retrievedFileNames": [
+        "Romania Map Problem",
+        "UNIT-2-1.pdf",
+        "Romania Map Problem",
+        "UNIT-2-1.pdf",
+        "UNIT-2-1.pdf"
+      ],
+      "retrievedScores": [
+        0.8710880279541016,
+        0.8568147420883179,
+        0.8544130325317383,
+        0.8292285203933716,
+        0.8212551474571228
+      ],
+      "top1Score": 0.8710880279541016,
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 1,
+      "latencyMs": 5947,
+      "llmAnswer": "Based on your notes (Romania Map Problem, Page 1 and UNIT-2-1.pdf, Page 38), the final optimal path and total distance from Arad to Bucharest are:\n\n* **Final Route:** Arad → Sibiu → Rimnicu Vilcea → Pitesti → Bucharest\n* **Total Distance (Cost):** 418 km (calculated as $140 + 80 + 97 + 101 = 418$)",
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How does a dynamic Bayesian network represent a robot moving in a 2D space?",
+      "subject": "IAI",
+      "expectedFileName": "Unit-3.pdf",
+      "sourceChunkId": "6a684c8a9688f92f9ecdc3cb",
+      "retrievedChunkIds": [
+        "6a684c8a9688f92f9ecdc3cc",
+        "6a684c8a9688f92f9ecdc3cd",
+        "6a684c8a9688f92f9ecdc3cb",
+        "6a684c8a9688f92f9ecdc3c9",
+        "6a684c8a9688f92f9ecdc3ca"
+      ],
+      "retrievedFileNames": [
+        "Unit-3.pdf",
+        "Unit-3.pdf",
+        "Unit-3.pdf",
+        "Unit-3.pdf",
+        "Unit-3.pdf"
+      ],
+      "retrievedScores": [
+        0.9113279581069946,
+        0.906845211982727,
+        0.8839799165725708,
+        0.875643253326416,
+        0.8746336698532104
+      ],
+      "top1Score": 0.9113279581069946,
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 1,
+      "latencyMs": 1052,
+      "llmAnswer": "Hey there! 👋 Based on your notes (`Unit-3.pdf`, Pages 25–26), here is how a Dynamic Bayesian Network (DBN) models the motion of a robot in a 2D ($X–Y$) plane:\n\nIn this setup, the DBN breaks down the problem into time steps and uses a chain-like structure to track and predict motion under uncertainty. It relies on a few key components:\n\n1. **State Variables ($X_t$):** These represent the robot's actual, hidden position and velocity in the plane:\n   * Position coordinates: $X_t, Y_t$\n   * Velocity components (potentially): $V_{xt}, V_{yt}$\n\n2. **Evidence Variables ($E_t$):** These represent the sensor readings (like $Z_{xt}, Z_{yt}$ for observed positions). Because real-world sensors aren't perfect, these measurements are noisy.\n\n3. **Core Components for Construction:**\n   * **Initial State ($P(X_0, Y_0)$):** Defines the starting position of the robot.\n   * **Transition Model / Motion Model ($P(X_t, Y_t \\mid X_{t-1}, Y_{t-1})$):** Describes how the robot moves. It captures the idea that the robot's next position depends on its previous position and velocity, factoring in movement noise (e.g., *New position = old position + movement + noise*).\n   * **Sensor Model ($P(Z_t \\mid X_t, Y_t)$):** Describes how observations are generated, capturing the error/approximation in the sensor's readings.\n   * **Unrolling Over Time:** The structure repeats for $t = 1, 2, 3, \\dots$ forming a chain that follows the first-order Markov property (meaning the current state depends directly on the previous state).\n\nBy combining the transition and sensor models and repeating them over time, the DBN gives us a solid, efficient framework to handle real-world noise and track the robot's motion accurately! Let me know if you need help with any other parts of Unit 3.",
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How do I choose the parents for a variable when building a Bayesian network?",
+      "subject": "IAI",
+      "expectedFileName": "Unit-3.pdf",
+      "sourceChunkId": "6a684c8a9688f92f9ecdc3ba",
+      "retrievedChunkIds": [
+        "6a684c8a9688f92f9ecdc3ba",
+        "6a684c8a9688f92f9ecdc3b9",
+        "6a684c8a9688f92f9ecdc3b8",
+        "6a684c8a9688f92f9ecdc3b4",
+        "6a68647c6ddf1c26379e5c91"
+      ],
+      "retrievedFileNames": [
+        "Unit-3.pdf",
+        "Unit-3.pdf",
+        "Unit-3.pdf",
+        "Unit-3.pdf",
+        "AI unit-3 (1).pptx"
+      ],
+      "retrievedScores": [
+        0.8935290575027466,
+        0.8789884448051453,
+        0.8712934851646423,
+        0.8693227767944336,
+        0.8564879894256592
+      ],
+      "top1Score": 0.8935290575027466,
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 1,
+      "latencyMs": 6484,
+      "llmAnswer": "Hey! Based on your notes (`Unit-3.pdf`, Page 13), choosing the parents for a variable is considered the **most important step** (Step 2) when building a Bayesian Network. \n\nHere is how you should do it for each variable $X_i$:\n\n1. **Select a minimal set of parents** from the earlier variables ($X_1, \\dots, X_{i-1}$).\n2. Make sure that this selection:\n   * Satisfies **conditional independence** (meaning each node depends only on this small set of parent nodes, rather than all earlier variables, as defined by $P(X_i \\mid X_{i-1}, \\dots, X_1) = P(X_i \\mid Parents(X_i))$).\n   * Includes **no unnecessary variables**.\n3. **Include only direct influences** — stick to variables that directly affect $X_i$. \n\n*(Pro-tip from Step 1 of the same notes: When setting up your variables initially, it's also best to arrange them from **causes $\\rightarrow$ effects** for better efficiency!)*",
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "Which pathfinding graph algorithm is mentioned for long answer questions in the second unit?",
+      "subject": "IAI",
+      "expectedFileName": "AI Question bank.docx",
+      "sourceChunkId": "6a684d069688f92f9ecdc416",
+      "retrievedChunkIds": [
+        "6a684d039688f92f9ecdc412",
+        "6a684d0a9688f92f9ecdc41c",
+        "6a684d039688f92f9ecdc413",
+        "6a684d0a9688f92f9ecdc41b",
+        "6a684cfe9688f92f9ecdc40d"
+      ],
+      "retrievedFileNames": [
+        "AI Question bank.docx",
+        "IAI Question Bank.docx",
+        "AI Question bank.docx",
+        "IAI Question Bank.docx",
+        "AI QB 2.5 UNITS (1).pdf"
+      ],
+      "retrievedScores": [
+        0.8558182120323181,
+        0.8493006825447083,
+        0.8473954200744629,
+        0.8452298641204834,
+        0.843589186668396
+      ],
+      "top1Score": 0.8558182120323181,
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 1,
+      "latencyMs": 710,
+      "llmAnswer": "Hey there! Based on your uploaded study materials, the pathfinding and graph search algorithms mentioned for long answer questions in Unit II include:\n\n* **A\\* search / A\\* algorithm** (found in *AI Question bank.docx, Page 1*, *IAI Question Bank.docx, Page 1*, and *AI QB 2.5 UNITS (1).pdf, Page 2*)\n* **Greedy Best First Search** (found in *IAI Question Bank.docx, Page 1* and *AI QB 2.5 UNITS (1).pdf, Page 2*)\n* **Depth First Search (DFS)** and **Breadth First Search (BFS)** (found in *AI Question bank.docx, Page 1* and *IAI Question Bank.docx, Page 1*)\n\nLet me know if you need any help breaking down how these algorithms work for your exam prep!",
+      "faithfulnessScore": 0.75,
+      "citedFile": true
+    },
+    {
+      "question": "How do you calculate the utility of a state in Markov Decision Processes?",
+      "subject": "IAI",
+      "expectedFileName": "Unit-4.pdf",
+      "sourceChunkId": "6a684ce29688f92f9ecdc3e8",
+      "retrievedChunkIds": [
+        "6a684ce29688f92f9ecdc3e8",
+        "6a684ce29688f92f9ecdc3e9",
+        "6a684ce29688f92f9ecdc3e7",
+        "6a684ce29688f92f9ecdc3d8",
+        "6a684ce29688f92f9ecdc3ed"
+      ],
+      "retrievedFileNames": [
+        "Unit-4.pdf",
+        "Unit-4.pdf",
+        "Unit-4.pdf",
+        "Unit-4.pdf",
+        "Unit-4.pdf"
+      ],
+      "retrievedScores": [
+        0.8831503987312317,
+        0.8751083612442017,
+        0.8683844804763794,
+        0.8674160242080688,
+        0.8633155822753906
+      ],
+      "top1Score": 0.8831503987312317,
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 1,
+      "latencyMs": 2727,
+      "llmAnswer": "Hey! Based on your study materials (specifically `Unit-4.pdf`, Pages 13-15), the utility of a state in a Markov Decision Process (MDP) depends on whether you are looking at it without discounting, with discounting, or through the Bellman equation during value updates. \n\nHere is how it works:\n\n1. **Basic Definition:**\n   Utility represents how good or desirable an outcome is. An agent doesn't just look at a single reward; it considers the total accumulated reward (or expected total reward) over a sequence of states.\n\n2. **Without Discounting:**\n   The utility is simply the sum of all rewards collected over time steps ($t$):\n   $$\\text{Utility} = \\sum_{t=0}^{\\infty} R(s_t)$$\n\n3. **With Discounting (Most Common Concept):**\n   Since future rewards are usually less certain or valued slightly less than immediate ones, a discount factor ($\\gamma$, where $0 < \\gamma < 1$) is applied. The formula is:\n   $$\\text{Utility} = \\sum_{t=0}^{\\infty} \\gamma^t R(s_t)$$\n\n4. **Using the Bellman Equation (Iterative Approach / Value Iteration):**\n   As mentioned in your notes (`Unit-4.pdf`, Page 14-15), the utility of a state is defined as **the immediate reward for that state plus the expected discounted utility of the next state**, assuming the agent chooses the optimal action. \n   \n   The Bellman Update Rule used to compute this iteratively is:\n   $$U_{i+1}(s) = R(s) + \\gamma \\max_{a} \\sum P(s' \\mid s, a) U_i(s')$$\n\n   Where:\n   * $R(s)$ = Immediate reward of state $s$\n   * $\\gamma$ = Discount factor\n   * $P(s' \\mid s, a)$ = Transition probability of moving to state $s'$ given action $a$\n   * $U_i(s')$ = Utility of the next state\n\nLet me know if you want to walk through an example of this using the Grid World!",
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How do reinforcement learning and supervised learning differ?",
+      "subject": "IAI",
+      "expectedFileName": "IAI SET-2 R19.pdf",
+      "sourceChunkId": "6a684cf69688f92f9ecdc404",
+      "retrievedChunkIds": [
+        "6a6864866ddf1c26379e5cd0",
+        "6a684c439688f92f9ecdc339",
+        "6a6864866ddf1c26379e5cd1",
+        "6a6864866ddf1c26379e5cce",
+        "6a684c439688f92f9ecdc338"
+      ],
+      "retrievedFileNames": [
+        "AI_UNIT-5.pptx",
+        "UNIT-1.docx",
+        "AI_UNIT-5.pptx",
+        "AI_UNIT-5.pptx",
+        "UNIT-1.docx"
+      ],
+      "retrievedScores": [
+        0.8326494693756104,
+        0.82497239112854,
+        0.8236701488494873,
+        0.8227664232254028,
+        0.8191335797309875
+      ],
+      "top1Score": 0.8326494693756104,
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": false,
+      "thresholdLoss": false,
+      "reciprocalRank": 0,
+      "latencyMs": 787,
+      "llmAnswer": "Hey there! Let's break down the difference between supervised learning and reinforcement learning based on your VJIT study materials. \n\nHere is how they differ:\n\n1. **Supervised Learning:**\n   - **How it works:** The model is trained using **labeled data** (meaning the correct answers or outputs are already provided in the training dataset). \n   - **Example (from `UNIT-1.docx`, Page 1):** Predicting house prices, where the algorithm is fed data about houses (size, bedrooms, location) *along with* their actual prices so it can learn the relationship between the features and the price. Another example is a Spam Email Filter trained on emails explicitly labeled as \"spam\" or \"not spam\".\n\n2. **Reinforcement Learning:**\n   - **How it works:** Instead of learning from a pre-labeled dataset, the machine learns by **taking actions and receiving feedback in the form of rewards or penalties** from the environment (as seen in `UNIT-1.docx`, Page 1 and `AI_UNIT-5.pptx`, Page 3). The main task is to use these observed rewards to figure out the best (optimal) policies.\n   - **Example (from `UNIT-1.docx`, Page 1):** Game AI like AlphaGo, where the system tries different strategies and learns from the feedback of winning or losing. Other types include passive learning (where the policy is fixed and it learns state utilities) and active learning like Q-Learning (`AI_UNIT-5.pptx`, Pages 6-7).\n\n**In short:** Supervised learning learns by example from labeled datasets, whereas reinforcement learning learns by trial and error through rewards and penalties! Let me know if you need any more topics from your AI notes cleared up.",
+      "faithfulnessScore": 0.75,
+      "citedFile": true
+    },
+    {
+      "question": "What topics are covered in Unit 3 of the Intro to AI course for VJIT students?",
+      "subject": "IAI",
+      "expectedFileName": "IAI.pdf",
+      "sourceChunkId": "6a684d0e9688f92f9ecdc41f",
+      "retrievedChunkIds": [
+        "6a684d0e9688f92f9ecdc420",
+        "6a68647c6ddf1c26379e5c7d",
+        "6a684c8a9688f92f9ecdc3a4",
+        "6a684cf69688f92f9ecdc403",
+        "6a684d039688f92f9ecdc412"
+      ],
+      "retrievedFileNames": [
+        "IAI.pdf",
+        "AI unit-3 (1).pptx",
+        "Unit-3.pdf",
+        "IAI SET-2 R19.pdf",
+        "AI Question bank.docx"
+      ],
+      "retrievedScores": [
+        0.8778700828552246,
+        0.8749040961265564,
+        0.8672157526016235,
+        0.8665827512741089,
+        0.8651325702667236
+      ],
+      "top1Score": 0.8778700828552246,
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 1,
+      "latencyMs": 1821,
+      "llmAnswer": "Hey there! Based on your study materials, here are the topics covered in **Unit 3** of the Introduction to Artificial Intelligence (IAI) course:\n\nAccording to the syllabus outline (found in `IAI.pdf`, Page 1 and `AI unit-3 (1).pptx`, Page 1), **Unit – III: Probabilistic Reasoning** covers:\n* Probability & Conditional Probability\n* Bayes Rule\n* Bayesian Networks (Representation, Construction, and Inference)\n* Temporal Models\n* Hidden Markov Models (HMM)\n* Dynamic Bayesian Networks (DBN)\n* Natural Language Processing using HMM\n\nAdditionally, your notes include a section on **Uncertainty** (from `Unit-3.pdf`, Page 1), which discusses why acting under uncertainty is essential in AI, dealing with partial observability, nondeterminism, and examples like the automated taxi. \n\nLet me know if you need help diving into any specific topic from this unit!",
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "What topics are covered in the exam questions related to Markov Decision Process and Reinforcement Learning?",
+      "subject": "IAI",
+      "expectedFileName": "IAI 1.pdf",
+      "sourceChunkId": "6a684ceb9688f92f9ecdc3f5",
+      "retrievedChunkIds": [
+        "6a684cef9688f92f9ecdc3fa",
+        "6a684d039688f92f9ecdc413",
+        "6a684cfa9688f92f9ecdc409",
+        "6a684cf69688f92f9ecdc404",
+        "6a684ceb9688f92f9ecdc3f4"
+      ],
+      "retrievedFileNames": [
+        "IAI Question Bank - II (1).pdf",
+        "AI Question bank.docx",
+        "IAI.pdf",
+        "IAI SET-2 R19.pdf",
+        "IAI 1.pdf"
+      ],
+      "retrievedScores": [
+        0.8836175203323364,
+        0.8832458257675171,
+        0.8637228608131409,
+        0.8636412620544434,
+        0.8626202344894409
+      ],
+      "top1Score": 0.8836175203323364,
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 0.2,
+      "latencyMs": 693,
+      "llmAnswer": "Hey! Based on your uploaded VJIT study materials, here are the specific topics covered regarding **Markov Decision Process (MDP)** and **Reinforcement Learning (RL)**:\n\n### 1. Markov Decision Process (MDP) Topics\n*   **Core Concepts:** \n    *   Markov Property and Markov Assumptions ([IAI Question Bank - II (1).pdf, Page 1](https://drive.google.com/file/d/17_bHxpeq-l3xUKErGWCOEfVY_dtGe-Ob/view?usp=drivesdk); [IAI SET-2 R19.pdf, Page 1](https://drive.google.com/file/d/1OllvhTEpCCKsgw6XZdpEZVrW918mq-5n/view?usp=drivesdk))\n    *   Components of a Markov Decision Process ([IAI.pdf, Page 1](https://drive.google.com/file/d/11-i8KtYtQq21JOvWzIvJcbNpoiEYWKY8/view?usp=drivesdk))\n    *   Transition models and Reward functions ([IAI Question Bank - II (1).pdf, Page 1](https://drive.google.com/file/d/17_bHxpeq-l3xUKErGWCOEfVY_dtGe-Ob/view?usp=drivesdk))\n    *   Bellman’s equation ([IAI Question Bank - II (1).pdf, Page 1](https://drive.google.com/file/d/17_bHxpeq-l3xUKErGWCOEfVY_dtGe-Ob/view?usp=drivesdk))\n    *   Utilities and Discount Factors ([IAI Question Bank - II (1).pdf, Page 1](https://drive.google.com/file/d/17_bHxpeq-l3xUKErGWCOEfVY_dtGe-Ob/view?usp=drivesdk))\n    *   Policies (Policies, Policy Iteration, Optimal Policy, and Optimal Policies/Utilities of states) ([IAI Question Bank - II (1).pdf, Page 1](https://drive.google.com/file/d/17_bHxpeq-l3xUKErGWCOEfVY_dtGe-Ob/view?usp=drivesdk); [AI Question bank.docx, Page 1](https://docs.google.com/document/d/1ek3EfOSX4WA3RiF6lA9bJvFcetifZ4zM/edit?usp=drivesdk&ouid=108536391606531957118&rtpof=true&sd=true))\n    *   Value Iteration (Definitions and Algorithms) ([IAI Question Bank - II (1).pdf, Page 1](https://drive.google.com/file/d/17_bHxpeq-l3xUKErGWCOEfVY_dtGe-Ob/view?usp=drivesdk); [AI Question bank.docx, Page 1](https://docs.google.com/document/d/1ek3EfOSX4WA3RiF6lA9bJvFcetifZ4zM/edit?usp=drivesdk&ouid=108536391606531957118&rtpof=true&sd=true))\n*   **Advanced / Extensions:**\n    *   Partially Observable MDPs (POMDP) and their specifications ([IAI Question Bank - II (1).pdf, Page 1](https://drive.google.com/file/d/17_bHxpeq-l3xUKErGWCOEfVY_dtGe-Ob/view?usp=drivesdk); [IAI.pdf, Page 1](https://drive.google.com/file/d/11-i8KtYtQq21JOvWzIvJcbNpoiEYWKY8/view?usp=drivesdk))\n    *   Formulation procedures for MDPs ([AI Question bank.docx, Page 1](https://docs.google.com/document/d/1ek3EfOSX4WA3RiF6lA9bJvFcetifZ4zM/edit?usp=drivesdk&ouid=1085363916065319571",
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How many total questions are there in Part-A of the AI exam and how many marks does each carry?",
+      "subject": "IAI",
+      "expectedFileName": "IAI 1.pdf",
+      "sourceChunkId": "6a684ceb9688f92f9ecdc3f3",
+      "retrievedChunkIds": [
+        "6a684cf29688f92f9ecdc3fd",
+        "6a684cfa9688f92f9ecdc408",
+        "6a684ceb9688f92f9ecdc3f3",
+        "6a684cf69688f92f9ecdc403",
+        "6a684ceb9688f92f9ecdc3f4"
+      ],
+      "retrievedFileNames": [
+        "IAI R19 & R20 Regular & Supply External Q Paper Format.pdf",
+        "IAI.pdf",
+        "IAI 1.pdf",
+        "IAI SET-2 R19.pdf",
+        "IAI 1.pdf"
+      ],
+      "retrievedScores": [
+        0.8471083641052246,
+        0.8453952074050903,
+        0.8451582789421082,
+        0.8451368808746338,
+        0.8450379371643066
+      ],
+      "top1Score": 0.8471083641052246,
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 0.3333333333333333,
+      "latencyMs": 1971,
+      "llmAnswer": "Based on your study materials (such as `IAI R19 & R20 Regular & Supply External Q Paper Format.pdf`, Page 1), Part-A of the Introduction to Artificial Intelligence exam contains **ten questions** from five units, and it is compulsory. \n\nAs noted in the question paper format, Part-A carries a total of 25 marks, with individual questions typically carrying either **2 marks** or **3 marks** (for example, looking at the Q-paper breakdown, questions like the Bayes' rule equation carry 2 marks, while performance measure or comparison questions carry 3 marks).",
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How does reasoning help people make better choices instead of picking based on feelings?",
+      "subject": "PC",
+      "expectedFileName": "UNIT IV DECESION  MAKING.pdf",
+      "sourceChunkId": "6a6867296ddf1c26379e6048",
+      "retrievedChunkIds": [
+        "6a6866e36ddf1c26379e6003",
+        "6a6866e36ddf1c26379e6002",
+        "6a6866e36ddf1c26379e6005",
+        "6a6866e36ddf1c26379e6006",
+        "6a6866e36ddf1c26379e6004"
+      ],
+      "retrievedFileNames": [
+        "UNIT IV DECESION  MAKING.pdf",
+        "UNIT IV DECESION  MAKING.pdf",
+        "UNIT IV DECESION  MAKING.pdf",
+        "UNIT IV DECESION  MAKING.pdf",
+        "UNIT IV DECESION  MAKING.pdf"
+      ],
+      "retrievedScores": [
+        0.8787399530410767,
+        0.8767030239105225,
+        0.8663440942764282,
+        0.8616410493850708,
+        0.8572322130203247
+      ],
+      "top1Score": 0.8787399530410767,
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 1,
+      "latencyMs": 771,
+      "llmAnswer": "Hey there! Based on your notes (`UNIT IV DECESION MAKING.pdf`, Pages 13–14), reasoning helps you make much better choices by acting as a logical counterbalance to emotions and sudden moods. \n\nHere is how reasoning improves decision-making instead of going purely by feelings:\n\n1. **Avoiding Emotional Bias:** Emotions like anger, fear, or excitement can lead to impulsive and irrational choices (like wanting to quit a job immediately when angry). Reasoning lets you pause and think about long-term goals, financial stability, and alternatives, preventing short-term feelings from damaging your future (Page 13).\n2. **Comparing Alternatives Objectively:** While emotional attachment or bias can make one option feel better, reasoning provides a structured evaluation to analyze costs, risks, outcomes, and feasibility—ensuring you pick the most balanced and efficient option (Page 13).\n3. **Predicting Consequences:** Reasoning uses logic and past experience to help you think ahead and ask \"What if?\" (such as evaluating repayment ability before taking a loan), which reduces risks and helps you avoid the regret that often comes with rushed, emotional decisions (Page 14).\n4. **Supporting Ethical Decisions:** Reasoning ensures your choices align with values, fairness, and moral principles rather than just personal convenience or gain (Page 13).\n5. **Building Confidence and Reducing Regret:** Knowing you've weighed all the pros and cons logically reduces uncertainty, builds confidence, and prevents the mistakes and regret that come with acting without thinking (Page 14).\n\nHope this helps with your preparation! Let me know if you need anything else from Unit IV.",
+      "faithfulnessScore": 0.5,
+      "citedFile": true
+    },
+    {
+      "question": "What should I do right after I figure out what the problem is?",
+      "subject": "PC",
+      "expectedFileName": "UNIT IV DECESION  MAKING.pdf",
+      "sourceChunkId": "6a6867296ddf1c26379e6053",
+      "retrievedChunkIds": [
+        "6a6866e36ddf1c26379e600e",
+        "6a6866e36ddf1c26379e600c",
+        "6a6866e36ddf1c26379e600f",
+        "6a6866e36ddf1c26379e6011",
+        "6a6866e36ddf1c26379e5ff2"
+      ],
+      "retrievedFileNames": [
+        "UNIT IV DECESION  MAKING.pdf",
+        "UNIT IV DECESION  MAKING.pdf",
+        "UNIT IV DECESION  MAKING.pdf",
+        "UNIT IV DECESION  MAKING.pdf",
+        "UNIT IV DECESION  MAKING.pdf"
+      ],
+      "retrievedScores": [
+        0.8651052117347717,
+        0.85907381772995,
+        0.8586699962615967,
+        0.8580327033996582,
+        0.8577283620834351
+      ],
+      "top1Score": 0.8651052117347717,
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 1,
+      "latencyMs": 3099,
+      "llmAnswer": "Hey there! Based on your notes (`UNIT IV DECESION MAKING.pdf`, Page 16), right after you understand the problem and figure out what is wrong, the next step is to **think of possible solutions by brainstorming different ways to tackle it**. \n\nDepending on how your notes break down the full process, you'll also want to make sure you:\n* **Define your goals clearly** before jumping into a final choice, so you know what success actually looks like (`UNIT IV DECESION MAKING.pdf`, Page 17).\n* **Gather information** (collect facts, data, or opinions related to the issue) to help back up your potential solutions (`UNIT IV DECESION MAKING.pdf`, Page 17). \n\nAfter brainstorming and evaluating those options based on factors like cost and practicality, you then choose the best solution and put it into action! Let me know if you need help going through any of the other steps.",
+      "faithfulnessScore": 0.6,
+      "citedFile": true
+    },
+    {
+      "question": "How do social platforms help students and teachers with their studies?",
+      "subject": "PC",
+      "expectedFileName": "UNIT V DIGITAL COMMUNICATION.pdf",
+      "sourceChunkId": "6a686dc8cb43327bc2dc833c",
+      "retrievedChunkIds": [
+        "6a686dc8cb43327bc2dc833d",
+        "6a686dc8cb43327bc2dc8353",
+        "6a686dc8cb43327bc2dc833e",
+        "6a686dc8cb43327bc2dc834d",
+        "6a686dc8cb43327bc2dc8342"
+      ],
+      "retrievedFileNames": [
+        "UNIT V DIGITAL COMMUNICATION.pdf",
+        "UNIT V DIGITAL COMMUNICATION.pdf",
+        "UNIT V DIGITAL COMMUNICATION.pdf",
+        "UNIT V DIGITAL COMMUNICATION.pdf",
+        "UNIT V DIGITAL COMMUNICATION.pdf"
+      ],
+      "retrievedScores": [
+        0.8432427644729614,
+        0.8345668315887451,
+        0.8319354057312012,
+        0.8319134712219238,
+        0.831308126449585
+      ],
+      "top1Score": 0.8432427644729614,
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 1,
+      "latencyMs": 689,
+      "llmAnswer": "Hey there! Based on your notes (`UNIT V DIGITAL COMMUNICATION.pdf`, Page 27), social networking has become a really powerful educational tool for both students and teachers. \n\nHere is how it helps:\n* **Sharing Resources and Collaborating:** Students and teachers use these platforms to share study resources, join discussions, and work together on projects.\n* **Access to Free Learning Materials:** Many online groups and communities give you access to free learning materials, tutorials, and expert advice.\n* **Interactive Lessons:** Teachers can use social platforms to enhance their lessons with real-time updates and interactive sessions.\n* **Global Exposure and Peer Learning:** It fosters peer learning and gives students exposure to global knowledge.\n* **Awareness of Academic Events:** Social media helps promote new educational tools, webinars, and other academic events.\n* **Continuous Learning:** By encouraging interaction outside the classroom, it supports ongoing learning and helps build a more engaged and curious student community.",
+      "faithfulnessScore": 0.5,
+      "citedFile": true
+    },
+    {
+      "question": "What are the main drawbacks of using the 5 Whys technique?",
+      "subject": "PC",
+      "expectedFileName": "UNIT IV DECESION  MAKING.pdf",
+      "sourceChunkId": "6a6866e36ddf1c26379e6019",
+      "retrievedChunkIds": [
+        "6a6866e36ddf1c26379e6019",
+        "6a6866e36ddf1c26379e6018",
+        "6a6866e36ddf1c26379e6017",
+        "6a6879a3cb43327bc2dc83f6",
+        "6a6866e36ddf1c26379e601a"
+      ],
+      "retrievedFileNames": [
+        "UNIT IV DECESION  MAKING.pdf",
+        "UNIT IV DECESION  MAKING.pdf",
+        "UNIT IV DECESION  MAKING.pdf",
+        "PC -II MID QUESTION BANK.pdf",
+        "UNIT IV DECESION  MAKING.pdf"
+      ],
+      "retrievedScores": [
+        0.8629357218742371,
+        0.8485891819000244,
+        0.8409393429756165,
+        0.8311170339584351,
+        0.8200326561927795
+      ],
+      "top1Score": 0.8629357218742371,
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 1,
+      "latencyMs": 754,
+      "llmAnswer": "Based on your notes (`UNIT IV DECESION  MAKING.pdf`, Page 21), while the 5 Why’s method is a great and simple tool, it does have a few limitations:\n\n1. **Complex Problems:** It might not work very well for extremely complex problems that have multiple root causes. \n2. **Quality of Answers:** The results depend entirely on how well the questions are asked and answered. If people guess or aren't completely honest, you might miss the actual root cause.\n3. **Frustration:** Sometimes, asking \"why\" over and over again can become frustrating if it's done without proper guidance. \n\n*(Note: The notes also mention on Page 22 that the number \"five\" isn't a strict rule—you might need more or fewer steps, and it should always be used with logic and care!)*",
+      "faithfulnessScore": 0.5,
+      "citedFile": true
+    },
+    {
+      "question": "How can I stay motivated and handle unexpected problems when trying to reach my goals?",
+      "subject": "PC",
+      "expectedFileName": "SOFTSKILLS 1.pdf",
+      "sourceChunkId": "6a6866246ddf1c26379e5f4c",
+      "retrievedChunkIds": [
+        "6a6866246ddf1c26379e5f4b",
+        "6a6866246ddf1c26379e5f4c",
+        "6a6866246ddf1c26379e5f47",
+        "6a6866246ddf1c26379e5f4a",
+        "6a6866246ddf1c26379e5f49"
+      ],
+      "retrievedFileNames": [
+        "SOFTSKILLS 1.pdf",
+        "SOFTSKILLS 1.pdf",
+        "SOFTSKILLS 1.pdf",
+        "SOFTSKILLS 1.pdf",
+        "SOFTSKILLS 1.pdf"
+      ],
+      "retrievedScores": [
+        0.8595385551452637,
+        0.8546000123023987,
+        0.8442689180374146,
+        0.841520369052887,
+        0.8363098502159119
+      ],
+      "top1Score": 0.8595385551452637,
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 1,
+      "latencyMs": 3187,
+      "llmAnswer": "Hey there! Dealing with unexpected hurdles and keeping your motivation up is something every VJIT engineer runs into—whether it's managing a tough semester load or working on personal projects. \n\nBased on your notes (**SOFTSKILLS 1.pdf**, Pages 19–20), here are some great strategies you can use to stay motivated and handle setbacks:\n\n**How to stay motivated:**\n* **Visualize Success:** Imagine how great it will feel to actually achieve your goal and think about the benefits it brings. This mental picture is a powerful way to stay inspired (*Page 19*).\n* **Set Milestones & Celebrate Small Wins:** Break things down and reward yourself when you complete key steps. It reinforces positive behavior and keeps your drive alive (*Page 20*).\n* **Stay Positive and Focused:** Cultivate a positive mindset, dodge negative self-talk, and focus on the rewards waiting for you at the finish line (*Page 20*).\n* **Seek Accountability:** Share your goals with a trusted friend, mentor, or family member. Having someone keep you accountable boosts your commitment (*Page 20*).\n\n**How to handle unexpected problems (Setbacks):**\n* **Learn from Setbacks:** Don't let failures or sudden hurdles discourage you. Treat them as real learning opportunities, tweak your approach, and keep moving forward. Resilience is key (*Page 20*).\n* **Stay Flexible:** Life can definitely be unpredictable, and rigid goals usually lead to frustration when things change. Being flexible helps you adapt to new info or situations while keeping your eyes on the overall objective (*Pages 19–20*).\n\nYou've got this! Just take it one step at a time. Let me know if you need help planning out your study schedule or breaking down other goals!",
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "what is the very first step in the decision making wheel according to the notes?",
+      "subject": "PC",
+      "expectedFileName": "PC -II MID QUESTION BANK.pdf",
+      "sourceChunkId": "6a6879a3cb43327bc2dc83f4",
+      "retrievedChunkIds": [
+        "6a6866e36ddf1c26379e6007",
+        "6a6866e36ddf1c26379e5fef",
+        "6a6866e36ddf1c26379e6008",
+        "6a6866e36ddf1c26379e5ff1",
+        "6a6866e36ddf1c26379e600e"
+      ],
+      "retrievedFileNames": [
+        "UNIT IV DECESION  MAKING.pdf",
+        "UNIT IV DECESION  MAKING.pdf",
+        "UNIT IV DECESION  MAKING.pdf",
+        "UNIT IV DECESION  MAKING.pdf",
+        "UNIT IV DECESION  MAKING.pdf"
+      ],
+      "retrievedScores": [
+        0.8635303378105164,
+        0.8572362661361694,
+        0.854998767375946,
+        0.8510477542877197,
+        0.8443935513496399
+      ],
+      "top1Score": 0.8635303378105164,
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": false,
+      "thresholdLoss": false,
+      "reciprocalRank": 0,
+      "latencyMs": 1208,
+      "llmAnswer": "Hey! Based on your notes (`UNIT IV DECESION  MAKING.pdf`, Page 15), the very first step in the Decision-Making Wheel is **\"Stop and Think\"**. \n\nIt involves pausing before making any choice to prevent rash decisions driven by emotions or impulse, giving you time to assess the situation and clear your mind of distractions!",
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How do modern news platforms use different media formats to report stories?",
+      "subject": "PC",
+      "expectedFileName": "UNIT V DIGITAL COMMUNICATION.pdf",
+      "sourceChunkId": "6a687981cb43327bc2dc8386",
+      "retrievedChunkIds": [
+        "6a686dc8cb43327bc2dc8306",
+        "6a686dc8cb43327bc2dc830e",
+        "6a686dc8cb43327bc2dc830c",
+        "6a686dc8cb43327bc2dc830b",
+        "6a686dc8cb43327bc2dc8312"
+      ],
+      "retrievedFileNames": [
+        "UNIT V DIGITAL COMMUNICATION.pdf",
+        "UNIT V DIGITAL COMMUNICATION.pdf",
+        "UNIT V DIGITAL COMMUNICATION.pdf",
+        "UNIT V DIGITAL COMMUNICATION.pdf",
+        "UNIT V DIGITAL COMMUNICATION.pdf"
+      ],
+      "retrievedScores": [
+        0.8418669104576111,
+        0.8395442962646484,
+        0.8220912218093872,
+        0.817348837852478,
+        0.8142614364624023
+      ],
+      "top1Score": 0.8418669104576111,
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 1,
+      "latencyMs": 801,
+      "llmAnswer": "Hey! Based on your notes in **UNIT V DIGITAL COMMUNICATION.pdf (Page 8)**, modern journalism and news platforms rely heavily on multimedia to report news quickly and effectively. Here is how they use different media formats:\n\n* **Photos, Videos, and Live Updates:** News websites and apps use these to keep readers informed. Specifically, video reporting gives a real-time view of events, making stories much more authentic and engaging.\n* **Infographics:** These are used to clearly explain data-heavy reports so readers can digest complex information easily.\n* **Podcasts and Digital Interviews:** These formats allow for in-depth discussions on topics.\n* **Social Media:** News outlets use social media platforms with multimedia support to share stories instantly with their audience.",
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "What are the key elements I should mention when I introduce myself in an interview?",
+      "subject": "PC",
+      "expectedFileName": "PC QUESTION BANK.pdf",
+      "sourceChunkId": "6a6879b0cb43327bc2dc8405",
+      "retrievedChunkIds": [
+        "6a6866246ddf1c26379e5f34",
+        "6a6866246ddf1c26379e5f36",
+        "6a6866246ddf1c26379e5f3a",
+        "6a6866246ddf1c26379e5f3c",
+        "6a6866246ddf1c26379e5f32"
+      ],
+      "retrievedFileNames": [
+        "SOFTSKILLS 1.pdf",
+        "SOFTSKILLS 1.pdf",
+        "SOFTSKILLS 1.pdf",
+        "SOFTSKILLS 1.pdf",
+        "SOFTSKILLS 1.pdf"
+      ],
+      "retrievedScores": [
+        0.8682318925857544,
+        0.846207320690155,
+        0.8427599668502808,
+        0.8401151895523071,
+        0.838823676109314
+      ],
+      "top1Score": 0.8682318925857544,
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": false,
+      "thresholdLoss": false,
+      "reciprocalRank": 0,
+      "latencyMs": 674,
+      "llmAnswer": "Hey there! When you're heading into an interview, nailing your self-introduction is super important to set the right tone. \n\nBased on your notes (`SOFTSKILLS 1.pdf`, Pages 8 and 9), here are the key elements you should include:\n\n1. **Job and Education History:** Mention relevant details about your background and experience, keeping it brief and informative (e.g., *“I have a degree in mechanical engineering from XYZ University, and before joining my current company, I worked as a design engineer for three years.”* — Page 8).\n2. **Key Accomplishments:** Highlight one or two major achievements that showcase your expertise (Page 8).\n3. **Hobbies or Interests:** Adding a personal touch makes you more relatable and approachable (Page 8).\n4. **Why You Are There:** Clearly explain your purpose for being in that particular setting or interview (Page 8).\n5. **Keep It Short:** A great introduction is brief and effective, so avoid unnecessary details (Page 9).\n\nAlso, remember a few things to avoid during the process (from Page 11): steer clear of too much personal information, avoid negative talk, and stay humble rather than being overconfident or boasting. \n\nGood luck with prepping! Let me know if you need help going over anything else for your soft skills prep.",
+      "faithfulnessScore": 0.75,
+      "citedFile": true
+    },
+    {
+      "question": "How does critical thinking help in making better choices and solving complex problems?",
+      "subject": "PC",
+      "expectedFileName": "UNIT IV DECESION  MAKING.pdf",
+      "sourceChunkId": "6a6866e36ddf1c26379e6039",
+      "retrievedChunkIds": [
+        "6a6866e36ddf1c26379e603a",
+        "6a6866e36ddf1c26379e6033",
+        "6a6866e36ddf1c26379e6031",
+        "6a6866e36ddf1c26379e603c",
+        "6a6866e36ddf1c26379e6034"
+      ],
+      "retrievedFileNames": [
+        "UNIT IV DECESION  MAKING.pdf",
+        "UNIT IV DECESION  MAKING.pdf",
+        "UNIT IV DECESION  MAKING.pdf",
+        "UNIT IV DECESION  MAKING.pdf",
+        "UNIT IV DECESION  MAKING.pdf"
+      ],
+      "retrievedScores": [
+        0.87276691198349,
+        0.8619949817657471,
+        0.8614754676818848,
+        0.8614722490310669,
+        0.859925389289856
+      ],
+      "top1Score": 0.87276691198349,
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 1,
+      "latencyMs": 2216,
+      "llmAnswer": "Hey! As a fellow VJITian, I totally get why this topic comes up—decision-making and problem-solving are huge parts of our curriculum. \n\nBased on your notes (`UNIT IV DECESION MAKING.pdf`, Page 30–32), critical thinking helps us tackle complex problems and make better choices through a few key ways:\n\n* **Analytical Thinking (Breaking things down):** It helps break complex information into smaller, manageable parts so we can examine details, spot patterns, and see how components relate to each other. By questioning data and separating facts from opinions, it helps us evaluate arguments and make sound, informed decisions without falling into common errors or biases (Page 30).\n* **Creative Thinking (Going beyond the obvious):** It allows us to approach problems from unique angles by combining knowledge or using unconventional methods. This helps us solve challenges that traditional logic alone can't fix, keeping us flexible and adaptable when unexpected situations pop up (Page 30).\n* **Enhanced Problem-Solving Skills:** By questioning assumptions and carefully evaluating evidence, critical thinking helps us avoid pitfalls. This makes us much more confident and efficient when handling unexpected situations in academics, our future workplaces, or daily life (Page 32).\n\nHope this helps clear it up for your prep! Let me know if you need help with anything else from this unit.",
+      "faithfulnessScore": 0.6,
+      "citedFile": true
+    },
+    {
+      "question": "How do businesses use multimedia to improve their marketing and sales?",
+      "subject": "PC",
+      "expectedFileName": "UNIT V DIGITAL COMMUNICATION.pdf",
+      "sourceChunkId": "6a687981cb43327bc2dc8385",
+      "retrievedChunkIds": [
+        "6a686dc8cb43327bc2dc8305",
+        "6a686dc8cb43327bc2dc8306",
+        "6a686dc8cb43327bc2dc8312",
+        "6a686dc8cb43327bc2dc8314",
+        "6a686dc8cb43327bc2dc8303"
+      ],
+      "retrievedFileNames": [
+        "UNIT V DIGITAL COMMUNICATION.pdf",
+        "UNIT V DIGITAL COMMUNICATION.pdf",
+        "UNIT V DIGITAL COMMUNICATION.pdf",
+        "UNIT V DIGITAL COMMUNICATION.pdf",
+        "UNIT V DIGITAL COMMUNICATION.pdf"
+      ],
+      "retrievedScores": [
+        0.877068817615509,
+        0.8603773713111877,
+        0.8593288064002991,
+        0.8564056158065796,
+        0.8549718856811523
+      ],
+      "top1Score": 0.877068817615509,
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 1,
+      "latencyMs": 1617,
+      "llmAnswer": "Hey there! Based on your notes in **UNIT V DIGITAL COMMUNICATION.pdf (Page 8)**, businesses use multimedia in several key ways to boost their marketing and sales:\n\n* **Connecting with Audiences:** They use videos, infographics, animations, and podcasts to build emotional appeal and improve brand recall. \n* **Grabbing Attention:** Advertisements with music and visuals catch people's attention much faster than plain text.\n* **Enhancing Web and Product Pages:** Websites use images and videos to attract customers and clearly explain product features.\n* **Improving Email Marketing:** Adding multimedia to emails increases click-through rates.\n* **Going Viral on Social Media:** Social media campaigns with multimedia content reach wider audiences much more easily.\n\nOverall, it helps businesses deliver persuasive, entertaining, and memorable messages that strengthen customer relationships and drive sales! Let me know if you need help with anything else from your units.",
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "Which type of workplace group handles day-to-day duties and routine tasks to keep things running smoothly?",
+      "subject": "PC",
+      "expectedFileName": "UNIT III. TEAM BUILDING.pdf",
+      "sourceChunkId": "6a68669e6ddf1c26379e5f8b",
+      "retrievedChunkIds": [
+        "6a68669e6ddf1c26379e5f8c",
+        "6a68669e6ddf1c26379e5f8b",
+        "6a68669e6ddf1c26379e5f8e",
+        "6a68669e6ddf1c26379e5f93",
+        "6a68669e6ddf1c26379e5f87"
+      ],
+      "retrievedFileNames": [
+        "UNIT III. TEAM BUILDING.pdf",
+        "UNIT III. TEAM BUILDING.pdf",
+        "UNIT III. TEAM BUILDING.pdf",
+        "UNIT III. TEAM BUILDING.pdf",
+        "UNIT III. TEAM BUILDING.pdf"
+      ],
+      "retrievedScores": [
+        0.8388524055480957,
+        0.8292880058288574,
+        0.8174425363540649,
+        0.8165502548217773,
+        0.8163942098617554
+      ],
+      "top1Score": 0.8388524055480957,
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 1,
+      "latencyMs": 1584,
+      "llmAnswer": "Based on your notes (`UNIT III. TEAM BUILDING.pdf`, Page 9), the type of workplace team that handles day-to-day activities and routine tasks to ensure smooth operations is the **Operational Team**. \n\nFor example, a customer service team handling client inquiries or a manufacturing team managing production lines fall under this category.",
+      "faithfulnessScore": 0.5,
+      "citedFile": true
+    },
+    {
+      "question": "what is digital communication and what format does it use to send data?",
+      "subject": "PC",
+      "expectedFileName": "UNIT V DIGITAL COMMUNICATION.pdf",
+      "sourceChunkId": "6a686dc8cb43327bc2dc82ef",
+      "retrievedChunkIds": [
+        "6a686dc8cb43327bc2dc82ef",
+        "6a686dc8cb43327bc2dc82f0",
+        "6a686dc8cb43327bc2dc82f1",
+        "6a686dc8cb43327bc2dc82f3",
+        "6a686dc8cb43327bc2dc82f2"
+      ],
+      "retrievedFileNames": [
+        "UNIT V DIGITAL COMMUNICATION.pdf",
+        "UNIT V DIGITAL COMMUNICATION.pdf",
+        "UNIT V DIGITAL COMMUNICATION.pdf",
+        "UNIT V DIGITAL COMMUNICATION.pdf",
+        "UNIT V DIGITAL COMMUNICATION.pdf"
+      ],
+      "retrievedScores": [
+        0.8621164560317993,
+        0.8508038520812988,
+        0.8507715463638306,
+        0.8414360880851746,
+        0.8407187461853027
+      ],
+      "top1Score": 0.8621164560317993,
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 1,
+      "latencyMs": 1303,
+      "llmAnswer": "Hey! Based on your notes (`UNIT V DIGITAL COMMUNICATION.pdf`, Page 1):\n\n**Digital communication** refers to the exchange of information using digital technology. It lets people send and receive texts, images, audio, and videos across the globe in real-time using devices like smartphones, computers, and tablets. It plays a major role in education, business, healthcare, and daily life.\n\nAs for the format, it transmits data in **binary format (0s and 1s)**, which makes it much faster, more efficient, and more reliable than traditional analog methods.",
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "what skills do formal group discussions usually test people on?",
+      "subject": "PC",
+      "expectedFileName": "UNIT III. TEAM BUILDING.pdf",
+      "sourceChunkId": "6a68669e6ddf1c26379e5fbf",
+      "retrievedChunkIds": [
+        "6a68669e6ddf1c26379e5fc5",
+        "6a68669e6ddf1c26379e5fc4",
+        "6a68669e6ddf1c26379e5fb7",
+        "6a68669e6ddf1c26379e5fc7",
+        "6a68669e6ddf1c26379e5fc3"
+      ],
+      "retrievedFileNames": [
+        "UNIT III. TEAM BUILDING.pdf",
+        "UNIT III. TEAM BUILDING.pdf",
+        "UNIT III. TEAM BUILDING.pdf",
+        "UNIT III. TEAM BUILDING.pdf",
+        "UNIT III. TEAM BUILDING.pdf"
+      ],
+      "retrievedScores": [
+        0.8821133971214294,
+        0.8693411350250244,
+        0.8692061901092529,
+        0.8635350465774536,
+        0.8619771003723145
+      ],
+      "top1Score": 0.8821133971214294,
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 1,
+      "latencyMs": 650,
+      "llmAnswer": "Hey! Based on your notes (*UNIT III. TEAM BUILDING.pdf*, Page 31–32), formal Group Discussions (GDs) are widely used in academic, professional, and recruitment settings to evaluate a range of essential skills. \n\nHere are the key skills you're tested on:\n\n1. **Communication Skills**\n   * **Verbal Communication:** Expressing your ideas clearly, logically, and confidently.\n   * **Clarity and Conciseness:** Delivering your message in a straightforward way without dragging it out.\n   * **Persuasion:** Using logical arguments and evidence to convince others of your viewpoint.\n\n2. **Listening Skills**\n   * **Active Listening:** Paying attention to what others are saying, acknowledging their points, and responding thoughtfully.\n   * **Empathy:** Understanding and respecting perspectives that differ from your own.\n\n3. **Critical Thinking and Analytical Skills**\n   * **Problem-Solving:** Analyzing the topic, spotting key issues, and proposing practical solutions.\n   * **Logical Reasoning:** Presenting well-structured arguments backed by facts.\n   * **Creativity:** Bringing innovative ideas and unique perspectives to the table.\n\n4. **Teamwork and Collaboration**\n   * **Cooperation:** Working harmoniously with the group toward a common goal.\n   * **Inclusivity:** Making sure everyone gets a chance to contribute.\n   * **Conflict Resolution:** Handling disagreements respectfully and finding common ground.\n\n5. **Leadership Skills**\n   * **Initiative:** Taking the lead by starting discussions, summarizing points, or guiding the group.\n   * **Decision-Making:** Helping the team reach conclusions effectively.\n   * **Motivation:** Encouraging and inspiring others to participate.\n\n6. **Other key areas** like **Turn-Taking** (not interrupting others), **Summarization Skills**, and **Emotional Intelligence** (self-awareness) are also evaluated during the process (*UNIT III. TEAM BUILDING.pdf*, Page 33). \n\nLet me know if you need any tips on how to improve on any of these!",
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "what happens if you type messages in all caps online?",
+      "subject": "PC",
+      "expectedFileName": "PC QUESTION BANK.pdf",
+      "sourceChunkId": "6a6879b0cb43327bc2dc840a",
+      "retrievedChunkIds": [
+        "6a686dc8cb43327bc2dc832c",
+        "6a6866566ddf1c26379e5f56",
+        "6a6866566ddf1c26379e5f57",
+        "6a686dc8cb43327bc2dc830b",
+        "6a686dc8cb43327bc2dc830c"
+      ],
+      "retrievedFileNames": [
+        "UNIT V DIGITAL COMMUNICATION.pdf",
+        "UNIT II. PROFESSIONAL ETIQUETTE.pdf",
+        "UNIT II. PROFESSIONAL ETIQUETTE.pdf",
+        "UNIT V DIGITAL COMMUNICATION.pdf",
+        "UNIT V DIGITAL COMMUNICATION.pdf"
+      ],
+      "retrievedScores": [
+        0.8296374082565308,
+        0.8268462419509888,
+        0.8138177394866943,
+        0.8024942874908447,
+        0.7997655272483826
+      ],
+      "top1Score": 0.8296374082565308,
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": false,
+      "thresholdLoss": false,
+      "reciprocalRank": 0,
+      "latencyMs": 6054,
+      "llmAnswer": "Hey! Based on your study materials (specifically `UNIT V DIGITAL COMMUNICATION.pdf`, Page 21 and `UNIT II. PROFESSIONAL ETIQUETTE.pdf`, Page 3), writing in all capital letters has a couple of negative effects:\n\n1. **It looks like shouting:** Typing in all caps is often interpreted as shouting and can come across as aggressive or annoy the reader. \n2. **It reduces professionalism:** Proper sentence casing and punctuation show attention to detail and respect for the reader, whereas all caps can look unpolished.",
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "what are some examples of skills that are not job-specific and can be transferred across different jobs?",
+      "subject": "PC",
+      "expectedFileName": "SOFTSKILLS 1.pdf",
+      "sourceChunkId": "6a6866246ddf1c26379e5f21",
+      "retrievedChunkIds": [
+        "6a6866246ddf1c26379e5f21",
+        "6a6866246ddf1c26379e5f2d",
+        "6a6866246ddf1c26379e5f27",
+        "6a6866246ddf1c26379e5f2b",
+        "6a6866246ddf1c26379e5f22"
+      ],
+      "retrievedFileNames": [
+        "SOFTSKILLS 1.pdf",
+        "SOFTSKILLS 1.pdf",
+        "SOFTSKILLS 1.pdf",
+        "SOFTSKILLS 1.pdf",
+        "SOFTSKILLS 1.pdf"
+      ],
+      "retrievedScores": [
+        0.8735260963439941,
+        0.8585928678512573,
+        0.8550460338592529,
+        0.8549984693527222,
+        0.8537273406982422
+      ],
+      "top1Score": 0.8735260963439941,
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 1,
+      "latencyMs": 690,
+      "llmAnswer": "Hey there! Based on your notes (`SOFTSKILLS 1.pdf`, Page 1), skills that are not job-specific and can be transferred across various professions and industries are known as **soft skills**. \n\nSome key examples of these transferable soft skills include:\n\n1. **Communication:** The ability to convey information clearly and understandably through both speaking and listening (Page 1).\n2. **Teamwork:** Collaborating with others to achieve a common goal, which requires trust, respect, and cooperation (Page 1).\n3. **Adaptability:** The ability to adjust to new circumstances, environments, challenges, technologies, or methods (Page 1).\n4. **Other examples** mentioned in your notes also include leadership, time management, problem-solving, emotional intelligence, conflict resolution, networking, negotiation, stress management, collaboration, and empathy (Pages 1 & 3).\n\nEmployers really value these because they help build strong relationships, boost productivity, and support career growth no matter what field you go into! Let me know if you need help with anything else.",
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "What is the purpose of the Graphics class in Java AWT and what are some methods it provides?",
+      "subject": "OOPs-Java",
+      "expectedFileName": "Java-Unit4-part1.docx",
+      "sourceChunkId": "6a6865296ddf1c26379e5dea",
+      "retrievedChunkIds": [
+        "6a6865296ddf1c26379e5deb",
+        "6a6865296ddf1c26379e5dea",
+        "6a6865296ddf1c26379e5de5",
+        "6a6866126ddf1c26379e5f16",
+        "6a684d189688f92f9ecdc445"
+      ],
+      "retrievedFileNames": [
+        "Java-Unit4-part1.docx",
+        "Java-Unit4-part1.docx",
+        "Java-Unit4-part1.docx",
+        "JP Question Bank IT (1).pdf",
+        "AWT-JAVA UNIT-IV.pdf"
+      ],
+      "retrievedScores": [
+        0.8782540559768677,
+        0.8612990379333496,
+        0.8467133045196533,
+        0.8452438116073608,
+        0.8319740295410156
+      ],
+      "top1Score": 0.8782540559768677,
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 1,
+      "latencyMs": 6415,
+      "llmAnswer": "Hey! Based on your study materials (`Java-Unit4-part1.docx`), here is what you need to know about the `Graphics` class:\n\nThe **`Graphics` class** in Java AWT is used for drawing shapes, text, and images directly on GUI components for custom drawing. \n\nSome of the key methods it provides include:\n* `drawRect()` (and `fillRect()`) – for drawing rectangles\n* `drawOval()` – for drawing ovals/circles\n* `drawString()` – for drawing text strings\n\n*(Source: `Java-Unit4-part1.docx`)*",
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How do synchronized blocks differ from synchronized methods in terms of performance and locking?",
+      "subject": "OOPs-Java",
+      "expectedFileName": "Java-Unit3 part2.docx",
+      "sourceChunkId": "6a6865136ddf1c26379e5dcb",
+      "retrievedChunkIds": [
+        "6a6865136ddf1c26379e5dcc",
+        "6a6865e26ddf1c26379e5ed3",
+        "6a6865e26ddf1c26379e5ed2",
+        "6a684d319688f92f9ecdc484",
+        "6a6865e26ddf1c26379e5ed6"
+      ],
+      "retrievedFileNames": [
+        "Java-Unit3 part2.docx",
+        "OOP Java - Unit-III.pdf",
+        "OOP Java - Unit-III.pdf",
+        "JAVA UNIT-3 THREADS& UTIL PACKAGES.pdf",
+        "OOP Java - Unit-III.pdf"
+      ],
+      "retrievedScores": [
+        0.8760197162628174,
+        0.8439441919326782,
+        0.8366633653640747,
+        0.8301177024841309,
+        0.8300889134407043
+      ],
+      "top1Score": 0.8760197162628174,
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 1,
+      "latencyMs": 826,
+      "llmAnswer": "Hey there! Let's break down the difference between synchronized blocks and synchronized methods based on your Java notes.\n\nHere is how they compare in terms of locking and performance:\n\n1. **Scope of the Lock:**\n   * **Synchronized Method:** Locks the **entire method**. When a thread enters a synchronized method, it automatically acquires the lock for that entire object and holds it until the method finishes executing (Source: `OOP Java - Unit-III.pdf`, Page 14).\n   * **Synchronized Block:** Locks only a **specific critical section** or part of the code instead of the whole method. Its scope is smaller than a method (Source: `Java-Unit3 part2.docx` & `OOP Java - Unit-III.pdf`, Page 15).\n\n2. **Performance & Thread Contention:**\n   * **Synchronized Method:** Can reduce performance more because it locks the whole method, meaning non-critical sections of code also wait unnecessarily if another thread holds the lock. \n   * **Synchronized Block:** **Improves performance** and is more efficient than a synchronized method. Because it only locks the necessary lines of code, non-critical sections can still be executed concurrently by multiple threads, which successfully reduces thread contention (Source: `Java-Unit3 part2.docx` & `OOP Java - Unit-III.pdf`, Page 15). \n\nSo, whenever you want to minimize bottlenecks in your code, wrapping just the critical shared resource logic inside a synchronized block is usually the better approach! Let me know if you need any examples.",
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "what is the purpose of the finalize method and what are its drawbacks?",
+      "subject": "OOPs-Java",
+      "expectedFileName": "JP Question Bank IT (1).pdf",
+      "sourceChunkId": "6a6866126ddf1c26379e5f12",
+      "retrievedChunkIds": [
+        "6a6865956ddf1c26379e5e79",
+        "6a6864d86ddf1c26379e5d8a",
+        "6a6865ca6ddf1c26379e5e9c",
+        "6a6864cb6ddf1c26379e5d69",
+        "6a6864d86ddf1c26379e5d8b"
+      ],
+      "retrievedFileNames": [
+        "OOP Java - Unit-I.pdf",
+        "JAVA-Notes-Unit-2_Part 1.pdf",
+        "OOP Java - Unit-II.pdf",
+        "JAVA-Notes-Unit-1_Part 2.pdf",
+        "JAVA-Notes-Unit-2_Part 1.pdf"
+      ],
+      "retrievedScores": [
+        0.8330723643302917,
+        0.8279556035995483,
+        0.8208394646644592,
+        0.8197431564331055,
+        0.8194520473480225
+      ],
+      "top1Score": 0.8330723643302917,
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": false,
+      "thresholdLoss": false,
+      "reciprocalRank": 0,
+      "latencyMs": 5356,
+      "llmAnswer": "Hey there! Let's break down the `finalize()` method based on your Java notes.\n\nBased on your notes (`OOP Java - Unit-I.pdf`, Page 27 and `JAVA-Notes-Unit-1_Part 2.pdf`, Page 46):\n\n### **Purpose of the `finalize()` method:**\n* **Cleanup before deletion:** The `finalize()` method is called by the garbage collector on an object right before it is removed from memory and its space is reclaimed. \n* **Performs final actions:** It allows the object to perform any necessary cleanup operations (like closing open file streams, database connections, or releasing system resources) before it's permanently destroyed.\n\n### **Drawbacks of `finalize()`:**\n*(Note: While your specific unit notes focus mainly on its definition and role in garbage collection, here are the well-known drawbacks of `finalize()` in Java academics/practice that you should know for exams):*\n1. **Unpredictability:** You never know *when* garbage collection will run. Therefore, you can't predict when (or even if) `finalize()` will be executed. It shouldn't be used for critical time-sensitive cleanups.\n2. **Performance Hit:** Running `finalize()` adds overhead to the garbage collector, slowing down object destruction and memory reclamation.\n3. **Deprecated Status:** In modern Java versions, `finalize()` has actually been deprecated because of these performance and safety issues (like object resurrection risks). Instead, resources are usually managed using `try-with-resources` or `AutoCloseable`. \n\nHope this helps clear it up for your exams! Let me know if you need any more topics explained.",
+      "faithfulnessScore": 0.75,
+      "citedFile": true
+    },
+    {
+      "question": "How do I write a method that requires an object to be invoked in Java?",
+      "subject": "OOPs-Java",
+      "expectedFileName": "OOP Java - Unit-I.pdf",
+      "sourceChunkId": "6a6865956ddf1c26379e5e6e",
+      "retrievedChunkIds": [
+        "6a6865956ddf1c26379e5e6e",
+        "6a6865956ddf1c26379e5e74",
+        "6a6865956ddf1c26379e5e70",
+        "6a6864cb6ddf1c26379e5d4c",
+        "6a6865956ddf1c26379e5e6f"
+      ],
+      "retrievedFileNames": [
+        "OOP Java - Unit-I.pdf",
+        "OOP Java - Unit-I.pdf",
+        "OOP Java - Unit-I.pdf",
+        "JAVA-Notes-Unit-1_Part 2.pdf",
+        "OOP Java - Unit-I.pdf"
+      ],
+      "retrievedScores": [
+        0.8445771932601929,
+        0.8420519828796387,
+        0.8416182994842529,
+        0.8385897874832153,
+        0.8363935947418213
+      ],
+      "top1Score": 0.8445771932601929,
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 1,
+      "latencyMs": 648,
+      "llmAnswer": "Hey there! To write a method that requires an object to be invoked in Java (known as an **instance method**), you simply write a method *without* using the `static` keyword. \n\nBased on your notes (**OOP Java - Unit-I.pdf**, Page 21–22):\n\nAn instance method belongs to an object of the class rather than the class itself, which means you need to create an object of that class using the `new` keyword before you can call it.\n\nHere is an example from your notes showing how to define and invoke an instance method:\n\n```java\npublic class MethodExample {\n    // 1. Defining an Instance Method (notice there is no 'static' keyword)\n    void greet() {\n        System.out.println(\"Hello, Welcome to Java!\");\n    }\n\n    public static void main(String[] args) {\n        // Creating an object of the class\n        MethodExample obj = new MethodExample();\n        \n        // Calling the instance method using the object reference\n        obj.greet();\n    }\n}\n```\n\nLet me know if you want to go over static methods or constructors next!",
+      "faithfulnessScore": 0.5,
+      "citedFile": true
+    },
+    {
+      "question": "How do I read text files in Java using character streams instead of bytes?",
+      "subject": "OOPs-Java",
+      "expectedFileName": "OOP Java - Unit-III.pdf",
+      "sourceChunkId": "6a6865e26ddf1c26379e5ec2",
+      "retrievedChunkIds": [
+        "6a68656b6ddf1c26379e5e49",
+        "6a6865e26ddf1c26379e5ec2",
+        "6a68656b6ddf1c26379e5e4a",
+        "6a6865e26ddf1c26379e5ec5",
+        "6a6865e26ddf1c26379e5ebf"
+      ],
+      "retrievedFileNames": [
+        "JP UNIT-III Files.pdf",
+        "OOP Java - Unit-III.pdf",
+        "JP UNIT-III Files.pdf",
+        "OOP Java - Unit-III.pdf",
+        "OOP Java - Unit-III.pdf"
+      ],
+      "retrievedScores": [
+        0.8701329231262207,
+        0.868520975112915,
+        0.8509346842765808,
+        0.847537636756897,
+        0.8425458073616028
+      ],
+      "top1Score": 0.8701329231262207,
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 0.5,
+      "latencyMs": 2357,
+      "llmAnswer": "Hey! To read text files in Java using character streams, you want to use classes from the `java.io` package designed for 16-bit Unicode characters (like `FileReader`) rather than byte streams. \n\nBased on your notes (**OOP Java - Unit-III.pdf, Page 3**), character streams are specifically built to handle text-based data. Here's how you can use a `FileReader` to read a file character by character:\n\n```java\nimport java.io.FileReader;\nimport java.io.IOException;\n\npublic class CharacterStreamExample {\n    public static void main(String[] args) {\n        try {\n            FileReader fr = new FileReader(\"input.txt\");\n            int data;\n            while ((data = fr.read()) != -1) { // Read character by character\n                System.out.print((char) data);\n            }\n            fr.close();\n        } catch (IOException e) {\n            e.printStackTrace();\n        }\n    }\n}\n```\n\n### Key Takeaways from your notes:\n* **Why Character Streams?** While byte streams (like `FileInputStream`) handle 8-bit bytes (great for images, videos, or PDFs), character streams handle 16-bit Unicode characters, making them much better suited for text files, XML, and JSON (*OOP Java - Unit-III.pdf, Page 3 & 5*).\n* **How it works:** `FileReader` reads two bytes at a time (characters) instead of single bytes, and it returns `-1` when it reaches the end of the file (*JP UNIT-III Files.pdf, Page 2*).\n* **Other key classes:** If you need to handle text more efficiently or read line-by-line, you can also look into using `BufferedReader` along with your `FileReader` (*OOP Java - Unit-III.pdf, Page 3*). \n\nLet me know if you want to see an example using `BufferedReader` as well!",
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How do you make a thread using the Runnable interface instead of extending the Thread class?",
+      "subject": "OOPs-Java",
+      "expectedFileName": "OOP Java - Unit-III.pdf",
+      "sourceChunkId": "6a6865e26ddf1c26379e5ecd",
+      "retrievedChunkIds": [
+        "6a6865136ddf1c26379e5dc8",
+        "6a6865136ddf1c26379e5dc7",
+        "6a6865e26ddf1c26379e5ecc",
+        "6a684d319688f92f9ecdc47f",
+        "6a6865e26ddf1c26379e5ecd"
+      ],
+      "retrievedFileNames": [
+        "Java-Unit3 part2.docx",
+        "Java-Unit3 part2.docx",
+        "OOP Java - Unit-III.pdf",
+        "JAVA UNIT-3 THREADS& UTIL PACKAGES.pdf",
+        "OOP Java - Unit-III.pdf"
+      ],
+      "retrievedScores": [
+        0.8744065761566162,
+        0.8698931336402893,
+        0.8670779466629028,
+        0.8592665195465088,
+        0.8559087514877319
+      ],
+      "top1Score": 0.8744065761566162,
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 0.3333333333333333,
+      "latencyMs": 869,
+      "llmAnswer": "Hey there! To create a thread using the `Runnable` interface, you follow a couple of simple steps instead of subclassing `Thread`. \n\nBased on your notes (`Java-Unit3 part2.docx` and `OOP Java - Unit-III.pdf, Page 11`), here is how you do it:\n\n1. **Implement `Runnable`:** Create a new class that implements the `java.lang.Runnable` interface and override its `run()` method where you put your thread's task.\n2. **Pass to `Thread` Constructor:** Create an instance of your implemented class, and then pass that reference as a parameter into the constructor of the `java.lang.Thread` class. (Since a `Runnable` object isn't a thread by itself, this step wraps it inside a `Thread` object).\n3. **Call `start()`:** Finally, invoke the `start()` method on that `Thread` object to begin execution.\n\nHere is a quick code example based on your materials (`JAVA UNIT-3 THREADS& UTIL PACKAGES.pdf, Page 5`):\n\n```java\nclass MyThread implements Runnable {\n    public void run() {\n        System.out.println(\"Thread is Running Successfully\");\n    }\n}\n\npublic class Program {\n    public static void main(String[] args) {\n        MyThread g1 = new MyThread(); // 1. Create instance of Runnable class\n        Thread t1 = new Thread(g1);  // 2. Pass it to the Thread constructor\n        t1.start();                    // 3. Start the thread\n    }\n}\n```\n\n**Why use `Runnable` instead of extending `Thread`?** \nSince Java doesn't support multiple inheritance of classes, implementing `Runnable` leaves your class free to inherit from any other parent class you might need! Let me know if you want to look at examples for multi-threading as well.",
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "What two requirements are needed to create an event listener in Java?",
+      "subject": "OOPs-Java",
+      "expectedFileName": "AWT-JAVA UNIT-IV.pdf",
+      "sourceChunkId": "6a684d189688f92f9ecdc441",
+      "retrievedChunkIds": [
+        "6a684d189688f92f9ecdc441",
+        "6a684d189688f92f9ecdc43c",
+        "6a684d189688f92f9ecdc440",
+        "6a684d189688f92f9ecdc43d",
+        "6a68654f6ddf1c26379e5e07"
+      ],
+      "retrievedFileNames": [
+        "AWT-JAVA UNIT-IV.pdf",
+        "AWT-JAVA UNIT-IV.pdf",
+        "AWT-JAVA UNIT-IV.pdf",
+        "AWT-JAVA UNIT-IV.pdf",
+        "Java-Unit4-Part2.docx"
+      ],
+      "retrievedScores": [
+        0.8698753714561462,
+        0.8695493936538696,
+        0.8657342195510864,
+        0.8616383671760559,
+        0.8568137884140015
+      ],
+      "top1Score": 0.8698753714561462,
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 1,
+      "latencyMs": 2367,
+      "llmAnswer": "Hey! Based on your notes (`AWT-JAVA UNIT-IV.pdf`, Page 23, 26 and `Java-Unit4-Part2.docx`), an event listener has two major requirements:\n\n1. **Registration:** It must be registered with one or more source objects (it can be registered with several sources) to receive notifications about specific types of events.\n2. **Implementation:** It must implement the required methods to receive and process those event notifications (these methods are defined in a set of interfaces found in the `java.awt.event` package).",
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How do we write the syntax to create a child class from a parent class in java?",
+      "subject": "OOPs-Java",
+      "expectedFileName": "OOP Java - Unit-II.pdf",
+      "sourceChunkId": "6a6865ca6ddf1c26379e5e8d",
+      "retrievedChunkIds": [
+        "6a6865636ddf1c26379e5e2e",
+        "6a6865ca6ddf1c26379e5e91",
+        "6a6864cb6ddf1c26379e5d41",
+        "6a6864d86ddf1c26379e5d6f",
+        "6a6864cb6ddf1c26379e5d40"
+      ],
+      "retrievedFileNames": [
+        "JP Unit II.pdf",
+        "OOP Java - Unit-II.pdf",
+        "JAVA-Notes-Unit-1_Part 2.pdf",
+        "JAVA-Notes-Unit-2_Part 1.pdf",
+        "JAVA-Notes-Unit-1_Part 2.pdf"
+      ],
+      "retrievedScores": [
+        0.8677467703819275,
+        0.8608989715576172,
+        0.8597153425216675,
+        0.8533700704574585,
+        0.8499751091003418
+      ],
+      "top1Score": 0.8677467703819275,
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 0.5,
+      "latencyMs": 787,
+      "llmAnswer": "Hey! To create a child class from a parent class in Java, we use the `extends` keyword. \n\nBased on your notes (`JP Unit II.pdf`, Page 1 and `JAVA-Notes-Unit-2_Part 1.pdf`, Page 2), here is the syntax:\n\n```java\nclass Superclass-name \n{\n    // parent class methods and fields\n}\n\nclass Subclass-name extends Superclass-name \n{\n    // child class methods and fields\n}\n```\n\nThe `extends` keyword essentially tells Java that you're building a new class that derives from an existing one, which helps increase functionality and promotes code reusability! Let me know if you want to look at an example with this.",
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How does Java handle things when none of the conditions in an if-else-if chain are met?",
+      "subject": "OOPs-Java",
+      "expectedFileName": "JAVA-Notes-Unit-1_Part 1.pdf",
+      "sourceChunkId": "6a684d999688f92f9ecdc4df",
+      "retrievedChunkIds": [
+        "6a684d999688f92f9ecdc4e0",
+        "6a684d999688f92f9ecdc4df",
+        "6a684d999688f92f9ecdc4e1",
+        "6a684d999688f92f9ecdc4e3",
+        "6a684d999688f92f9ecdc4dc"
+      ],
+      "retrievedFileNames": [
+        "JAVA-Notes-Unit-1_Part 1.pdf",
+        "JAVA-Notes-Unit-1_Part 1.pdf",
+        "JAVA-Notes-Unit-1_Part 1.pdf",
+        "JAVA-Notes-Unit-1_Part 1.pdf",
+        "JAVA-Notes-Unit-1_Part 1.pdf"
+      ],
+      "retrievedScores": [
+        0.8558511734008789,
+        0.8557701110839844,
+        0.8525627255439758,
+        0.8456809520721436,
+        0.8439223766326904
+      ],
+      "top1Score": 0.8558511734008789,
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 1,
+      "latencyMs": 1373,
+      "llmAnswer": "Hey there! Based on your notes (`JAVA-Notes-Unit-1_Part 1.pdf`, Page 38), when none of the conditions in an if-else-if ladder are met, Java executes the final `else` block—**if it is present**. \n\nTo break it down:\n* If a matching condition is found, that specific block runs and the rest of the ladder gets skipped.\n* If every single condition evaluates to false, Java falls back to the last `else` block (which you can use to handle default cases or trigger an error message, like showing an unsupported browser warning). If there is no `else` block at all, the whole ladder is simply skipped without doing anything.",
+      "faithfulnessScore": 0.75,
+      "citedFile": true
+    },
+    {
+      "question": "How do I change a String into a primitive int versus an Integer object in Java?",
+      "subject": "OOPs-Java",
+      "expectedFileName": "OOP Java - Unit-I.pdf",
+      "sourceChunkId": "6a6865956ddf1c26379e5e67",
+      "retrievedChunkIds": [
+        "6a6865956ddf1c26379e5e67",
+        "6a6865956ddf1c26379e5e58",
+        "6a6865e26ddf1c26379e5ef7",
+        "6a6865956ddf1c26379e5e7a",
+        "6a6865956ddf1c26379e5e85"
+      ],
+      "retrievedFileNames": [
+        "OOP Java - Unit-I.pdf",
+        "OOP Java - Unit-I.pdf",
+        "OOP Java - Unit-III.pdf",
+        "OOP Java - Unit-I.pdf",
+        "OOP Java - Unit-I.pdf"
+      ],
+      "retrievedScores": [
+        0.8419891595840454,
+        0.8289023041725159,
+        0.82854163646698,
+        0.8259849548339844,
+        0.8213109970092773
+      ],
+      "top1Score": 0.8419891595840454,
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 1,
+      "latencyMs": 669,
+      "llmAnswer": "Hey there! Based on your notes (`OOP Java - Unit-I.pdf`, Page 15), converting a `String` to an `int` or an `Integer` object is super straightforward. Here is how you do it:\n\n* **To get a primitive `int`:** Use `Integer.parseInt(str)`\n* **To get an `Integer` object:** Use `Integer.valueOf(str)`\n\nAs your notes point out, both methods work similarly for the conversion, but `parseInt()` returns a primitive `int` while `valueOf()` returns an `Integer` object. \n\nHere's the quick reference from your notes for other datatypes too, just in case:\n* **String → float:** `Float.parseFloat(str)` or `Float.valueOf(str)`\n* **String → double:** `Double.parseDouble(str)` or `Double.valueOf(str)`",
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How do I connect to a database in Java and when should I use each driver type?",
+      "subject": "OOPs-Java",
+      "expectedFileName": "JAVA UNIT-V LAYOUTS&APPLETS&JDBC.pdf",
+      "sourceChunkId": "6a684d3c9688f92f9ecdc4b4",
+      "retrievedChunkIds": [
+        "6a684d3c9688f92f9ecdc4b3",
+        "6a684d3c9688f92f9ecdc4b4",
+        "6a6865596ddf1c26379e5e21",
+        "6a6865596ddf1c26379e5e22",
+        "6a6865596ddf1c26379e5e24"
+      ],
+      "retrievedFileNames": [
+        "JAVA UNIT-V LAYOUTS&APPLETS&JDBC.pdf",
+        "JAVA UNIT-V LAYOUTS&APPLETS&JDBC.pdf",
+        "Java-Unit5.docx",
+        "Java-Unit5.docx",
+        "Java-Unit5.docx"
+      ],
+      "retrievedScores": [
+        0.8850303292274475,
+        0.8834352493286133,
+        0.8828919529914856,
+        0.8753470182418823,
+        0.8725934028625488
+      ],
+      "top1Score": 0.8850303292274475,
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 1,
+      "latencyMs": 817,
+      "llmAnswer": "Hey there! Let's break down how to connect to a database in Java and figure out when to use which JDBC driver based on your VJIT study materials.\n\n### 1. How to Connect to a Database in Java\n\nBased on your notes (`Java-Unit5.docx`), connecting a Java application to a database using JDBC typically involves 5 main steps:\n\n1. **Register the Driver Class:** \n   You dynamically load and register the driver class into memory using the `Class.forName()` method. \n   *(Note: As mentioned in `JAVA UNIT-V LAYOUTS&APPLETS&JDBC.pdf, Page 22`, since JDBC 4.0 this step is optional if your driver jar has a proper service provider configuration).*\n   ```java\n   Class.forName(\"com.mysql.cj.jdbc.Driver\");\n   ```\n\n2. **Create Connection:** \n   You establish a connection using the `DriverManager.getConnection()` method by passing your database URL (connection string), username, and password. For example, using a Type-4 driver for MySQL:\n   ```java\n   Connection con = DriverManager.getConnection(\n       \"jdbc:mysql://localhost:3306/mydatabase\", \"user\", \"password\");\n   ```\n\n3. **Create the Statement Object:** \n   Use the `createStatement()` method of the `Connection` interface to create a statement that will execute your queries.\n   ```java\n   Statement stmt = con.createStatement();\n   ```\n\n4. **Execute the Query:** \n   Use methods like `executeQuery()` to run SQL statements (like `SELECT` queries), which return a `ResultSet` containing your data.\n   ```java\n   ResultSet rs = stmt.rs.executeQuery(\"select * from emp\");\n   ```\n\n5. **Close the Connection Object:** \n   Always close your connection when done to free up resources. Closing the connection automatically closes the associated statements and result sets.\n   ```java\n   con.close();\n   ```\n\n---\n\n### 2. When Should You Use Each Driver Type?\n\nAccording to your notes (`JAVA UNIT-V LAYOUTS&APPLETS&JDBC.pdf, Pages 21–22`), the right driver depends on your application's needs regarding performance, portability, and database types:\n\n* **Type-4 Driver (Thin Driver):** \n  * *When to use:* Preferred when you are accessing a **single type of database** (like Oracle or MySQL) because it offers the **best performance** among all drivers, is fully written in Java (highly portable), and doesn't require client or server-side software libraries.\n* **Type-3 Driver (Network Protocol Driver):** \n  * *When to use:* Most suitable for applications that need to access **multiple types of databases simultaneously**. It uses middleware to handle tasks like load balancing and logging, though it requires network support and middle-tier coding.\n* **Type-2 Driver (Native-API Driver):** \n  * *When to use:* Useful as an alternative **when Type-3 or Type-4 drivers are not available** for a specific database you need to target.\n* **Type-1 Driver (JDBC-ODBC Bridge Driver):** \n  * *When to use:* Generally **restricted to development and testing purposes only** (and is otherwise largely discouraged nowadays in favor of thin drivers).",
+      "faithfulnessScore": 0.6,
+      "citedFile": true
+    },
+    {
+      "question": "What are the two different ways to make a thread in Java?",
+      "subject": "OOPs-Java",
+      "expectedFileName": "Java-Unit3 part2.docx",
+      "sourceChunkId": "6a68651a6ddf1c26379e5dd8",
+      "retrievedChunkIds": [
+        "6a6865e26ddf1c26379e5ecc",
+        "6a6865136ddf1c26379e5dc8",
+        "6a6865136ddf1c26379e5dc7",
+        "6a684d319688f92f9ecdc47e",
+        "6a6865e26ddf1c26379e5ecd"
+      ],
+      "retrievedFileNames": [
+        "OOP Java - Unit-III.pdf",
+        "Java-Unit3 part2.docx",
+        "Java-Unit3 part2.docx",
+        "JAVA UNIT-3 THREADS& UTIL PACKAGES.pdf",
+        "OOP Java - Unit-III.pdf"
+      ],
+      "retrievedScores": [
+        0.8758056163787842,
+        0.874322772026062,
+        0.8731626272201538,
+        0.8610407710075378,
+        0.8582760691642761
+      ],
+      "top1Score": 0.8758056163787842,
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 0.5,
+      "latencyMs": 935,
+      "llmAnswer": "Hey there! \n\nBased on your study materials, there are **two main ways** to create a thread in Java:\n\n1. **By Extending the `Thread` class:**\n   * You create a class that inherits (`extends`) from the `java.lang.Thread` class.\n   * You override the `run()` method inside this class, which is where the thread begins its life and execution.\n   * You then create an object of your new class and call the `start()` method to begin execution.\n   * *Sources:* `OOP Java - Unit-III.pdf` (Page 10), `Java-Unit3 part2.docx`, and `JAVA UNIT-3 THREADS& UTIL PACKAGES.pdf` (Page 4).\n\n2. **By Implementing the `Runnable` interface:**\n   * You create a new class that implements the `java.lang.Runnable` interface and override its `run()` method.\n   * To execute it, you create an instance of the `Thread` class and pass the reference of your `Runnable` implemented class to the `Thread` object's constructor.\n   * Finally, you invoke the `start()` method on that `Thread` object to start the newly created thread.\n   * *Sources:* `Java-Unit3 part2.docx` and `OOP Java - Unit-III.pdf` (Page 11). \n\nLet me know if you need code examples for either of these approaches!",
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "What are the core classes and interfaces used for handling sessions, sending queries, and getting results in database connectivity?",
+      "subject": "OOPs-Java",
+      "expectedFileName": "JAVA UNIT-V LAYOUTS&APPLETS&JDBC.pdf",
+      "sourceChunkId": "6a684d3c9688f92f9ecdc4b0",
+      "retrievedChunkIds": [
+        "6a684d3c9688f92f9ecdc4b1",
+        "6a684d3c9688f92f9ecdc4b0",
+        "6a6865596ddf1c26379e5e24",
+        "6a6865596ddf1c26379e5e22",
+        "6a6865596ddf1c26379e5e25"
+      ],
+      "retrievedFileNames": [
+        "JAVA UNIT-V LAYOUTS&APPLETS&JDBC.pdf",
+        "JAVA UNIT-V LAYOUTS&APPLETS&JDBC.pdf",
+        "Java-Unit5.docx",
+        "Java-Unit5.docx",
+        "Java-Unit5.docx"
+      ],
+      "retrievedScores": [
+        0.8568773865699768,
+        0.8482629656791687,
+        0.8457063436508179,
+        0.8383148908615112,
+        0.8379318714141846
+      ],
+      "top1Score": 0.8568773865699768,
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 1,
+      "latencyMs": 911,
+      "llmAnswer": "Based on your study notes (`JAVA UNIT-V LAYOUTS&APPLETS&JDBC.pdf`, Page 20), the main components (classes and interfaces) used for handling sessions, sending queries, and getting results in JDBC are:\n\n1. **Connection:** Represents a session with a database.\n2. **Statement / PreparedStatement:** Used to send SQL commands/queries to the database.\n3. **ResultSet:** Stores and processes the results retrieved from a database query.\n4. **DriverManager:** Manages the list of database drivers and helps establish the connection.",
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How do I write a Java class that uses a vehicle interface with start, stop, and accelerate methods?",
+      "subject": "OOPs-Java",
+      "expectedFileName": "JAVA-Notes-Unit-2_Part 2.pdf",
+      "sourceChunkId": "6a6864e26ddf1c26379e5d91",
+      "retrievedChunkIds": [
+        "6a6864e26ddf1c26379e5d91",
+        "6a6865076ddf1c26379e5db9",
+        "6a6864e26ddf1c26379e5d92",
+        "6a6864e26ddf1c26379e5d96",
+        "6a6864e26ddf1c26379e5d93"
+      ],
+      "retrievedFileNames": [
+        "JAVA-Notes-Unit-2_Part 2.pdf",
+        "JAVA-Notes-Unit-2_Part 3.pdf",
+        "JAVA-Notes-Unit-2_Part 2.pdf",
+        "JAVA-Notes-Unit-2_Part 2.pdf",
+        "JAVA-Notes-Unit-2_Part 2.pdf"
+      ],
+      "retrievedScores": [
+        0.8836403489112854,
+        0.8833422660827637,
+        0.878713846206665,
+        0.8775911331176758,
+        0.876563310623169
+      ],
+      "top1Score": 0.8836403489112854,
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 1,
+      "latencyMs": 6333,
+      "llmAnswer": "Hey! Writing a class that implements an interface is pretty straightforward in Java. Based on your OOP Through Java notes (JAVA-Notes-Unit-2_Part 2.pdf, Pages 3–4), you use the `implements` keyword and provide the body for all the abstract methods defined in the interface.\n\nHere is how you can set up a `Vehicle` interface and a `Car` class implementing it:\n\n```java\n// Define the Vehicle interface with abstract methods\ninterface Vehicle {\n    void start();\n    void stop();\n    void accelerate();\n    void honk();\n}\n\n// Class Car implementing the Vehicle interface\nclass Car implements Vehicle {\n    private String brand;\n    private String model;\n\n    // Constructor to initialize brand and model\n    public Car(String brand, String model) {\n        this.brand = brand;\n        this.model = model;\n    }\n\n    // Implementing the start method\n    public void start() {\n        System.out.println(brand + \" \" + model + \" is starting.\");\n    }\n\n    // Implementing the stop method\n    public void stop() {\n        System.out.println(brand + \" \" + model + \" is stopping.\");\n    }\n\n    // Implementing the accelerate method\n    public void accelerate() {\n        System.out.println(brand + \" \" + model + \" is accelerating.\");\n    }\n\n    // Implementing the honk method\n    public void honk() {\n        System.out.println(brand + \" \" + model + \" is honking: Beep Beep!\");\n    }\n}\n```\n\nA quick tip from class: when a class implements an interface, it *must* provide implementations for all of its abstract methods, otherwise Java will throw a compilation error unless the class is declared as `abstract`. \n\nLet me know if you need help testing this with a `main` method!",
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How do I make a text input field show dots for a password in Java AWT?",
+      "subject": "OOPs-Java",
+      "expectedFileName": "Java-Unit4-part1.docx",
+      "sourceChunkId": "6a6865296ddf1c26379e5df9",
+      "retrievedChunkIds": [
+        "6a6865296ddf1c26379e5deb",
+        "6a6865296ddf1c26379e5dfb",
+        "6a684d189688f92f9ecdc448",
+        "6a6865296ddf1c26379e5df9",
+        "6a684d189688f92f9ecdc449"
+      ],
+      "retrievedFileNames": [
+        "Java-Unit4-part1.docx",
+        "Java-Unit4-part1.docx",
+        "AWT-JAVA UNIT-IV.pdf",
+        "Java-Unit4-part1.docx",
+        "AWT-JAVA UNIT-IV.pdf"
+      ],
+      "retrievedScores": [
+        0.839617133140564,
+        0.8361015319824219,
+        0.8335227966308594,
+        0.8333583474159241,
+        0.8333057165145874
+      ],
+      "top1Score": 0.839617133140564,
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 1,
+      "latencyMs": 956,
+      "llmAnswer": "Hey! To show dots (or any other echo character) for a password in Java AWT, you can use a `TextField` and apply the `setEchoChar()` method. \n\nBased on your notes (`Java-Unit4-part1.docx`), `TextField` supports a password mode specifically through this feature. \n\nHere is how you can use it:\n\n```java\nimport java.awt.*;\n\npublic class PasswordExample extends Frame {\n    public PasswordExample() {\n        setTitle(\"Password Field Example\");\n        setSize(300, 200);\n        setLayout(null);\n\n        // Create a TextField\n        TextField passwordField = new TextField();\n        passwordField.setBounds(50, 80, 200, 30);\n        \n        // Set the echo character to a dot ('*') or any other symbol\n        passwordField.setEchoChar('*');\n\n        add(passwordField);\n        setVisible(true);\n    }\n\n    public static void main(String[] args) {\n        new PasswordExample();\n    }\n}\n```\n\nWhenever the user types in that `TextField`, it will mask the input characters with the symbol you passed into `setEchoChar()`! Let me know if you need help with anything else from Unit 4.",
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How many total marks are allocated for Part-A in this exam paper?",
+      "subject": "DBMS",
+      "expectedFileName": "DBMS  II-II SUPLY JULY 2024.pdf",
+      "sourceChunkId": "6a684bea9688f92f9ecdc2e1",
+      "retrievedChunkIds": [
+        "6a684bfb9688f92f9ecdc2f5",
+        "6a684bf39688f92f9ecdc2ed",
+        "6a684bfb9688f92f9ecdc2f4",
+        "6a684c029688f92f9ecdc2f9",
+        "6a684bf39688f92f9ecdc2ee"
+      ],
+      "retrievedFileNames": [
+        "DBMS II-II SUPPLY DEC-2023.pdf",
+        "DBMS II-II Regular JULY-2024.pdf",
+        "DBMS II-II SUPPLY DEC-2023.pdf",
+        "DBMS II-II SUPPLY JAN-FEB-2024.pdf",
+        "DBMS II-II Regular JULY-2024.pdf"
+      ],
+      "retrievedScores": [
+        0.8360180854797363,
+        0.8323332071304321,
+        0.8310714364051819,
+        0.8287988305091858,
+        0.8282285928726196
+      ],
+      "top1Score": 0.8360180854797363,
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": false,
+      "thresholdLoss": false,
+      "reciprocalRank": 0,
+      "latencyMs": 959,
+      "llmAnswer": "Based on your notes, the total marks allocated for Part-A depend on which specific exam paper you are looking at, as different sessions have different weightages:\n\n* In the **DEC-2023 Supplementary Exam** (*DBMS II-II SUPPLY DEC-2023.pdf*, Page 1), Part-A carries **25 marks**.\n* In the **JULY-2024 Regular Exam** (*DBMS II-II Regular JULY-2024.pdf*, Page 1), Part-A carries **10 marks** (10 questions x 1 mark each).\n* In the **JAN-FEB-2024 Supplementary Exam** (*DBMS II-II SUPPLY JAN-FEB-2024.pdf*, Page 1), Part-A carries **20 marks**.",
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "what is the difference between force and steal policies in database recovery",
+      "subject": "DBMS",
+      "expectedFileName": "DBMS-Unit-5.pdf",
+      "sourceChunkId": "6a684bd99688f92f9ecdc297",
+      "retrievedChunkIds": [
+        "6a684bd99688f92f9ecdc297",
+        "6a6840cf4b4448ab07c6c300",
+        "6a6840cf4b4448ab07c6c301",
+        "6a684c139688f92f9ecdc317",
+        "6a684bd99688f92f9ecdc288"
+      ],
+      "retrievedFileNames": [
+        "DBMS-Unit-5.pdf",
+        "ARIES.pdf",
+        "ARIES.pdf",
+        "DBMS-Question Bank (I to V-UNITS).pdf",
+        "DBMS-Unit-5.pdf"
+      ],
+      "retrievedScores": [
+        0.8853310942649841,
+        0.8746603727340698,
+        0.869707465171814,
+        0.8501343727111816,
+        0.8491209745407104
+      ],
+      "top1Score": 0.8853310942649841,
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 1,
+      "latencyMs": 2052,
+      "llmAnswer": "Hey! Let's break down the difference between the **Steal** and **Force** policies in database recovery, based on your notes. \n\nEven though both deal with how the database buffer pool interacts with the disk, they target two completely different aspects of transaction management:\n\n### 1. Steal vs. No-Steal Policy (Focuses on *Active/Uncommitted* Transactions)\n* **Steal Policy:** The system allows the buffer manager to write modified blocks (dirty pages) of an **uncommitted** transaction to disk even before that transaction finishes or commits (often done to prevent buffer overflow or support long transactions) (*DBMS-Unit-5.pdf, Page 36* & *ARIES.pdf, Page 3*). Because uncommitted changes get written to disk, it requires an **UNDO phase** during recovery to roll back changes if the transaction eventually aborts (*ARIES.pdf, Page 3*).\n* **No-Steal Policy:** Blocks modified by a transaction that is still active *cannot* be written to disk until that transaction commits (*DBMS-Unit-5.pdf, Page 36*).\n\n### 2. Force vs. No-Force Policy (Focuses on *Commit* Time)\n* **Force Policy:** When a transaction commits, the system forces all modified blocks to be immediately written (output) to disk (*DBMS-Unit-5.pdf, Page 36*). This makes the commit process more expensive in terms of I/O.\n* **No-Force Policy:** The system allows a transaction to commit even if some of the blocks it modified haven't been written back to disk yet (*DBMS-Unit-5.pdf, Page 36*). This improves performance by batching writes and reducing disk I/O, but it requires a **REDO phase** during recovery to re-apply those changes if a crash happens (*ARIES.pdf, Page 4*).\n\n**In short:** \n* **Steal** is about whether *uncommitted* data can go to disk.\n* **Force** is about whether *committed* data must instantly go to disk.",
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "Why do database systems allow multiple transactions to run at the same time instead of just one by one?",
+      "subject": "DBMS",
+      "expectedFileName": "DBMS-Unit-4 (Part-1).pdf",
+      "sourceChunkId": "6a68411e4b4448ab07c6c442",
+      "retrievedChunkIds": [
+        "6a68411e4b4448ab07c6c443",
+        "6a68411e4b4448ab07c6c442",
+        "6a6841304b4448ab07c6c468",
+        "6a68411e4b4448ab07c6c439",
+        "6a6840d84b4448ab07c6c327"
+      ],
+      "retrievedFileNames": [
+        "DBMS-Unit-4 (Part-1).pdf",
+        "DBMS-Unit-4 (Part-1).pdf",
+        "DBMS-Unit-4 (Part-2).pdf",
+        "DBMS-Unit-4 (Part-1).pdf",
+        "DBMS-Unit-1 (Part-1).pdf"
+      ],
+      "retrievedScores": [
+        0.8789820671081543,
+        0.8686590194702148,
+        0.8486721515655518,
+        0.8417795896530151,
+        0.8398412466049194
+      ],
+      "top1Score": 0.8789820671081543,
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 1,
+      "latencyMs": 733,
+      "llmAnswer": "Hey! That's a classic question when studying Database Management Systems (DBMS). \n\nBased on your notes (`DBMS-Unit-4 (Part-1).pdf`, Page 20-21), while running transactions serially (one after another) avoids complications, database systems allow multiple transactions to run concurrently for two main reasons:\n\n1. **Increased Throughput and Resource Utilization:** \n   When multiple transactions run concurrently, system resources are used much more efficiently. For example, while one transaction is waiting for a read or write operation on a disk, the CPU can work on another transaction, and a different disk can handle another task. This increases the overall throughput—meaning the system can execute a higher number of transactions in a given amount of time.\n\n2. **Reduced Waiting Time and Response Time:** \n   If transactions only ran serially, a short transaction might get stuck waiting for a long preceding transaction to finish, leading to unpredictable delays. Concurrently executing them reduces these unpredictable delays and lowers the **average response time** (the average time it takes for a transaction to complete after being submitted).\n\n**The catch?** \nAs noted in your materials, letting transactions run concurrently can lead to complications and leave the database in an inconsistent state if it violates the **isolation** property (`DBMS-Unit-4 (Part-1).pdf`, Page 8 & `DBMS-Unit-4 (Part-2).pdf`, Page 4). That's why databases use **concurrency control schemes** (like lock-based protocols) to manage these interactions safely!",
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How does the redo pass in ARIES decide whether to skip or apply an update log record?",
+      "subject": "DBMS",
+      "expectedFileName": "DBMS-Unit-5.pdf",
+      "sourceChunkId": "6a684bd99688f92f9ecdc2aa",
+      "retrievedChunkIds": [
+        "6a684bd99688f92f9ecdc2aa",
+        "6a684bd99688f92f9ecdc2a9",
+        "6a684bd99688f92f9ecdc2a7",
+        "6a684bd99688f92f9ecdc2ab",
+        "6a684bd99688f92f9ecdc2a3"
+      ],
+      "retrievedFileNames": [
+        "DBMS-Unit-5.pdf",
+        "DBMS-Unit-5.pdf",
+        "DBMS-Unit-5.pdf",
+        "DBMS-Unit-5.pdf",
+        "DBMS-Unit-5.pdf"
+      ],
+      "retrievedScores": [
+        0.891180157661438,
+        0.8806842565536499,
+        0.8698704242706299,
+        0.8694610595703125,
+        0.8683023452758789
+      ],
+      "top1Score": 0.891180157661438,
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 1,
+      "latencyMs": 3953,
+      "llmAnswer": "Hey! Let's break down how the redo pass in ARIES figures out whether to skip or apply an update log record. \n\nBased on your notes (`DBMS-Unit-5.pdf`, Page 57), during the Redo Pass, ARIES scans forward from the `RedoLSN`. Whenever it finds an update log record, it checks two conditions to decide what to do:\n\n1. **The Dirty Page Table Check:** \n   If the page is not in the DirtyPageTable, **or** if the LSN of the log record is less than the `RecLSN` of that page in the DirtyPageTable, it **skips** the log record. \n   *(Note: This first test is super handy because it avoids even having to fetch the page from disk!)*\n\n2. **The PageLSN Check:**\n   If it passes the first test, it fetches the page from disk. If the `PageLSN` of the page fetched from disk is less than the LSN of the log record, it **redos** (applies) the log record.\n\nIf either of these tests is negative, it means the effects of that log record have already appeared on the page, so the redo pass safely skips it. This mechanism prevents repeating work and ensures idempotence!",
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "Which data model allows different data items of the same type to possess varying sets of attributes, and what format is commonly used for it?",
+      "subject": "DBMS",
+      "expectedFileName": "DBMS-Unit-1 (Part-1).pdf",
+      "sourceChunkId": "6a6840d84b4448ab07c6c334",
+      "retrievedChunkIds": [
+        "6a6840d84b4448ab07c6c334",
+        "6a6840d84b4448ab07c6c330",
+        "6a6840d84b4448ab07c6c35f",
+        "6a6840d84b4448ab07c6c331",
+        "6a6844e1ddd4b9e729c43170"
+      ],
+      "retrievedFileNames": [
+        "DBMS-Unit-1 (Part-1).pdf",
+        "DBMS-Unit-1 (Part-1).pdf",
+        "DBMS-Unit-1 (Part-1).pdf",
+        "DBMS-Unit-1 (Part-1).pdf",
+        "DBMS-Unit-1 (Part-2).pdf"
+      ],
+      "retrievedScores": [
+        0.8418517112731934,
+        0.8309847116470337,
+        0.8301801681518555,
+        0.8279028534889221,
+        0.8264296650886536
+      ],
+      "top1Score": 0.8418517112731934,
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 1,
+      "latencyMs": 1492,
+      "llmAnswer": "Hey there! Based on your notes (`DBMS-Unit-1 (Part-1).pdf`, Page 30), the data model you're asking about is the **Semistructured Data Model**. \n\nIt permits the specification of data where individual data items of the same type may have different sets of attributes. For the format, **Extensible Markup Language (XML)** is widely used to represent this type of semistructured data.",
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How do you figure out the attributes that make up a relationship's key when there are no extra attributes versus when there are descriptive attributes involved?",
+      "subject": "DBMS",
+      "expectedFileName": "DBMS-Unit-1 (Part-2).pdf",
+      "sourceChunkId": "6a6844e1ddd4b9e729c43153",
+      "retrievedChunkIds": [
+        "6a6844e1ddd4b9e729c43153",
+        "6a6844e1ddd4b9e729c4316a",
+        "6a6844e1ddd4b9e729c43152",
+        "6a6844e1ddd4b9e729c43169",
+        "6a6844e1ddd4b9e729c43160"
+      ],
+      "retrievedFileNames": [
+        "DBMS-Unit-1 (Part-2).pdf",
+        "DBMS-Unit-1 (Part-2).pdf",
+        "DBMS-Unit-1 (Part-2).pdf",
+        "DBMS-Unit-1 (Part-2).pdf",
+        "DBMS-Unit-1 (Part-2).pdf"
+      ],
+      "retrievedScores": [
+        0.8796259164810181,
+        0.8710460662841797,
+        0.8584854602813721,
+        0.8565109372138977,
+        0.8488273620605469
+      ],
+      "top1Score": 0.8796259164810181,
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 1,
+      "latencyMs": 556,
+      "llmAnswer": "Hey! Let's break this down based on your DBMS notes. \n\nBased on your notes (`DBMS-Unit-1 (Part-2).pdf`, Page 33), figuring out the attributes for a relationship's key depends on whether the relationship set has descriptive attributes or not:\n\n* **When the relationship set has NO attributes associated with it:** \n  An individual relationship in set $R$ is described simply by taking the union of the primary keys of all the participating entity sets. \n  Formula: `primary-key(E1) ∪ primary-key(E2) ∪ ... ∪ primary-key(En)`\n\n* **When the relationship set DOES have descriptive attributes ($a_1, a_2, ..., a_m$):** \n  You take that same union of primary keys from all the participating entity sets, and you just add the descriptive attributes to it. \n  Formula: `primary-key(E1) ∪ primary-key(E2) ∪ ... ∪ primary-key(En) ∪ {a1, a2, ..., am}`\n\nIn both of these scenarios, that resulting set of attributes forms a **super key** for the relationship set! Let me know if you need any more examples from Unit 1.",
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "What are the different types of consistency constraints mentioned in the DDL notes?",
+      "subject": "DBMS",
+      "expectedFileName": "DBMS-Unit-1 (Part-1).pdf",
+      "sourceChunkId": "6a6840d84b4448ab07c6c337",
+      "retrievedChunkIds": [
+        "6a6840d84b4448ab07c6c337",
+        "6a684527ddd4b9e729c431a7",
+        "6a684563ddd4b9e729c43220",
+        "6a6840d84b4448ab07c6c339",
+        "6a684563ddd4b9e729c43224"
+      ],
+      "retrievedFileNames": [
+        "DBMS-Unit-1 (Part-1).pdf",
+        "DBMS-Unit-2 (Part-1).pdf",
+        "DBMS-Unit-2 (Part-2).pdf",
+        "DBMS-Unit-1 (Part-1).pdf",
+        "DBMS-Unit-2 (Part-2).pdf"
+      ],
+      "retrievedScores": [
+        0.8750243186950684,
+        0.8721582889556885,
+        0.8655140399932861,
+        0.8607468605041504,
+        0.8596405386924744
+      ],
+      "top1Score": 0.8750243186950684,
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 1,
+      "latencyMs": 1738,
+      "llmAnswer": "Hey there! Based on your notes (`DBMS-Unit-1 (Part-1).pdf`, Page 33), the consistency constraints implemented using integrity constraints in DDL include:\n\n1. **Domain Constraints:** \n   - Every attribute must be associated with a domain of possible values (such as integer, character, or date/time types).\n   - These are checked whenever a new data item is entered into the database.\n\n2. **Referential Integrity:** \n   - Ensures that a value appearing in one relation for a specific set of attributes also appears in a certain set of attributes in another relation. \n   - Note that database modifications can sometimes cause violations of this constraint.\n\nAdditionally, looking further into your notes (`DBMS-Unit-1 (Part-1).pdf`, Page 36 and `DBMS-Unit-2 (Part-2).pdf`, Page 40), **assertions** are also mentioned as conditions the database must always satisfy, with domain constraints and referential-integrity constraints acting as special forms of assertions.",
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "What issues happen when a table is un-normalized?",
+      "subject": "DBMS",
+      "expectedFileName": "DBMS II-II SUPPLY DEC-2023.pdf",
+      "sourceChunkId": "6a684bfb9688f92f9ecdc2f5",
+      "retrievedChunkIds": [
+        "6a684b88e522b9d1dbe11c6f",
+        "6a684b88e522b9d1dbe11c72",
+        "6a684b88e522b9d1dbe11c6e",
+        "6a6840d84b4448ab07c6c323",
+        "6a6840d84b4448ab07c6c325"
+      ],
+      "retrievedFileNames": [
+        "DBMS-Unit-3 (Part-2).pdf",
+        "DBMS-Unit-3 (Part-2).pdf",
+        "DBMS-Unit-3 (Part-2).pdf",
+        "DBMS-Unit-1 (Part-1).pdf",
+        "DBMS-Unit-1 (Part-1).pdf"
+      ],
+      "retrievedScores": [
+        0.8516716957092285,
+        0.8479495048522949,
+        0.8461483716964722,
+        0.845951497554779,
+        0.8453947305679321
+      ],
+      "top1Score": 0.8516716957092285,
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": false,
+      "thresholdLoss": false,
+      "reciprocalRank": 0,
+      "latencyMs": 762,
+      "llmAnswer": "Hey! When a table isn't properly normalized (meaning we end up with a bad design or un-normalized tables), it leads to several major issues in a database. \n\nBased on your notes (`DBMS-Unit-3 (Part-2).pdf` and `DBMS-Unit-1 (Part-1).pdf`), here are the key problems you'll run into:\n\n1. **Data Redundancy and Inconsistency:** \n   * As seen in `DBMS-Unit-1 (Part-1.pdf, Page 12)`, duplicating data across multiple places leads to higher storage and access costs. \n   * It also causes **data inconsistency**. For example, if a student has a double major and their address is stored in both department files, updating it in one place (like the music department) might leave the other outdated if it's not changed everywhere.\n\n2. **Difficulty in Representing Information (Null Values):**\n   * According to `DBMS-Unit-3 (Part-2.pdf, Page 10)`, a poorly designed schema might force you to rely on null values. For instance, if you combine instructor and department data (`inst-dept schema`), you wouldn't be able to record information about a newly created department until the first instructor is actually hired (unless you use a tuple with a null value for building and budget). As your notes point out, null values can be troublesome.\n\n3. **Lossy Decompositions:**\n   * If you try to fix a bad design with a \"bad decomposition,\" you run into serious trouble (`DBMS-Unit-3 (Part-2.pdf, Page 15)`). For example, if you split tables incorrectly, you might end up with new tuples that incorrectly mix data values (like mixing up data for different employees named Kim) and you won't be able to distinguish between them. This means the decomposition fails to represent important real-world facts.\n\n4. **Anomalies and Costly Discoveries:**\n   * In a large real-world database with millions of tuples and many attributes, discovering repetition is very costly (`DBMS-Unit-3 (Part-2.pdf, Page 11)`). Without proper normalization rules (like ensuring each department maps to a single building and budget), you open the door to update, insertion, and deletion anomalies.\n\nLet me know if you want to dive deeper into any specific normal form!",
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How do primary keys connect to functional dependencies according to the study material?",
+      "subject": "DBMS",
+      "expectedFileName": "DBMS Question Bank MID-2.pdf",
+      "sourceChunkId": "6a684c099688f92f9ecdc301",
+      "retrievedChunkIds": [
+        "6a684b88e522b9d1dbe11c7f",
+        "6a684b88e522b9d1dbe11c82",
+        "6a684b88e522b9d1dbe11c79",
+        "6a684b88e522b9d1dbe11c70",
+        "6a684b88e522b9d1dbe11c84"
+      ],
+      "retrievedFileNames": [
+        "DBMS-Unit-3 (Part-2).pdf",
+        "DBMS-Unit-3 (Part-2).pdf",
+        "DBMS-Unit-3 (Part-2).pdf",
+        "DBMS-Unit-3 (Part-2).pdf",
+        "DBMS-Unit-3 (Part-2).pdf"
+      ],
+      "retrievedScores": [
+        0.8600897789001465,
+        0.8576983213424683,
+        0.8519251942634583,
+        0.851615309715271,
+        0.8494841456413269
+      ],
+      "top1Score": 0.8600897789001465,
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": false,
+      "thresholdLoss": false,
+      "reciprocalRank": 0,
+      "latencyMs": 3857,
+      "llmAnswer": "Hey! Let's break down how primary keys and functional dependencies are connected based on your notes. \n\nAccording to your notes (`DBMS-Unit-3 (Part-2).pdf`, Page 31), database constraints are generally represented in two main ways:\n1. Formally as **keys** (which include superkeys, candidate keys, and primary keys).\n2. As **functional dependencies**.\n\nHere is how they tie together:\n* **Expressing Rules:** Both keys and functional dependencies are used to specify rules and constraints that a legal instance of a relation must satisfy (`DBMS-Unit-3 (Part-2).pdf`, Page 31). For example, a rule like *\"if there were a schema (dept_name, budget), then dept_name is able to serve as the primary key\"* is specifically specified as a functional dependency (`DBMS-Unit-3 (Part-2).pdf`, Page 12).\n* **Beyond Superkeys:** Functional dependencies allow us to express constraints that we can't always express with superkeys alone, by uniquely identifying the values of certain attributes (like `dept_name → budget`, where `dept_name` uniquely determines the budget) (`DBMS-Unit-3 (Part-2).pdf`, Page 34).\n* **Decomposition:** Both concepts form the foundation for database decomposition. When you have rules expressed through functional dependencies (often relating to primary or candidate keys), it helps the designer figure out how and where a schema needs to be split or decomposed into better, more refined schemas (`DBMS-Unit-3 (Part-2).pdf`, Page 12 and Page 31).",
+      "faithfulnessScore": 0.75,
+      "citedFile": true
+    },
+    {
+      "question": "What are some practical uses of triggers in a database?",
+      "subject": "DBMS",
+      "expectedFileName": "DBMS-Unit-2 (Part-2).pdf",
+      "sourceChunkId": "6a684563ddd4b9e729c43249",
+      "retrievedChunkIds": [
+        "6a684563ddd4b9e729c43249",
+        "6a684563ddd4b9e729c4324f",
+        "6a684563ddd4b9e729c43250",
+        "6a684563ddd4b9e729c4324e",
+        "6a684563ddd4b9e729c4324c"
+      ],
+      "retrievedFileNames": [
+        "DBMS-Unit-2 (Part-2).pdf",
+        "DBMS-Unit-2 (Part-2).pdf",
+        "DBMS-Unit-2 (Part-2).pdf",
+        "DBMS-Unit-2 (Part-2).pdf",
+        "DBMS-Unit-2 (Part-2).pdf"
+      ],
+      "retrievedScores": [
+        0.8742251396179199,
+        0.8710427284240723,
+        0.8605207204818726,
+        0.8575583696365356,
+        0.8495453596115112
+      ],
+      "top1Score": 0.8742251396179199,
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 1,
+      "latencyMs": 651,
+      "llmAnswer": "Hey! Based on your notes (`DBMS-Unit-2 (Part-2).pdf`, Pages 80–87), triggers are super handy and have several practical uses in a database:\n\n1. **Implementing Complex Integrity Constraints:** They can handle integrity constraints that regular SQL constraint mechanisms can't specify easily (Page 80).\n2. **Alerting and Automation:** They are great for alerting humans or automatically kicking off tasks when specific conditions are met (Page 80). For example, a warehouse database can automatically place a new order if an item's inventory drops to or below the minimum required level during an update (Page 80).\n3. **Maintaining Data Consistency:** They can automatically keep related data synced up. For instance, a trigger can update a student's total credits (`tot_cred`) automatically whenever their grade changes to a passing grade, keeping the student table consistent with the `takes` and `course` tables (Page 86).\n4. **Data Cleaning/Formatting:** Triggers like `setnull` can be used to automatically clean up data, such as converting empty strings (`''`) into proper `NULL` values in a column (Page 87).\n5. **Enforcing Referential Actions & Validation:** They can be used to prevent invalid data from being inserted—like stopping an invalid `time_slot_id` from getting into the `section` table—or to prevent deletions, like stopping a `time_slot` record from being deleted if another table is still referencing it (Pages 83, 85).\n\nJust a quick heads-up noted in the slides: trigger systems generally can't perform updates outside of the database itself (Page 80). Let me know if you need help with the syntax or anything else from Unit 2!",
+      "faithfulnessScore": 0.75,
+      "citedFile": true
+    },
+    {
+      "question": "How do I write the query to find all bill numbers for July 1st, 2023 along with customer names and item IDs?",
+      "subject": "DBMS",
+      "expectedFileName": "DBMS Question Bank MID-I.pdf",
+      "sourceChunkId": "6a684c0e9688f92f9ecdc30a",
+      "retrievedChunkIds": [
+        "6a684c139688f92f9ecdc313",
+        "6a684c0e9688f92f9ecdc30a",
+        "6a684c139688f92f9ecdc314",
+        "6a684c0e9688f92f9ecdc30b",
+        "6a684b7ce522b9d1dbe11c57"
+      ],
+      "retrievedFileNames": [
+        "DBMS-Question Bank (I to V-UNITS).pdf",
+        "DBMS Question Bank MID-I.pdf",
+        "DBMS-Question Bank (I to V-UNITS).pdf",
+        "DBMS Question Bank MID-I.pdf",
+        "DBMS-Unit-3 (Part-1).pdf"
+      ],
+      "retrievedScores": [
+        0.8917583227157593,
+        0.8365792036056519,
+        0.8338886499404907,
+        0.8288242816925049,
+        0.820271372795105
+      ],
+      "top1Score": 0.8917583227157593,
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 0.5,
+      "latencyMs": 1118,
+      "llmAnswer": "Hey there! Let's get that query sorted out for your DBMS lab or assignment. \n\nBased on your notes (`DBMS-Question Bank (I to V-UNITS).pdf`, Page 3) and (`DBMS Question Bank MID-I.pdf`, Page 3), we are dealing with a Customer-Sale scenario with the following schema:\n* **Customer** (`cust_id` : integer, `cust_name`: string)\n* **Item** (`item_id`: integer, `item_name`: string, `price`: integer)\n* **Sale** (`bill_no`: integer, `bill_date`: date, `cust_id`: integer, `item_id`: integer, `qty_sold`: integer)\n\nTo find all the bill numbers for the date `2023-07-01` along with the customer names and item IDs—making sure the column names are explicitly `bill_no`, `cust_name`, and `item_id`—you'll need to join the `Sale` table and the `Customer` table using their matching `cust_id`.\n\nHere is the SQL query to do just that:\n\n```sql\nSELECT s.bill_no AS bill_no, c.cust_name AS cust_name, s.item_id AS item_id\nFROM Sale s\nJOIN Customer c ON s.cust_id = c.cust_id\nWHERE s.bill_date = '2023-07-01';\n```\n\n### Quick breakdown:\n* **`JOIN Customer c ON s.cust_id = c.cust_id`**: Connects the sales records with the customer details so we can pull out the `cust_name`.\n* **`WHERE s.bill_date = '2023-07-01'`**: Filters the records specifically for July 1st, 2023.\n* **`AS` aliases**: Ensure the column headers in your output match the exact requirements (`bill_no`, `cust_name`, and `item_id`).\n\nLet me know if you need help with the rest of the queries from this question set!",
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How many total marks are allocated for Part A in the DBMS exam?",
+      "subject": "DBMS",
+      "expectedFileName": "DBMS II-II Regular JULY-2024.pdf",
+      "sourceChunkId": "6a684bf39688f92f9ecdc2ed",
+      "retrievedChunkIds": [
+        "6a684c029688f92f9ecdc2f9",
+        "6a684bed9688f92f9ecdc2e5",
+        "6a684bfb9688f92f9ecdc2f4",
+        "6a684bea9688f92f9ecdc2e1",
+        "6a684bf09688f92f9ecdc2e9"
+      ],
+      "retrievedFileNames": [
+        "DBMS II-II SUPPLY JAN-FEB-2024.pdf",
+        "DBMS DEC-JAN 22-23.pdf",
+        "DBMS II-II SUPPLY DEC-2023.pdf",
+        "DBMS  II-II SUPLY JULY 2024.pdf",
+        "DBMS FEB 2023.pdf"
+      ],
+      "retrievedScores": [
+        0.8583980798721313,
+        0.8577215671539307,
+        0.857387900352478,
+        0.856173038482666,
+        0.8561649322509766
+      ],
+      "top1Score": 0.8583980798721313,
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": false,
+      "thresholdLoss": false,
+      "reciprocalRank": 0,
+      "latencyMs": 4333,
+      "llmAnswer": "Based on your uploaded study materials, the total marks allocated for **Part A** vary depending on the specific exam paper:\n\n* **DEC/JAN-2022-23 & DECEMBER-2023 Regular/Supplementary Exams** (`DBMS DEC-JAN 22-23.pdf`, Page 1 and `DBMS II-II SUPPLY DEC-2023.pdf`, Page 1): Part A carries **25 marks** (Ten questions from five units).\n* **JAN/FEB-2024 & FEBRUARY-2023 Exams** (`DBMS II-II SUPPLY JAN-FEB-2024.pdf`, Page 1 and `DBMS FEB 2023.pdf`, Page 1): Part A carries **20 marks** (Ten questions from five units).\n* **JULY-2024 Exam** (`DBMS  II-II SUPLY JULY 2024.pdf`, Page 1): Part A carries **10 marks** (Ten questions, 1 mark each).",
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How can I tell the difference between a weak and a strong entity set?",
+      "subject": "DBMS",
+      "expectedFileName": "DBMS-Unit-1 (Part-2).pdf",
+      "sourceChunkId": "6a6844e1ddd4b9e729c4315e",
+      "retrievedChunkIds": [
+        "6a6844e1ddd4b9e729c4315e",
+        "6a6844e1ddd4b9e729c43160",
+        "6a6844e1ddd4b9e729c43167",
+        "6a6844e1ddd4b9e729c4315f",
+        "6a6844e1ddd4b9e729c4316c"
+      ],
+      "retrievedFileNames": [
+        "DBMS-Unit-1 (Part-2).pdf",
+        "DBMS-Unit-1 (Part-2).pdf",
+        "DBMS-Unit-1 (Part-2).pdf",
+        "DBMS-Unit-1 (Part-2).pdf",
+        "DBMS-Unit-1 (Part-2).pdf"
+      ],
+      "retrievedScores": [
+        0.8870534896850586,
+        0.8788094520568848,
+        0.8662953972816467,
+        0.8604961633682251,
+        0.857979953289032
+      ],
+      "top1Score": 0.8870534896850586,
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "thresholdLoss": false,
+      "reciprocalRank": 1,
+      "latencyMs": 1090,
+      "llmAnswer": "Hey! Let's break this down simply. \n\nBased on your notes (`DBMS-Unit-1 (Part-2).pdf`, Pages 47 and 49), here is how you can tell the difference between a strong and a weak entity set:\n\n* **Primary Key:** A **strong entity set** has enough attributes of its own to form a primary key. A **weak entity set**, on the other hand, *does not* have enough attributes to form its own primary key.\n* **Existence & Ownership:** A **strong entity set** stands independently. A **weak entity set** is existence-dependent on another entity set (called the identifying or owner entity set), meaning it relies on a strong entity to uniquely identify it.\n* **Keys & Discriminators:** Because weak entities don't have a full primary key, they use a **discriminator** (or *partial key*) along with the primary key of the strong entity set to form their complete primary key. \n\nFor example, in your notes, `course` acts as a strong entity set, while `section` acts as a weak entity set because a section cannot exist without a course, and its primary key combines the course's primary key (`course_id`) with its own discriminator (`sec_id`, `year`, `semester`).",
+      "faithfulnessScore": 0.75,
+      "citedFile": true
+    },
+    {
+      "question": "What topics are covered in Unit 2 of the DBMS syllabus?",
+      "subject": "DBMS",
+      "expectedFileName": "DBMS.pdf",
+      "sourceChunkId": "6a684c179688f92f9ecdc31a",
+      "retrievedChunkIds": [
+        "6a684563ddd4b9e729c43202",
+        "6a684527ddd4b9e729c4319d",
+        "6a684b88e522b9d1dbe11c69",
+        "6a6840d84b4448ab07c6c357",
+        "6a684c0e9688f92f9ecdc309"
+      ],
+      "retrievedFileNames": [
+        "DBMS-Unit-2 (Part-2).pdf",
+        "DBMS-Unit-2 (Part-1).pdf",
+        "DBMS-Unit-3 (Part-2).pdf",
+        "DBMS-Unit-1 (Part-1).pdf",
+        "DBMS Question Bank MID-I.pdf"
+      ],
+      "retrievedScores": [
+        0.8804581165313721,
+        0.8804581165313721,
+        0.8716162443161011,
+        0.8708638548851013,
+        0.8687856197357178
+      ],
+      "top1Score": 0.8804581165313721,
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": false,
+      "thresholdLoss": false,
+      "reciprocalRank": 0,
+      "latencyMs": 3300,
+      "llmAnswer": "Hey there! Based on your question about the DBMS syllabus, let's look at what we have for Unit 2. \n\nAccording to your question bank (`DBMS Question Bank MID-I.pdf`, Page 2), the topics covered in Unit 2 include:\n* Explaining various DDL and DML functions in SQL with examples\n* Describing databases and schemas\n* Listing and explaining various set operations in SQL with syntax and examples\n* Illustrating the `GROUP BY` and `HAVING` clauses used in SQL with syntax and relevant examples\n\n(Note: You also have slide decks for Unit 2 from Dr. G. Merlin Linda, CSE, as seen in `DBMS-Unit-2 (Part-1).pdf` and `DBMS-Unit-2 (Part-2).pdf`, Page 1). \n\nLet me know if you need help diving into any of these SQL commands or database schemas for your prep!",
+      "faithfulnessScore": 0.2,
+      "citedFile": true
+    }
+  ]
+}

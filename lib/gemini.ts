@@ -1,9 +1,9 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { GoogleGenAI } from '@google/genai';
 
 /**
  * Creates a Gemini client from a user-supplied API key (stored in localStorage).
- * Only used client-side.
+ * Only used client-side or in server utilities.
  */
 export function createGeminiClient(apiKey: string) {
-  return new GoogleGenerativeAI(apiKey);
+  return new GoogleGenAI({ apiKey });
 }

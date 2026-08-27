@@ -1,16 +1,18 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
   Bot, Send, Settings, Loader2, Sparkles, Globe, CheckCircle2,
-  ArrowRight, Menu, Clock, Trash, X
+  ArrowRight, Menu, Clock, Trash, X, ThumbsUp, ThumbsDown
 } from 'lucide-react';
 import { toast } from '@/components/ui/toaster';
 
 interface Message {
   role: 'user' | 'assistant';
   content: string;
+  queryLogId?: string | null;
+  feedback?: 'up' | 'down' | null;
 }
 
 interface ChatSession {
@@ -51,78 +53,44 @@ export default function AIPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [sessions, setSessions] = useState<ChatSession[]>([]);
   const [currentSessionId, setCurrentSessionId] = useState<string>('');
+
+  // RAG Auto-scoping & Search All toggle states
+  const [userBranch, setUserBranch] = useState<string>('');
+  const [userSemester] = useState<number>(4);
+  const [searchAll, setSearchAll] = useState<boolean>(false);
   
   const bottomRef = useRef<HTMLDivElement>(null);
 
-  const [showResolvedBanner, setShowResolvedBanner] = useState(false);
-
-  const checkNotifications = async () => {
-    try {
-      const res = await fetch('/api/notifications');
-      if (res.ok) {
-        const data = await res.json();
-        const unread = (data.notifications ?? []).filter((n: any) => !n.isRead);
-        setShowResolvedBanner(unread.length > 0);
-      }
-    } catch (err) {
-      console.error('[AI Notifications Error]', err);
-    }
-  };
-
   useEffect(() => {
-    checkNotifications();
-
-    const handleUpdate = () => {
-      checkNotifications();
-    };
-    window.addEventListener('notifications-updated', handleUpdate);
-    return () => window.removeEventListener('notifications-updated', handleUpdate);
+    fetch('/api/auth/me')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (data?.branch) setUserBranch(data.branch);
+      })
+      .catch((err) => console.error('[AI Auth Error]', err));
   }, []);
 
-  const handleBannerClick = async () => {
-    try {
-      await fetch('/api/notifications', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({}),
-      });
-      setShowResolvedBanner(false);
-      window.dispatchEvent(new Event('notifications-updated'));
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  // Initialize and load saved sessions
   useEffect(() => {
-    // 0. Close sidebar by default on mobile
-    if (typeof window !== 'undefined' && window.innerWidth < 768) {
-      setSidebarOpen(false);
-    }
+    const key = localStorage.getItem('gemini_api_key') || '';
+    setSavedKey(key);
 
-    // 1. Fetch Gemini key
-    const stored = localStorage.getItem('gemini_api_key') ?? '';
-    setSavedKey(stored);
-    setApiKey(stored);
-
-    // 2. Fetch saved sessions
     const savedSessionsRaw = localStorage.getItem('vjit_ai_sessions');
-    let loadedSessions: ChatSession[] = [];
     if (savedSessionsRaw) {
       try {
-        loadedSessions = JSON.parse(savedSessionsRaw);
-      } catch (e) {
-        console.error('[Contribute Load Sessions]', e);
+        const parsed: ChatSession[] = JSON.parse(savedSessionsRaw);
+        setSessions(parsed);
+        if (parsed.length > 0) {
+          const mostRecent = parsed[0];
+          setCurrentSessionId(mostRecent.id);
+          setMessages(mostRecent.messages);
+          setHistory(mostRecent.history || []);
+        } else {
+          startNewChat();
+        }
+      } catch (err) {
+        console.error(err);
+        startNewChat();
       }
-    }
-    setSessions(loadedSessions);
-
-    // 3. Load the most recent session or start a new one
-    if (loadedSessions.length > 0) {
-      const mostRecent = loadedSessions[0];
-      setCurrentSessionId(mostRecent.id);
-      setMessages(mostRecent.messages);
-      setHistory(mostRecent.history || []);
     } else {
       startNewChat();
     }
@@ -133,12 +101,12 @@ export default function AIPage() {
   }, [messages, loading]);
 
   const saveApiKey = () => {
-    const candidate = apiKey.trim();
-    if (!candidate.startsWith('AIzaSy')) {
-      setKeyErrorMessage("This doesn't look like a valid key. Make sure it starts with AIzaSy...");
+    if (!apiKey.trim()) {
+      setKeyErrorMessage('Please enter an API key');
       return;
     }
 
+    const candidate = apiKey.trim();
     localStorage.setItem('gemini_api_key', candidate);
     setSavedKey(candidate);
     setApiKey(candidate);
@@ -171,10 +139,7 @@ export default function AIPage() {
   const saveSession = (id: string, msgs: Message[], hist: any[]) => {
     if (msgs.length === 0) return;
 
-    // Auto-generate title from the first user message
     const firstUserMsg = msgs.find((m) => m.role === 'user')?.content || '';
-    
-    // Clean up first user message if it contains RAG prompt headers
     let cleanPrompt = firstUserMsg;
     if (firstUserMsg.includes('Student question:')) {
       cleanPrompt = firstUserMsg.split('Student question:').pop()?.trim() || firstUserMsg;
@@ -203,22 +168,20 @@ export default function AIPage() {
       timestamp: Date.now(),
     };
 
-    // Filter out duplicates and append
     const updated = [newSession, ...currentSessions.filter((s) => s.id !== id)]
       .sort((a, b) => b.timestamp - a.timestamp)
-      .slice(0, 20); // max 20 recent chats
+      .slice(0, 20);
 
     localStorage.setItem('vjit_ai_sessions', JSON.stringify(updated));
     setSessions(updated);
   };
 
   const deleteSession = (id: string, e: React.MouseEvent) => {
-    e.stopPropagation(); // prevent loading the deleted session
+    e.stopPropagation();
     const updated = sessions.filter((s) => s.id !== id);
     localStorage.setItem('vjit_ai_sessions', JSON.stringify(updated));
     setSessions(updated);
 
-    // If we deleted the currently active session, start a new one or load the next available
     if (currentSessionId === id) {
       if (updated.length > 0) {
         const nextActive = updated[0];
@@ -228,6 +191,28 @@ export default function AIPage() {
       } else {
         startNewChat();
       }
+    }
+  };
+
+  const handleFeedback = async (msgIdx: number, queryLogId: string | undefined, verdict: 'up' | 'down') => {
+    if (!queryLogId) return;
+
+    setMessages((prev) =>
+      prev.map((msg, i) => (i === msgIdx ? { ...msg, feedback: verdict } : msg))
+    );
+
+    try {
+      await fetch('/api/ai/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ queryLogId, verdict }),
+      });
+      toast({
+        title: verdict === 'up' ? 'Thanks for the feedback! 👍' : 'Feedback recorded 👎',
+        description: verdict === 'down' ? 'We logged this to improve study corpus grounding.' : undefined,
+      });
+    } catch (err) {
+      console.error('[Feedback Error]', err);
     }
   };
 
@@ -243,30 +228,37 @@ export default function AIPage() {
     setLoading(true);
 
     try {
-      // Get RAG context
       const ctxRes = await fetch('/api/ai/get-context', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: currentInput }),
+        body: JSON.stringify({
+          query: currentInput,
+          searchAll,
+          ...(searchAll ? {} : { branch: userBranch, semester: userSemester }),
+        }),
       });
-      const { chunks } = await ctxRes.json();
 
-      const contextText = chunks?.length
-        ? `Context from study materials:\n${chunks
-            .map((c: { title: string; snippet: string }) => `[${c.title}]: ${c.snippet}`)
-            .join('\n\n')}`
-        : '';
+      const { chunks, grounded, queryLogId } = await ctxRes.json();
 
-      const prompt = contextText
-        ? `You are an academic study assistant for VJIT engineering students.\n\n${contextText}\n\nStudent question: ${currentInput}`
-        : `You are an academic study assistant for VJIT engineering students. Answer helpfully and concisely.\n\nStudent question: ${currentInput}`;
+      let contextText = '';
+      if (grounded && chunks?.length) {
+        contextText = `Context from study materials:\n${chunks
+          .map(
+            (c: { fileName: string; pageNumber?: number | null; webViewLink: string; text: string }) => {
+              const pageTag = c.pageNumber != null ? ` (Page ${c.pageNumber})` : '';
+              return `[Source: ${c.fileName}${pageTag} | Link: ${c.webViewLink}]:\n${c.text}`;
+            }
+          )
+          .join('\n\n')}`;
+      } else {
+        contextText = `NOTICE: No direct study materials were found matching score threshold >= 0.6. You MUST begin your response with "I don't have study material on this in your subjects, but based on general academic knowledge:" before answering.`;
+      }
+
+      const prompt = `You are an academic study assistant for VJIT engineering students.\n\n${contextText}\n\nStudent question: ${currentInput}`;
 
       const nextHistory = [...history, { role: 'user', parts: [{ text: prompt }] }];
-      
-      // Save session with user prompt in history
       saveSession(currentSessionId, nextMessages, nextHistory);
 
-      // Call our secure server-side AI chat proxy
       const chatRes = await fetch('/api/ai/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -281,7 +273,12 @@ export default function AIPage() {
         throw new Error(chatData.error ?? 'AI Assistant failed to respond');
       }
 
-      const assistantMsg: Message = { role: 'assistant', content: chatData.text };
+      const assistantMsg: Message = {
+        role: 'assistant',
+        content: chatData.text,
+        queryLogId: queryLogId || null,
+      };
+
       const finalMessages = [...nextMessages, assistantMsg];
       const finalHistory = [...nextHistory, { role: 'model', parts: [{ text: chatData.text }] }];
       
@@ -289,7 +286,6 @@ export default function AIPage() {
       setHistory(finalHistory);
       setKeyProblem(false);
       
-      // Save session with assistant reply
       saveSession(currentSessionId, finalMessages, finalHistory);
     } catch (err: any) {
       console.error('[AIPage Chat Error]', err);
@@ -320,175 +316,139 @@ export default function AIPage() {
   const showSetup = !savedKey || showSetupScreen;
   const step1Complete = hasOpenedStudio;
   const step2Complete = apiKey.trim().length > 0;
-  const step3Complete = apiKey.trim().startsWith('AIzaSy');
+  const step3Complete = apiKey.trim().length > 0;
   const step4Complete = Boolean(savedKey);
 
   return (
     <div className="flex flex-grow flex-1 min-h-[calc(100vh-6rem)] md:min-h-[calc(100vh-2rem)] h-[calc(100vh-6rem)] md:h-[calc(100vh-2rem)] max-w-6xl w-full mx-auto px-2 md:px-8 py-2 md:py-4 gap-4 overflow-hidden relative">
-      
-      {/* Backdrop overlay for mobile when sidebar is open */}
-      <AnimatePresence>
-        {sidebarOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+      {/* Sidebar Panel */}
+      <div
+        className={`${
+          sidebarOpen ? 'w-64' : 'w-0 border-none'
+        } transition-all duration-300 flex flex-col bg-card-custom border border-custom rounded-2xl p-3 overflow-hidden flex-shrink-0 relative hidden md:flex`}
+      >
+        <div className="flex items-center justify-between pb-3 border-b border-custom mb-3">
+          <div className="flex items-center gap-2">
+            <Clock className="w-4 h-4 text-indigo-400" />
+            <span className="text-xs font-semibold text-primary uppercase tracking-wider">Chat History</span>
+          </div>
+          <button
             onClick={() => setSidebarOpen(false)}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-10 md:hidden"
-          />
-        )}
-      </AnimatePresence>
-
-      {/* 1. Left Chat History Sidebar Panel */}
-      <AnimatePresence>
-        {sidebarOpen && (
-          <motion.div
-            initial={{ opacity: 0, width: 0 }}
-            animate={{ opacity: 1, width: 260 }}
-            exit={{ opacity: 0, width: 0 }}
-            transition={{ type: 'spring', bounce: 0.1, duration: 0.3 }}
-            className="flex-shrink-0 bg-card-custom border border-custom rounded-r-2xl md:rounded-2xl p-4 flex flex-col h-full overflow-hidden fixed md:relative z-20 left-0 md:left-0 top-0 md:top-0 bottom-0 md:bottom-0 shadow-2xl md:shadow-none border-l-0 md:border-l"
+            className="p-1 rounded-lg hover:bg-zinc-800 text-secondary hover:text-primary transition"
           >
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-sm font-bold text-primary flex items-center gap-1.5">
-                <Clock className="w-4 h-4 text-indigo-400" /> Recent Chats
-              </h2>
-              <button
-                onClick={() => setSidebarOpen(false)}
-                className="p-1.5 rounded-lg text-secondary hover:text-primary hover:bg-card-custom border border-custom transition-all md:hidden cursor-pointer"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            </div>
+            <X className="w-4 h-4" />
+          </button>
+        </div>
 
-            <button
-              onClick={startNewChat}
-              className="w-full mb-3 py-2.5 px-3 rounded-xl text-xs font-bold gradient-accent text-white flex items-center justify-center gap-1.5 glow-accent cursor-pointer flex-shrink-0"
-            >
-               New Chat
-            </button>
+        <button
+          onClick={startNewChat}
+          className="w-full mb-3 flex items-center justify-center gap-2 px-3 py-2 rounded-xl gradient-accent text-white text-xs font-semibold shadow-sm hover:opacity-90 transition cursor-pointer"
+        >
+          <Sparkles className="w-3.5 h-3.5" /> New Chat
+        </button>
 
-            {/* Scrollable list of recent chats */}
-            <div className="flex-1 overflow-y-auto space-y-1.5 pr-1 scrollbar-thin">
-              {sessions.length === 0 ? (
-                <div className="text-center py-8 text-xs text-muted-custom">
-                  No recent conversations.
+        <div className="flex-1 overflow-y-auto space-y-1 pr-1 scrollbar-thin">
+          {sessions.length === 0 ? (
+            <p className="text-xs text-muted-custom text-center py-6">No previous chats yet.</p>
+          ) : (
+            sessions.map((s) => {
+              const isActive = s.id === currentSessionId;
+              return (
+                <div
+                  key={s.id}
+                  onClick={() => {
+                    setCurrentSessionId(s.id);
+                    setMessages(s.messages);
+                    setHistory(s.history || []);
+                  }}
+                  className={`group flex items-center justify-between px-3 py-2 rounded-xl text-xs cursor-pointer transition ${
+                    isActive
+                      ? 'bg-indigo-500/15 border border-indigo-500/30 text-indigo-300 font-medium'
+                      : 'hover:bg-zinc-800/60 text-secondary hover:text-primary'
+                  }`}
+                >
+                  <span className="truncate pr-2">{s.title}</span>
+                  <button
+                    onClick={(e) => deleteSession(s.id, e)}
+                    className="opacity-0 group-hover:opacity-100 p-1 hover:text-red-400 text-muted-custom transition"
+                  >
+                    <Trash className="w-3 h-3" />
+                  </button>
                 </div>
-              ) : (
-                sessions.map((s) => {
-                  const isActive = currentSessionId === s.id;
-                  return (
-                    <div
-                      key={s.id}
-                      onClick={() => {
-                        setCurrentSessionId(s.id);
-                        setMessages(s.messages);
-                        setHistory(s.history || []);
-                      }}
-                      className={`
-                        group relative flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium cursor-pointer transition-all duration-150
-                        ${isActive
-                          ? 'bg-indigo-500/10 border border-indigo-500/30 text-indigo-400'
-                          : 'bg-card-custom border border-custom text-secondary hover:text-primary hover:bg-zinc-900/50'
-                        }
-                      `}
-                    >
-                      <div className="truncate pr-4 flex-1">
-                        {s.title}
-                      </div>
-                      <button
-                        onClick={(e) => deleteSession(s.id, e)}
-                        className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-red-500/20 text-muted-custom hover:text-red-400 transition-all absolute right-2 top-1.5"
-                        title="Delete Chat"
-                      >
-                        <Trash className="w-3 h-3" />
-                      </button>
-                    </div>
-                  );
-                })
-              )}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              );
+            })
+          )}
+        </div>
+      </div>
 
-      {/* 2. Main Chat Panel */}
-      <div className="flex-1 flex flex-col h-full bg-transparent overflow-hidden min-w-0">
-        {/* Dynamic Resolution Banner */}
-        {showResolvedBanner && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            onClick={handleBannerClick}
-            className="flex items-center justify-between p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm cursor-pointer hover:bg-emerald-500/15 transition-all shadow-lg shadow-emerald-500/5 group mb-4 flex-shrink-0"
-          >
-            <div className="flex items-center gap-2.5 min-w-0">
-              <span role="img" aria-label="celebrate" className="text-base flex-shrink-0">🎉</span>
-              <span className="font-semibold truncate">
-                Your reported issue has been resolved! Click to view.
-              </span>
-            </div>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowResolvedBanner(false);
-              }}
-              className="p-1.5 rounded-lg hover:bg-emerald-500/20 text-emerald-400/70 hover:text-emerald-400 transition-colors focus:outline-none"
-              aria-label="Dismiss banner"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </motion.div>
-        )}
-
-        {/* Premium Header */}
-        <div className="flex items-center justify-between pb-4 border-b border-custom mb-4 flex-shrink-0">
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="p-2 rounded-xl text-secondary hover:text-primary hover:bg-card-custom border border-custom transition-all cursor-pointer"
-              title="Toggle Chat History"
-            >
-              <Menu className="w-4 h-4" />
-            </button>
-            <div className="w-10 h-10 rounded-xl gradient-accent flex items-center justify-center glow-accent">
-              <Bot className="w-5.5 h-5.5 text-white" />
+      {/* Main Chat Panel */}
+      <div className="flex-1 flex flex-col min-w-0 bg-card-custom border border-custom rounded-2xl p-4 relative overflow-hidden">
+        {/* Header */}
+        <div className="flex items-center justify-between pb-3 border-b border-custom mb-3 gap-2 flex-wrap">
+          <div className="flex items-center gap-2">
+            {!sidebarOpen && (
+              <button
+                onClick={() => setSidebarOpen(true)}
+                className="hidden md:flex p-1.5 rounded-xl hover:bg-zinc-800 text-secondary hover:text-primary border border-custom"
+              >
+                <Menu className="w-4 h-4" />
+              </button>
+            )}
+            <div className="w-8 h-8 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400">
+              <Bot className="w-4 h-4" />
             </div>
             <div>
-              <h1 className="text-lg md:text-xl font-bold text-primary flex items-center gap-2">
-                JARVIS
-                <Sparkles className="w-4 h-4 text-indigo-400 animate-pulse" />
+              <h1 className="text-sm font-bold text-primary flex items-center gap-1.5">
+                VJIT JARVIS <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-semibold">Active</span>
               </h1>
-              <p className="text-xs text-secondary mt-0.5 hidden sm:block">your ai personal assistant answers all your academic doubts</p>
+              <p className="text-[11px] text-muted-custom">AI Study Assistant & RAG Knowledge Engine</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            {savedKey && (
-              <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-semibold animate-pulse">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                <span className="hidden sm:inline">Active Key</span>
-              </span>
-            )}
+          <div className="flex items-center gap-2">
+            {/* Auto-Scoping Toggle */}
+            <div className="flex items-center gap-2 bg-zinc-950/60 border border-custom px-3 py-1.5 rounded-xl text-xs">
+              <Globe className="w-3.5 h-3.5 text-indigo-400" />
+              <span className="text-secondary font-medium">Search All Corpus</span>
+              <input
+                type="checkbox"
+                checked={searchAll}
+                onChange={(e) => setSearchAll(e.target.checked)}
+                className="rounded border-custom text-indigo-500 focus:ring-indigo-500 cursor-pointer"
+              />
+            </div>
+
             <button
-              onClick={() => setShowSetupScreen((prev) => !prev)}
-              className="p-2 rounded-xl text-secondary hover:text-primary hover:bg-card-custom border border-custom transition-all cursor-pointer"
-              aria-label="API Settings"
+              onClick={() => setShowSetupScreen(!showSetupScreen)}
+              className="p-2 rounded-xl border border-custom hover:bg-zinc-800 text-secondary hover:text-primary transition cursor-pointer"
+              title="Settings & Key"
             >
               <Settings className="w-4 h-4" />
             </button>
+
+            {messages.length > 0 && (
+              <button
+                onClick={clearChat}
+                className="p-2 rounded-xl border border-custom hover:bg-zinc-800 text-secondary hover:text-primary transition cursor-pointer"
+                title="Clear current chat"
+              >
+                <Trash className="w-4 h-4" />
+              </button>
+            )}
           </div>
         </div>
 
+        {/* Main Body */}
         {showSetup ? (
-          <div className="flex-1 overflow-y-auto min-h-0 mb-4 pr-1.5 scrollbar-thin">
-            <div className="mx-auto flex h-full w-full max-w-4xl items-start justify-center py-6">
-              <div className="w-full space-y-6">
-                <div className="rounded-3xl border border-custom bg-card-custom p-6">
-                  <div className="mb-6">
-                    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-indigo-400">JARVIS - AI Study Assistant</p>
-                    <h2 className="mt-3 text-3xl font-bold text-primary">To use JARVIS, you need a free API key. Follow these steps:</h2>
+          <div className="flex-1 overflow-y-auto min-h-0 pr-1 scrollbar-thin">
+            <div className="max-w-2xl mx-auto py-6">
+              <div className="rounded-3xl border border-custom bg-card-custom p-6 md:p-8 shadow-xl">
+                <div className="space-y-6">
+                  <div>
+                    <h2 className="text-xl font-bold text-primary">Activate VJIT JARVIS</h2>
+                    <p className="text-sm text-secondary mt-1">
+                      Enter your free Gemini API key to activate your personal AI academic tutor.
+                    </p>
                   </div>
 
                   <div className="space-y-4">
@@ -500,18 +460,17 @@ export default function AIPage() {
                           </div>
                           <div>
                             <h3 className="text-sm font-semibold text-primary">STEP 1</h3>
-                            <p className="text-sm text-secondary">Go to Google AI Studio</p>
+                            <p className="text-sm text-secondary">Open Google AI Studio</p>
                           </div>
                         </div>
                         {step1Complete && <CheckCircle2 className="w-5 h-5 text-emerald-400" />}
                       </div>
-                      <p className="mt-4 text-sm text-secondary">Click the button below to open it in a new tab.</p>
                       <a
-                        href="https://aistudio.google.com"
+                        href="https://aistudio.google.com/app/apikey"
                         target="_blank"
                         rel="noreferrer"
                         onClick={() => setHasOpenedStudio(true)}
-                        className="mt-4 inline-flex items-center gap-2 rounded-xl border border-custom px-4 py-2 text-sm font-semibold text-indigo-300 hover:bg-zinc-900 transition"
+                        className="mt-4 inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 transition"
                       >
                         Open Google AI Studio <ArrowRight className="w-4 h-4" />
                       </a>
@@ -530,11 +489,6 @@ export default function AIPage() {
                         </div>
                         {step2Complete && <CheckCircle2 className="w-5 h-5 text-emerald-400" />}
                       </div>
-                      <ul className="mt-4 space-y-2 text-sm text-secondary list-disc list-inside">
-                        <li>Click "Get API Key" on the top left</li>
-                        <li>Click "Create API key in new project"</li>
-                        <li>Wait about 5 seconds for it to generate</li>
-                      </ul>
                     </div>
 
                     <div className={`rounded-3xl border p-5 ${step3Complete ? 'border-emerald-500/20 bg-emerald-500/5' : 'border-custom bg-zinc-950/60'}`}>
@@ -550,11 +504,6 @@ export default function AIPage() {
                         </div>
                         {step3Complete && <CheckCircle2 className="w-5 h-5 text-emerald-400" />}
                       </div>
-                      <ul className="mt-4 space-y-2 text-sm text-secondary list-disc list-inside">
-                        <li>Your key will start with <span className="text-primary">AIzaSy...</span></li>
-                        <li>Click the copy button next to it</li>
-                        <li>Copy the full key with no spaces</li>
-                      </ul>
                     </div>
 
                     <div className={`rounded-3xl border p-5 ${step4Complete ? 'border-emerald-500/20 bg-emerald-500/5' : 'border-custom bg-zinc-950/60'}`}>
@@ -575,7 +524,7 @@ export default function AIPage() {
                           type="text"
                           value={apiKey}
                           onChange={(e) => { setApiKey(e.target.value); setKeyErrorMessage(''); }}
-                          placeholder="Paste your API key here (AIzaSy...)"
+                          placeholder="Paste your API key here"
                           className="w-full rounded-xl border border-custom bg-zinc-950/60 px-4 py-3 text-sm text-primary placeholder:text-muted-custom focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
                         />
                         {keyErrorMessage && (
@@ -634,17 +583,43 @@ export default function AIPage() {
                   className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   <div
-                    className={`max-w-[85%] md:max-w-[80%] px-4 py-3 rounded-2xl text-sm leading-relaxed ${
+                    className={`max-w-[85%] md:max-w-[80%] px-4 py-3 rounded-2xl text-sm leading-relaxed relative group ${
                       msg.role === 'user'
                         ? 'gradient-accent text-white shadow-md'
                         : 'bg-card-custom border border-custom text-primary'
                     }`}
                   >
                     {msg.role === 'assistant' && msg.content ? (
-                      <div
-                        className="prose prose-invert text-xs sm:text-sm space-y-2"
-                        dangerouslySetInnerHTML={{ __html: renderMarkdown(msg.content) }}
-                      />
+                      <div>
+                        <div
+                          className="prose prose-invert text-xs sm:text-sm space-y-2"
+                          dangerouslySetInnerHTML={{ __html: renderMarkdown(msg.content) }}
+                        />
+                        {/* 1-Click Thumbs Up / Down Feedback Bar */}
+                        {msg.queryLogId && (
+                          <div className="mt-3 pt-2 border-t border-zinc-800/60 flex items-center gap-3 text-xs text-muted-custom">
+                            <span className="text-[11px]">Was this helpful?</span>
+                            <button
+                              onClick={() => handleFeedback(i, msg.queryLogId, 'up')}
+                              className={`p-1 rounded hover:bg-zinc-800 transition ${
+                                msg.feedback === 'up' ? 'text-emerald-400 font-bold' : 'text-zinc-400 hover:text-emerald-400'
+                              }`}
+                              title="Thumbs up"
+                            >
+                              <ThumbsUp className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              onClick={() => handleFeedback(i, msg.queryLogId, 'down')}
+                              className={`p-1 rounded hover:bg-zinc-800 transition ${
+                                msg.feedback === 'down' ? 'text-rose-400 font-bold' : 'text-zinc-400 hover:text-rose-400'
+                              }`}
+                              title="Thumbs down"
+                            >
+                              <ThumbsDown className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        )}
+                      </div>
                     ) : (
                       msg.content || (
                         <span className="flex items-center gap-1.5 text-muted-custom">

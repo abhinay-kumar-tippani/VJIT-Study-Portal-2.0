@@ -13,6 +13,8 @@ export interface IResourceDoc extends Document {
   rejectionReason?: string;
   embedding?: number[];
   textContent?: string;
+  isIngested?: boolean;
+  ingestedAt?: Date;
   createdAt: Date;
 }
 
@@ -49,6 +51,8 @@ const ResourceSchema = new Schema<IResourceDoc>(
     },
     embedding: { type: [Number], select: false }, // Vector — excluded by default
     textContent: { type: String, select: false },  // Raw text for RAG
+    isIngested: { type: Boolean, default: false },
+    ingestedAt: { type: Date },
   },
   { timestamps: true, collection: 'resources' }
 );

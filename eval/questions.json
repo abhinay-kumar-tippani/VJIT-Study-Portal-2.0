@@ -1,0 +1,760 @@
+[
+  {
+    "question": "what are the logical rules called that define rational behavior when dealing with uncertainty?",
+    "keywords": [
+      "axioms",
+      "rational",
+      "preferences",
+      "utility"
+    ],
+    "subject": "IAI",
+    "expectedDriveFileId": "1VXmrVJV1jYEn-L4VLZRHn3QiXi6kftE5",
+    "expectedFileName": "Unit-4.pdf",
+    "sourceChunkId": "6a684ce29688f92f9ecdc3dd"
+  },
+  {
+    "question": "How do self-driving cars use AI to navigate and drive on their own?",
+    "keywords": [
+      "sensors",
+      "cameras",
+      "radar",
+      "machine learning",
+      "real-time"
+    ],
+    "subject": "IAI",
+    "expectedDriveFileId": "1vqkDO0wmr8R2eIlEJ65xsQS0lGA6o7In",
+    "expectedFileName": "UNIT-1.docx",
+    "sourceChunkId": "6a684c439688f92f9ecdc33d"
+  },
+  {
+    "question": "How do learning agents manage to get better at tasks over time?",
+    "keywords": [
+      "experience",
+      "feedback",
+      "learning element",
+      "performance element"
+    ],
+    "subject": "IAI",
+    "expectedDriveFileId": "1vqkDO0wmr8R2eIlEJ65xsQS0lGA6o7In",
+    "expectedFileName": "UNIT-1.docx",
+    "sourceChunkId": "6a684c439688f92f9ecdc356"
+  },
+  {
+    "question": "How do you calculate the total cost in A* search?",
+    "keywords": [
+      "g(x)",
+      "h(x)",
+      "sum",
+      "lowest"
+    ],
+    "subject": "IAI",
+    "expectedDriveFileId": "1ZkEe3L9Gs4Y7OVPswpPEHjcC8YeKhV6h",
+    "expectedFileName": "UNIT-2-1.pdf",
+    "sourceChunkId": "6a684c6c9688f92f9ecdc38c"
+  },
+  {
+    "question": "What happens at node E during alpha-beta pruning that causes the right successor to be skipped?",
+    "keywords": [
+      "node E",
+      "alpha",
+      "beta",
+      "pruned",
+      "max"
+    ],
+    "subject": "IAI",
+    "expectedDriveFileId": "1ZkEe3L9Gs4Y7OVPswpPEHjcC8YeKhV6h",
+    "expectedFileName": "UNIT-2-1.pdf",
+    "sourceChunkId": "6a684c6c9688f92f9ecdc39d"
+  },
+  {
+    "question": "What is the final route and total distance when going from Arad to Bucharest?",
+    "keywords": [
+      "Arad",
+      "Sibiu",
+      "Rimnicu Vilcea",
+      "Pitesti",
+      "Bucharest",
+      "418"
+    ],
+    "subject": "IAI",
+    "expectedDriveFileId": "1A8ug8SI5kgKINu-aezTQd0Fo0DRfKfyZ",
+    "expectedFileName": "Romania Map Problem",
+    "sourceChunkId": "6a684c3a9688f92f9ecdc331"
+  },
+  {
+    "question": "How does a dynamic Bayesian network represent a robot moving in a 2D space?",
+    "keywords": [
+      "state variables",
+      "position",
+      "velocity",
+      "sensor"
+    ],
+    "subject": "IAI",
+    "expectedDriveFileId": "14Qu_Q3fjC7CcuiNY3NO7B7aHFLLfShGC",
+    "expectedFileName": "Unit-3.pdf",
+    "sourceChunkId": "6a684c8a9688f92f9ecdc3cb"
+  },
+  {
+    "question": "How do I choose the parents for a variable when building a Bayesian network?",
+    "keywords": [
+      "minimal set",
+      "earlier variables",
+      "conditional independence",
+      "direct influences"
+    ],
+    "subject": "IAI",
+    "expectedDriveFileId": "14Qu_Q3fjC7CcuiNY3NO7B7aHFLLfShGC",
+    "expectedFileName": "Unit-3.pdf",
+    "sourceChunkId": "6a684c8a9688f92f9ecdc3ba"
+  },
+  {
+    "question": "Which pathfinding graph algorithm is mentioned for long answer questions in the second unit?",
+    "keywords": [
+      "A*",
+      "graph",
+      "search",
+      "algorithm"
+    ],
+    "subject": "IAI",
+    "expectedDriveFileId": "1CzVQy6bHF9zwC-bFA2eKpARYPBBE_zqC",
+    "expectedFileName": "AI Question bank.docx",
+    "sourceChunkId": "6a684d069688f92f9ecdc416"
+  },
+  {
+    "question": "How do you calculate the utility of a state in Markov Decision Processes?",
+    "keywords": [
+      "immediate reward",
+      "expected discounted utility",
+      "optimal action",
+      "Bellman equation"
+    ],
+    "subject": "IAI",
+    "expectedDriveFileId": "1VXmrVJV1jYEn-L4VLZRHn3QiXi6kftE5",
+    "expectedFileName": "Unit-4.pdf",
+    "sourceChunkId": "6a684ce29688f92f9ecdc3e8"
+  },
+  {
+    "question": "How do reinforcement learning and supervised learning differ?",
+    "keywords": [
+      "reinforcement",
+      "supervised",
+      "learning",
+      "differences"
+    ],
+    "subject": "IAI",
+    "expectedDriveFileId": "1OllvhTEpCCKsgw6XZdpEZVrW918mq-5n",
+    "expectedFileName": "IAI SET-2 R19.pdf",
+    "sourceChunkId": "6a684cf69688f92f9ecdc404"
+  },
+  {
+    "question": "What topics are covered in Unit 3 of the Intro to AI course for VJIT students?",
+    "keywords": [
+      "Probabilistic Reasoning",
+      "Bayes Rule",
+      "Bayesian Networks",
+      "Hidden Markov Model"
+    ],
+    "subject": "IAI",
+    "expectedDriveFileId": "16NhLVevIKFVy7TWYFTnoF4oEGOU2bXSe",
+    "expectedFileName": "IAI.pdf",
+    "sourceChunkId": "6a684d0e9688f92f9ecdc41f"
+  },
+  {
+    "question": "What topics are covered in the exam questions related to Markov Decision Process and Reinforcement Learning?",
+    "keywords": [
+      "Markov Decision Process",
+      "Value Iteration",
+      "Policy Iteration",
+      "Reinforcement Learning"
+    ],
+    "subject": "IAI",
+    "expectedDriveFileId": "1M6WDzPQJ-qomRYYVI1F7302el7r5FQO0",
+    "expectedFileName": "IAI 1.pdf",
+    "sourceChunkId": "6a684ceb9688f92f9ecdc3f5"
+  },
+  {
+    "question": "How many total questions are there in Part-A of the AI exam and how many marks does each carry?",
+    "keywords": [
+      "Part-A",
+      "compulsory",
+      "marks",
+      "questions"
+    ],
+    "subject": "IAI",
+    "expectedDriveFileId": "1M6WDzPQJ-qomRYYVI1F7302el7r5FQO0",
+    "expectedFileName": "IAI 1.pdf",
+    "sourceChunkId": "6a684ceb9688f92f9ecdc3f3"
+  },
+  {
+    "question": "How does reasoning help people make better choices instead of picking based on feelings?",
+    "keywords": [
+      "facts",
+      "pros and cons",
+      "outcomes",
+      "options"
+    ],
+    "subject": "PC",
+    "expectedDriveFileId": "10WjifB0lTbEY5YdrCMoVr5ZFg28ZpA2X",
+    "expectedFileName": "UNIT IV DECESION  MAKING.pdf",
+    "sourceChunkId": "6a6867296ddf1c26379e6048"
+  },
+  {
+    "question": "What should I do right after I figure out what the problem is?",
+    "keywords": [
+      "Gather Information",
+      "facts",
+      "data",
+      "background",
+      "context"
+    ],
+    "subject": "PC",
+    "expectedDriveFileId": "10WjifB0lTbEY5YdrCMoVr5ZFg28ZpA2X",
+    "expectedFileName": "UNIT IV DECESION  MAKING.pdf",
+    "sourceChunkId": "6a6867296ddf1c26379e6053"
+  },
+  {
+    "question": "How do social platforms help students and teachers with their studies?",
+    "keywords": [
+      "share resources",
+      "discussions",
+      "collaborate",
+      "projects"
+    ],
+    "subject": "PC",
+    "expectedDriveFileId": "1dnST7EteCoYS4g8Q8jQGWb2nK1Aulpk1",
+    "expectedFileName": "UNIT V DIGITAL COMMUNICATION.pdf",
+    "sourceChunkId": "6a686dc8cb43327bc2dc833c"
+  },
+  {
+    "question": "What are the main drawbacks of using the 5 Whys technique?",
+    "keywords": [
+      "complex problems",
+      "multiple causes",
+      "quality of results",
+      "frustrating"
+    ],
+    "subject": "PC",
+    "expectedDriveFileId": "1aupKsTPDJkCWCm0wORf7ODsExxVxQ56n",
+    "expectedFileName": "UNIT IV DECESION  MAKING.pdf",
+    "sourceChunkId": "6a6866e36ddf1c26379e6019"
+  },
+  {
+    "question": "How can I stay motivated and handle unexpected problems when trying to reach my goals?",
+    "keywords": [
+      "positive",
+      "milestones",
+      "accountability",
+      "setbacks",
+      "flexible"
+    ],
+    "subject": "PC",
+    "expectedDriveFileId": "1rWqAl8HxoPbsHsyzGatfBpaQSLSVHRAb",
+    "expectedFileName": "SOFTSKILLS 1.pdf",
+    "sourceChunkId": "6a6866246ddf1c26379e5f4c"
+  },
+  {
+    "question": "what is the very first step in the decision making wheel according to the notes?",
+    "keywords": [
+      "Decision-Making Wheel",
+      "Stop",
+      "think"
+    ],
+    "subject": "PC",
+    "expectedDriveFileId": "11F1j8kJLcszapRQ3elnHHb1ydfI4ckld",
+    "expectedFileName": "PC -II MID QUESTION BANK.pdf",
+    "sourceChunkId": "6a6879a3cb43327bc2dc83f4"
+  },
+  {
+    "question": "How do modern news platforms use different media formats to report stories?",
+    "keywords": [
+      "photos",
+      "videos",
+      "infographics",
+      "live updates"
+    ],
+    "subject": "PC",
+    "expectedDriveFileId": "1QH4et2HPaaGYw-qfWiunZZz__1jqMDEQ",
+    "expectedFileName": "UNIT V DIGITAL COMMUNICATION.pdf",
+    "sourceChunkId": "6a687981cb43327bc2dc8386"
+  },
+  {
+    "question": "What are the key elements I should mention when I introduce myself in an interview?",
+    "keywords": [
+      "personal background",
+      "education",
+      "skills",
+      "interview"
+    ],
+    "subject": "PC",
+    "expectedDriveFileId": "16mNxcEJXjYIOuc5W7Z4QV7OCm9p1pbvk",
+    "expectedFileName": "PC QUESTION BANK.pdf",
+    "sourceChunkId": "6a6879b0cb43327bc2dc8405"
+  },
+  {
+    "question": "How does critical thinking help in making better choices and solving complex problems?",
+    "keywords": [
+      "decision-making",
+      "problem-solving",
+      "logical",
+      "evidence",
+      "systematic"
+    ],
+    "subject": "PC",
+    "expectedDriveFileId": "1aupKsTPDJkCWCm0wORf7ODsExxVxQ56n",
+    "expectedFileName": "UNIT IV DECESION  MAKING.pdf",
+    "sourceChunkId": "6a6866e36ddf1c26379e6039"
+  },
+  {
+    "question": "How do businesses use multimedia to improve their marketing and sales?",
+    "keywords": [
+      "marketing",
+      "videos",
+      "brand",
+      "customers",
+      "sales"
+    ],
+    "subject": "PC",
+    "expectedDriveFileId": "1QH4et2HPaaGYw-qfWiunZZz__1jqMDEQ",
+    "expectedFileName": "UNIT V DIGITAL COMMUNICATION.pdf",
+    "sourceChunkId": "6a687981cb43327bc2dc8385"
+  },
+  {
+    "question": "Which type of workplace group handles day-to-day duties and routine tasks to keep things running smoothly?",
+    "keywords": [
+      "operational teams",
+      "day-to-day activities",
+      "routine tasks",
+      "core functions"
+    ],
+    "subject": "PC",
+    "expectedDriveFileId": "1IjxBt3XCAiQdfce_mjSt0-fBdxjPpm_1",
+    "expectedFileName": "UNIT III. TEAM BUILDING.pdf",
+    "sourceChunkId": "6a68669e6ddf1c26379e5f8b"
+  },
+  {
+    "question": "what is digital communication and what format does it use to send data?",
+    "keywords": [
+      "digital communication",
+      "binary format",
+      "0s and 1s",
+      "exchange of information"
+    ],
+    "subject": "PC",
+    "expectedDriveFileId": "1dnST7EteCoYS4g8Q8jQGWb2nK1Aulpk1",
+    "expectedFileName": "UNIT V DIGITAL COMMUNICATION.pdf",
+    "sourceChunkId": "6a686dc8cb43327bc2dc82ef"
+  },
+  {
+    "question": "what skills do formal group discussions usually test people on?",
+    "keywords": [
+      "communication",
+      "teamwork",
+      "critical thinking",
+      "leadership"
+    ],
+    "subject": "PC",
+    "expectedDriveFileId": "1IjxBt3XCAiQdfce_mjSt0-fBdxjPpm_1",
+    "expectedFileName": "UNIT III. TEAM BUILDING.pdf",
+    "sourceChunkId": "6a68669e6ddf1c26379e5fbf"
+  },
+  {
+    "question": "what happens if you type messages in all caps online?",
+    "keywords": [
+      "capital",
+      "letters",
+      "shouting"
+    ],
+    "subject": "PC",
+    "expectedDriveFileId": "16mNxcEJXjYIOuc5W7Z4QV7OCm9p1pbvk",
+    "expectedFileName": "PC QUESTION BANK.pdf",
+    "sourceChunkId": "6a6879b0cb43327bc2dc840a"
+  },
+  {
+    "question": "what are some examples of skills that are not job-specific and can be transferred across different jobs?",
+    "keywords": [
+      "communication",
+      "teamwork",
+      "adaptability",
+      "transferable"
+    ],
+    "subject": "PC",
+    "expectedDriveFileId": "1rWqAl8HxoPbsHsyzGatfBpaQSLSVHRAb",
+    "expectedFileName": "SOFTSKILLS 1.pdf",
+    "sourceChunkId": "6a6866246ddf1c26379e5f21"
+  },
+  {
+    "question": "What is the purpose of the Graphics class in Java AWT and what are some methods it provides?",
+    "keywords": [
+      "Graphics",
+      "drawing",
+      "shapes",
+      "methods",
+      "components"
+    ],
+    "subject": "OOPs-Java",
+    "expectedDriveFileId": "1kG48wQJI3kE01N0wY4rBxSOZK58aLARS",
+    "expectedFileName": "Java-Unit4-part1.docx",
+    "sourceChunkId": "6a6865296ddf1c26379e5dea"
+  },
+  {
+    "question": "How do synchronized blocks differ from synchronized methods in terms of performance and locking?",
+    "keywords": [
+      "synchronized block",
+      "entire method",
+      "performance",
+      "critical section"
+    ],
+    "subject": "OOPs-Java",
+    "expectedDriveFileId": "1o3ZiHes2OOfgzpcemiHMRpVoEVDD-1hY",
+    "expectedFileName": "Java-Unit3 part2.docx",
+    "sourceChunkId": "6a6865136ddf1c26379e5dcb"
+  },
+  {
+    "question": "what is the purpose of the finalize method and what are its drawbacks?",
+    "keywords": [
+      "finalize",
+      "method",
+      "disadvantage",
+      "use"
+    ],
+    "subject": "OOPs-Java",
+    "expectedDriveFileId": "1XeyzGEeegJs50_bUJjp_AJw-k8nWqUbT",
+    "expectedFileName": "JP Question Bank IT (1).pdf",
+    "sourceChunkId": "6a6866126ddf1c26379e5f12"
+  },
+  {
+    "question": "How do I write a method that requires an object to be invoked in Java?",
+    "keywords": [
+      "Instance Methods",
+      "object",
+      "invoked",
+      "syntax"
+    ],
+    "subject": "OOPs-Java",
+    "expectedDriveFileId": "1vj-TzlHUYkLf9Nr8Y_0nZJeIm-mtmkj3",
+    "expectedFileName": "OOP Java - Unit-I.pdf",
+    "sourceChunkId": "6a6865956ddf1c26379e5e6e"
+  },
+  {
+    "question": "How do I read text files in Java using character streams instead of bytes?",
+    "keywords": [
+      "FileReader",
+      "character",
+      "read",
+      "IOException"
+    ],
+    "subject": "OOPs-Java",
+    "expectedDriveFileId": "1eMLMsI64ienXXzqp3LmKXmWVPfz0aBvg",
+    "expectedFileName": "OOP Java - Unit-III.pdf",
+    "sourceChunkId": "6a6865e26ddf1c26379e5ec2"
+  },
+  {
+    "question": "How do you make a thread using the Runnable interface instead of extending the Thread class?",
+    "keywords": [
+      "implements",
+      "Runnable",
+      "constructor",
+      "start"
+    ],
+    "subject": "OOPs-Java",
+    "expectedDriveFileId": "1eMLMsI64ienXXzqp3LmKXmWVPfz0aBvg",
+    "expectedFileName": "OOP Java - Unit-III.pdf",
+    "sourceChunkId": "6a6865e26ddf1c26379e5ecd"
+  },
+  {
+    "question": "What two requirements are needed to create an event listener in Java?",
+    "keywords": [
+      "registered",
+      "source",
+      "implement",
+      "methods"
+    ],
+    "subject": "OOPs-Java",
+    "expectedDriveFileId": "1ubdyMbHP2kwBZemqypPt9ehPvKm4TQvQ",
+    "expectedFileName": "AWT-JAVA UNIT-IV.pdf",
+    "sourceChunkId": "6a684d189688f92f9ecdc441"
+  },
+  {
+    "question": "How do we write the syntax to create a child class from a parent class in java?",
+    "keywords": [
+      "extends",
+      "SuperClass",
+      "SubClass",
+      "class"
+    ],
+    "subject": "OOPs-Java",
+    "expectedDriveFileId": "1vJe5yRO3ehs0-csA1p7iCpBPrvvrbGlu",
+    "expectedFileName": "OOP Java - Unit-II.pdf",
+    "sourceChunkId": "6a6865ca6ddf1c26379e5e8d"
+  },
+  {
+    "question": "How does Java handle things when none of the conditions in an if-else-if chain are met?",
+    "keywords": [
+      "else",
+      "block",
+      "executed",
+      "conditions"
+    ],
+    "subject": "OOPs-Java",
+    "expectedDriveFileId": "1xXUs2b4ggyjz6cShMox47zA1USiDqOAv",
+    "expectedFileName": "JAVA-Notes-Unit-1_Part 1.pdf",
+    "sourceChunkId": "6a684d999688f92f9ecdc4df"
+  },
+  {
+    "question": "How do I change a String into a primitive int versus an Integer object in Java?",
+    "keywords": [
+      "Integer.parseInt",
+      "Integer.valueOf",
+      "primitive",
+      "object"
+    ],
+    "subject": "OOPs-Java",
+    "expectedDriveFileId": "1vj-TzlHUYkLf9Nr8Y_0nZJeIm-mtmkj3",
+    "expectedFileName": "OOP Java - Unit-I.pdf",
+    "sourceChunkId": "6a6865956ddf1c26379e5e67"
+  },
+  {
+    "question": "How do I connect to a database in Java and when should I use each driver type?",
+    "keywords": [
+      "JDBC driver",
+      "Class.forName",
+      "DriverManager.getConnection",
+      "classpath",
+      "connection URL"
+    ],
+    "subject": "OOPs-Java",
+    "expectedDriveFileId": "13SnLhpkB5RGYyJnRbv1_9kha30qDtN_7",
+    "expectedFileName": "JAVA UNIT-V LAYOUTS&APPLETS&JDBC.pdf",
+    "sourceChunkId": "6a684d3c9688f92f9ecdc4b4"
+  },
+  {
+    "question": "What are the two different ways to make a thread in Java?",
+    "keywords": [
+      "extend",
+      "Thread",
+      "implement",
+      "Runnable"
+    ],
+    "subject": "OOPs-Java",
+    "expectedDriveFileId": "1a1CR_UHXOYlJgdq72i2BLT7JhXYTJmwG",
+    "expectedFileName": "Java-Unit3 part2.docx",
+    "sourceChunkId": "6a68651a6ddf1c26379e5dd8"
+  },
+  {
+    "question": "What are the core classes and interfaces used for handling sessions, sending queries, and getting results in database connectivity?",
+    "keywords": [
+      "DriverManager",
+      "Connection",
+      "Statement",
+      "ResultSet"
+    ],
+    "subject": "OOPs-Java",
+    "expectedDriveFileId": "13SnLhpkB5RGYyJnRbv1_9kha30qDtN_7",
+    "expectedFileName": "JAVA UNIT-V LAYOUTS&APPLETS&JDBC.pdf",
+    "sourceChunkId": "6a684d3c9688f92f9ecdc4b0"
+  },
+  {
+    "question": "How do I write a Java class that uses a vehicle interface with start, stop, and accelerate methods?",
+    "keywords": [
+      "implements",
+      "Vehicle",
+      "interface",
+      "Car",
+      "start"
+    ],
+    "subject": "OOPs-Java",
+    "expectedDriveFileId": "16a6shUEyUNsvGjiS4O-axCD0dHyZpRn1",
+    "expectedFileName": "JAVA-Notes-Unit-2_Part 2.pdf",
+    "sourceChunkId": "6a6864e26ddf1c26379e5d91"
+  },
+  {
+    "question": "How do I make a text input field show dots for a password in Java AWT?",
+    "keywords": [
+      "TextField",
+      "password",
+      "setEchoChar"
+    ],
+    "subject": "OOPs-Java",
+    "expectedDriveFileId": "1kG48wQJI3kE01N0wY4rBxSOZK58aLARS",
+    "expectedFileName": "Java-Unit4-part1.docx",
+    "sourceChunkId": "6a6865296ddf1c26379e5df9"
+  },
+  {
+    "question": "How many total marks are allocated for Part-A in this exam paper?",
+    "keywords": [
+      "Part-A",
+      "10",
+      "marks"
+    ],
+    "subject": "DBMS",
+    "expectedDriveFileId": "1UmByxvCbcN4ezJaPM37wge5y81xJQIvm",
+    "expectedFileName": "DBMS  II-II SUPLY JULY 2024.pdf",
+    "sourceChunkId": "6a684bea9688f92f9ecdc2e1"
+  },
+  {
+    "question": "what is the difference between force and steal policies in database recovery",
+    "keywords": [
+      "commit",
+      "disk",
+      "modified",
+      "policy"
+    ],
+    "subject": "DBMS",
+    "expectedDriveFileId": "1Hb4CKL8RWrgqlHfHEo14JgUToUxEuzzq",
+    "expectedFileName": "DBMS-Unit-5.pdf",
+    "sourceChunkId": "6a684bd99688f92f9ecdc297"
+  },
+  {
+    "question": "Why do database systems allow multiple transactions to run at the same time instead of just one by one?",
+    "keywords": [
+      "throughput",
+      "resource utilization",
+      "concurrently",
+      "transactions"
+    ],
+    "subject": "DBMS",
+    "expectedDriveFileId": "1taFEicLdpyDb3vuf-HJCrJQPBf668lrI",
+    "expectedFileName": "DBMS-Unit-4 (Part-1).pdf",
+    "sourceChunkId": "6a68411e4b4448ab07c6c442"
+  },
+  {
+    "question": "How does the redo pass in ARIES decide whether to skip or apply an update log record?",
+    "keywords": [
+      "RedoLSN",
+      "DirtyPageTable",
+      "RecLSN",
+      "PageLSN"
+    ],
+    "subject": "DBMS",
+    "expectedDriveFileId": "1Hb4CKL8RWrgqlHfHEo14JgUToUxEuzzq",
+    "expectedFileName": "DBMS-Unit-5.pdf",
+    "sourceChunkId": "6a684bd99688f92f9ecdc2aa"
+  },
+  {
+    "question": "Which data model allows different data items of the same type to possess varying sets of attributes, and what format is commonly used for it?",
+    "keywords": [
+      "semistructured",
+      "attributes",
+      "XML"
+    ],
+    "subject": "DBMS",
+    "expectedDriveFileId": "1-luqAMZt4dEMIgFYqXvHgXsqR9sMkk0w",
+    "expectedFileName": "DBMS-Unit-1 (Part-1).pdf",
+    "sourceChunkId": "6a6840d84b4448ab07c6c334"
+  },
+  {
+    "question": "How do you figure out the attributes that make up a relationship's key when there are no extra attributes versus when there are descriptive attributes involved?",
+    "keywords": [
+      "primary key",
+      "relationship set",
+      "attributes",
+      "super key",
+      "union"
+    ],
+    "subject": "DBMS",
+    "expectedDriveFileId": "1x_ny-C76ggxCdIPBjMR2igkoHtEHOfMG",
+    "expectedFileName": "DBMS-Unit-1 (Part-2).pdf",
+    "sourceChunkId": "6a6844e1ddd4b9e729c43153"
+  },
+  {
+    "question": "What are the different types of consistency constraints mentioned in the DDL notes?",
+    "keywords": [
+      "Domain Constraints",
+      "Referential Integrity",
+      "consistency constraints"
+    ],
+    "subject": "DBMS",
+    "expectedDriveFileId": "1-luqAMZt4dEMIgFYqXvHgXsqR9sMkk0w",
+    "expectedFileName": "DBMS-Unit-1 (Part-1).pdf",
+    "sourceChunkId": "6a6840d84b4448ab07c6c337"
+  },
+  {
+    "question": "What issues happen when a table is un-normalized?",
+    "keywords": [
+      "problems",
+      "un-normalized",
+      "table"
+    ],
+    "subject": "DBMS",
+    "expectedDriveFileId": "1y-FShM4OZLpPa3BiFRC79MzwTHPa4BO1",
+    "expectedFileName": "DBMS II-II SUPPLY DEC-2023.pdf",
+    "sourceChunkId": "6a684bfb9688f92f9ecdc2f5"
+  },
+  {
+    "question": "How do primary keys connect to functional dependencies according to the study material?",
+    "keywords": [
+      "Primary Keys",
+      "Functional Dependencies",
+      "Normalization",
+      "Decomposition"
+    ],
+    "subject": "DBMS",
+    "expectedDriveFileId": "1E6CmPIfsC_t9y_Uy5atCOYrrPy-sdCJF",
+    "expectedFileName": "DBMS Question Bank MID-2.pdf",
+    "sourceChunkId": "6a684c099688f92f9ecdc301"
+  },
+  {
+    "question": "What are some practical uses of triggers in a database?",
+    "keywords": [
+      "integrity constraints",
+      "alerting",
+      "tasks automatically",
+      "inventory"
+    ],
+    "subject": "DBMS",
+    "expectedDriveFileId": "1aJOOMn4bv0TM7o6MCteoDq1b4TbaaBBr",
+    "expectedFileName": "DBMS-Unit-2 (Part-2).pdf",
+    "sourceChunkId": "6a684563ddd4b9e729c43249"
+  },
+  {
+    "question": "How do I write the query to find all bill numbers for July 1st, 2023 along with customer names and item IDs?",
+    "keywords": [
+      "bill_no",
+      "cust_name",
+      "item_id",
+      "2023-07-01"
+    ],
+    "subject": "DBMS",
+    "expectedDriveFileId": "1bewLb7grgPI0KGn4UKoq-lsvjQrETUK8",
+    "expectedFileName": "DBMS Question Bank MID-I.pdf",
+    "sourceChunkId": "6a684c0e9688f92f9ecdc30a"
+  },
+  {
+    "question": "How many total marks are allocated for Part A in the DBMS exam?",
+    "keywords": [
+      "Part A",
+      "10 marks"
+    ],
+    "subject": "DBMS",
+    "expectedDriveFileId": "1FBYKFqCQ8lDMEyxX6Lfbc7KlKq-s5CMI",
+    "expectedFileName": "DBMS II-II Regular JULY-2024.pdf",
+    "sourceChunkId": "6a684bf39688f92f9ecdc2ed"
+  },
+  {
+    "question": "How can I tell the difference between a weak and a strong entity set?",
+    "keywords": [
+      "primary key",
+      "weak entity set",
+      "strong entity set",
+      "sufficient attributes"
+    ],
+    "subject": "DBMS",
+    "expectedDriveFileId": "1x_ny-C76ggxCdIPBjMR2igkoHtEHOfMG",
+    "expectedFileName": "DBMS-Unit-1 (Part-2).pdf",
+    "sourceChunkId": "6a6844e1ddd4b9e729c4315e"
+  },
+  {
+    "question": "What topics are covered in Unit 2 of the DBMS syllabus?",
+    "keywords": [
+      "SQL",
+      "Data Definition",
+      "Queries",
+      "Join Expressions",
+      "Views"
+    ],
+    "subject": "DBMS",
+    "expectedDriveFileId": "1OkK8U9OQk3wZCwtxXQ8tUZBMLjkOmLjq",
+    "expectedFileName": "DBMS.pdf",
+    "sourceChunkId": "6a684c179688f92f9ecdc31a"
+  }
+]

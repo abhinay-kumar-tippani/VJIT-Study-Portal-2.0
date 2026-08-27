@@ -12,6 +12,7 @@ export default function LoginPage() {
   const [showPw, setShowPw]   = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError]     = useState('');
+  const [errorDetail, setErrorDetail] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,7 +30,14 @@ export default function LoginPage() {
       });
 
       const data = await res.json();
-      if (!res.ok) { setError(data.error ?? 'Login failed'); return; }
+      if (!res.ok) {
+          setError(data.error ?? 'Login failed');
+          // show detail on localhost or in dev builds to avoid leaking info in production
+          if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || process.env.NODE_ENV !== 'production')) {
+            setErrorDetail(data.detail ?? '');
+          }
+        return;
+      }
       router.push('/dashboard');
       router.refresh();
     } catch {
@@ -115,6 +123,9 @@ export default function LoginPage() {
                   <AlertCircle className="w-4 h-4 flex-shrink-0" /> {error}
                 </motion.div>
               )}
+            {errorDetail && process.env.NODE_ENV !== 'production' && (
+              <div className="text-xs text-secondary mt-1">{errorDetail}</div>
+            )}
             </AnimatePresence>
 
             {/* Submit */}

@@ -1,0 +1,1591 @@
+{
+  "config": {
+    "configLabel": "phase2-hybrid",
+    "mode": "hybrid",
+    "fetchDepth": 30,
+    "limit": 5,
+    "threshold": 0.6,
+    "chunkCount": 1918,
+    "questionCount": 58,
+    "rerankerModel": null
+  },
+  "timestamp": "2026-07-28T11:20:56.623Z",
+  "summary": {
+    "totalQuestions": 58,
+    "selfRetrievalRatePct": 60.3,
+    "fileRecallTop5Pct": 82.8,
+    "fileRecallTop30Pct": 96.6,
+    "mrr": 0.756,
+    "avgTotalMs": 1004,
+    "faithfulnessPct": 90.3,
+    "citationRatePct": 100
+  },
+  "results": [
+    {
+      "question": "what are the logical rules called that define rational behavior when dealing with uncertainty?",
+      "subject": "IAI",
+      "expectedFileName": "Unit-4.pdf",
+      "sourceChunkId": "6a684ce29688f92f9ecdc3dd",
+      "retrievedChunkIds": [
+        "6a684ce29688f92f9ecdc3dd",
+        "6a684c8a9688f92f9ecdc3a7",
+        "6a68647c6ddf1c26379e5c81",
+        "6a684c8a9688f92f9ecdc3a8",
+        "6a684ce29688f92f9ecdc3de"
+      ],
+      "retrievedFileNames": [
+        "Unit-4.pdf",
+        "Unit-3.pdf",
+        "AI unit-3 (1).pptx",
+        "Unit-3.pdf",
+        "Unit-4.pdf"
+      ],
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 1,
+      "latencyMs": 687,
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How do self-driving cars use AI to navigate and drive on their own?",
+      "subject": "IAI",
+      "expectedFileName": "UNIT-1.docx",
+      "sourceChunkId": "6a684c439688f92f9ecdc33d",
+      "retrievedChunkIds": [
+        "6a684c439688f92f9ecdc34b",
+        "6a684c439688f92f9ecdc33d",
+        "6a684c439688f92f9ecdc34a",
+        "6a684c439688f92f9ecdc33a",
+        "6a684c439688f92f9ecdc337"
+      ],
+      "retrievedFileNames": [
+        "UNIT-1.docx",
+        "UNIT-1.docx",
+        "UNIT-1.docx",
+        "UNIT-1.docx",
+        "UNIT-1.docx"
+      ],
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 1,
+      "latencyMs": 938,
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How do learning agents manage to get better at tasks over time?",
+      "subject": "IAI",
+      "expectedFileName": "UNIT-1.docx",
+      "sourceChunkId": "6a684c439688f92f9ecdc356",
+      "retrievedChunkIds": [
+        "6a684c439688f92f9ecdc356",
+        "6a6864866ddf1c26379e5ccf",
+        "6a684c439688f92f9ecdc355",
+        "6a6864866ddf1c26379e5cce",
+        "6a684ce29688f92f9ecdc3ee"
+      ],
+      "retrievedFileNames": [
+        "UNIT-1.docx",
+        "AI_UNIT-5.pptx",
+        "UNIT-1.docx",
+        "AI_UNIT-5.pptx",
+        "Unit-4.pdf"
+      ],
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 1,
+      "latencyMs": 674,
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How do you calculate the total cost in A* search?",
+      "subject": "IAI",
+      "expectedFileName": "UNIT-2-1.pdf",
+      "sourceChunkId": "6a684c6c9688f92f9ecdc38c",
+      "retrievedChunkIds": [
+        "6a684c6c9688f92f9ecdc38c",
+        "6a684c6c9688f92f9ecdc38d",
+        "6a684c6c9688f92f9ecdc38f",
+        "6a684c6c9688f92f9ecdc38e",
+        "6a684c6c9688f92f9ecdc390"
+      ],
+      "retrievedFileNames": [
+        "UNIT-2-1.pdf",
+        "UNIT-2-1.pdf",
+        "UNIT-2-1.pdf",
+        "UNIT-2-1.pdf",
+        "UNIT-2-1.pdf"
+      ],
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 1,
+      "latencyMs": 677,
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "What happens at node E during alpha-beta pruning that causes the right successor to be skipped?",
+      "subject": "IAI",
+      "expectedFileName": "UNIT-2-1.pdf",
+      "sourceChunkId": "6a684c6c9688f92f9ecdc39d",
+      "retrievedChunkIds": [
+        "6a684c6c9688f92f9ecdc39d",
+        "6a684c6c9688f92f9ecdc39e",
+        "6a684c6c9688f92f9ecdc39c",
+        "6a684c6c9688f92f9ecdc39b",
+        "6a684c6c9688f92f9ecdc39a"
+      ],
+      "retrievedFileNames": [
+        "UNIT-2-1.pdf",
+        "UNIT-2-1.pdf",
+        "UNIT-2-1.pdf",
+        "UNIT-2-1.pdf",
+        "UNIT-2-1.pdf"
+      ],
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 1,
+      "latencyMs": 823,
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "What is the final route and total distance when going from Arad to Bucharest?",
+      "subject": "IAI",
+      "expectedFileName": "Romania Map Problem",
+      "sourceChunkId": "6a684c3a9688f92f9ecdc331",
+      "retrievedChunkIds": [
+        "6a684c3a9688f92f9ecdc331",
+        "6a684c6c9688f92f9ecdc391",
+        "6a684c3a9688f92f9ecdc330",
+        "6a684c6c9688f92f9ecdc382",
+        "6a684c6c9688f92f9ecdc390"
+      ],
+      "retrievedFileNames": [
+        "Romania Map Problem",
+        "UNIT-2-1.pdf",
+        "Romania Map Problem",
+        "UNIT-2-1.pdf",
+        "UNIT-2-1.pdf"
+      ],
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 1,
+      "latencyMs": 638,
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How does a dynamic Bayesian network represent a robot moving in a 2D space?",
+      "subject": "IAI",
+      "expectedFileName": "Unit-3.pdf",
+      "sourceChunkId": "6a684c8a9688f92f9ecdc3cb",
+      "retrievedChunkIds": [
+        "6a684c8a9688f92f9ecdc3cc",
+        "6a684c8a9688f92f9ecdc3cd",
+        "6a684c8a9688f92f9ecdc3cb",
+        "6a684c8a9688f92f9ecdc3c9",
+        "6a684c8a9688f92f9ecdc3ca"
+      ],
+      "retrievedFileNames": [
+        "Unit-3.pdf",
+        "Unit-3.pdf",
+        "Unit-3.pdf",
+        "Unit-3.pdf",
+        "Unit-3.pdf"
+      ],
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 1,
+      "latencyMs": 660,
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How do I choose the parents for a variable when building a Bayesian network?",
+      "subject": "IAI",
+      "expectedFileName": "Unit-3.pdf",
+      "sourceChunkId": "6a684c8a9688f92f9ecdc3ba",
+      "retrievedChunkIds": [
+        "6a684c8a9688f92f9ecdc3ba",
+        "6a684c8a9688f92f9ecdc3b9",
+        "6a684c8a9688f92f9ecdc3b8",
+        "6a684c8a9688f92f9ecdc3b4",
+        "6a68647c6ddf1c26379e5c91"
+      ],
+      "retrievedFileNames": [
+        "Unit-3.pdf",
+        "Unit-3.pdf",
+        "Unit-3.pdf",
+        "Unit-3.pdf",
+        "AI unit-3 (1).pptx"
+      ],
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 1,
+      "latencyMs": 642,
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "Which pathfinding graph algorithm is mentioned for long answer questions in the second unit?",
+      "subject": "IAI",
+      "expectedFileName": "AI Question bank.docx",
+      "sourceChunkId": "6a684d069688f92f9ecdc416",
+      "retrievedChunkIds": [
+        "6a684d039688f92f9ecdc412",
+        "6a684d0a9688f92f9ecdc41c",
+        "6a684d039688f92f9ecdc413",
+        "6a684d0a9688f92f9ecdc41b",
+        "6a684cfe9688f92f9ecdc40d"
+      ],
+      "retrievedFileNames": [
+        "AI Question bank.docx",
+        "IAI Question Bank.docx",
+        "AI Question bank.docx",
+        "IAI Question Bank.docx",
+        "AI QB 2.5 UNITS (1).pdf"
+      ],
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 1,
+      "latencyMs": 704,
+      "faithfulnessScore": 0.5,
+      "citedFile": true
+    },
+    {
+      "question": "How do you calculate the utility of a state in Markov Decision Processes?",
+      "subject": "IAI",
+      "expectedFileName": "Unit-4.pdf",
+      "sourceChunkId": "6a684ce29688f92f9ecdc3e8",
+      "retrievedChunkIds": [
+        "6a684ce29688f92f9ecdc3e8",
+        "6a684ce29688f92f9ecdc3e9",
+        "6a684ce29688f92f9ecdc3e7",
+        "6a684ce29688f92f9ecdc3d8",
+        "6a684ce29688f92f9ecdc3ed"
+      ],
+      "retrievedFileNames": [
+        "Unit-4.pdf",
+        "Unit-4.pdf",
+        "Unit-4.pdf",
+        "Unit-4.pdf",
+        "Unit-4.pdf"
+      ],
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 1,
+      "latencyMs": 742,
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How do reinforcement learning and supervised learning differ?",
+      "subject": "IAI",
+      "expectedFileName": "IAI SET-2 R19.pdf",
+      "sourceChunkId": "6a684cf69688f92f9ecdc404",
+      "retrievedChunkIds": [
+        "6a6864866ddf1c26379e5cd0",
+        "6a684c439688f92f9ecdc339",
+        "6a6864866ddf1c26379e5cd1",
+        "6a6864866ddf1c26379e5cce",
+        "6a684c439688f92f9ecdc338"
+      ],
+      "retrievedFileNames": [
+        "AI_UNIT-5.pptx",
+        "UNIT-1.docx",
+        "AI_UNIT-5.pptx",
+        "AI_UNIT-5.pptx",
+        "UNIT-1.docx"
+      ],
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": false,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 0,
+      "latencyMs": 685,
+      "faithfulnessScore": 0.75,
+      "citedFile": true
+    },
+    {
+      "question": "What topics are covered in Unit 3 of the Intro to AI course for VJIT students?",
+      "subject": "IAI",
+      "expectedFileName": "IAI.pdf",
+      "sourceChunkId": "6a684d0e9688f92f9ecdc41f",
+      "retrievedChunkIds": [
+        "6a684d0e9688f92f9ecdc420",
+        "6a68647c6ddf1c26379e5c7d",
+        "6a684c8a9688f92f9ecdc3a4",
+        "6a684cf69688f92f9ecdc403",
+        "6a684d039688f92f9ecdc412"
+      ],
+      "retrievedFileNames": [
+        "IAI.pdf",
+        "AI unit-3 (1).pptx",
+        "Unit-3.pdf",
+        "IAI SET-2 R19.pdf",
+        "AI Question bank.docx"
+      ],
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 1,
+      "latencyMs": 725,
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "What topics are covered in the exam questions related to Markov Decision Process and Reinforcement Learning?",
+      "subject": "IAI",
+      "expectedFileName": "IAI 1.pdf",
+      "sourceChunkId": "6a684ceb9688f92f9ecdc3f5",
+      "retrievedChunkIds": [
+        "6a684cef9688f92f9ecdc3fa",
+        "6a684d039688f92f9ecdc413",
+        "6a684cfa9688f92f9ecdc409",
+        "6a684cf69688f92f9ecdc404",
+        "6a684ceb9688f92f9ecdc3f4"
+      ],
+      "retrievedFileNames": [
+        "IAI Question Bank - II (1).pdf",
+        "AI Question bank.docx",
+        "IAI.pdf",
+        "IAI SET-2 R19.pdf",
+        "IAI 1.pdf"
+      ],
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 0.2,
+      "latencyMs": 688,
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How many total questions are there in Part-A of the AI exam and how many marks does each carry?",
+      "subject": "IAI",
+      "expectedFileName": "IAI 1.pdf",
+      "sourceChunkId": "6a684ceb9688f92f9ecdc3f3",
+      "retrievedChunkIds": [
+        "6a684cf29688f92f9ecdc3fd",
+        "6a684cfa9688f92f9ecdc408",
+        "6a684ceb9688f92f9ecdc3f3",
+        "6a684cf69688f92f9ecdc403",
+        "6a684ceb9688f92f9ecdc3f4"
+      ],
+      "retrievedFileNames": [
+        "IAI R19 & R20 Regular & Supply External Q Paper Format.pdf",
+        "IAI.pdf",
+        "IAI 1.pdf",
+        "IAI SET-2 R19.pdf",
+        "IAI 1.pdf"
+      ],
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 0.3333333333333333,
+      "latencyMs": 771,
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How does reasoning help people make better choices instead of picking based on feelings?",
+      "subject": "PC",
+      "expectedFileName": "UNIT IV DECESION  MAKING.pdf",
+      "sourceChunkId": "6a6867296ddf1c26379e6048",
+      "retrievedChunkIds": [
+        "6a6866e36ddf1c26379e6003",
+        "6a6866e36ddf1c26379e6002",
+        "6a6866e36ddf1c26379e6005",
+        "6a6866e36ddf1c26379e6006",
+        "6a6866e36ddf1c26379e6004"
+      ],
+      "retrievedFileNames": [
+        "UNIT IV DECESION  MAKING.pdf",
+        "UNIT IV DECESION  MAKING.pdf",
+        "UNIT IV DECESION  MAKING.pdf",
+        "UNIT IV DECESION  MAKING.pdf",
+        "UNIT IV DECESION  MAKING.pdf"
+      ],
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 1,
+      "latencyMs": 1067,
+      "faithfulnessScore": 0.75,
+      "citedFile": true
+    },
+    {
+      "question": "What should I do right after I figure out what the problem is?",
+      "subject": "PC",
+      "expectedFileName": "UNIT IV DECESION  MAKING.pdf",
+      "sourceChunkId": "6a6867296ddf1c26379e6053",
+      "retrievedChunkIds": [
+        "6a6866e36ddf1c26379e600e",
+        "6a6866e36ddf1c26379e600c",
+        "6a6866e36ddf1c26379e600f",
+        "6a6866e36ddf1c26379e6011",
+        "6a6866e36ddf1c26379e5ff2"
+      ],
+      "retrievedFileNames": [
+        "UNIT IV DECESION  MAKING.pdf",
+        "UNIT IV DECESION  MAKING.pdf",
+        "UNIT IV DECESION  MAKING.pdf",
+        "UNIT IV DECESION  MAKING.pdf",
+        "UNIT IV DECESION  MAKING.pdf"
+      ],
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 1,
+      "latencyMs": 1832,
+      "faithfulnessScore": 0.6,
+      "citedFile": true
+    },
+    {
+      "question": "How do social platforms help students and teachers with their studies?",
+      "subject": "PC",
+      "expectedFileName": "UNIT V DIGITAL COMMUNICATION.pdf",
+      "sourceChunkId": "6a686dc8cb43327bc2dc833c",
+      "retrievedChunkIds": [
+        "6a686dc8cb43327bc2dc833d",
+        "6a686dc8cb43327bc2dc8353",
+        "6a686dc8cb43327bc2dc833e",
+        "6a686dc8cb43327bc2dc834d",
+        "6a686dc8cb43327bc2dc8342"
+      ],
+      "retrievedFileNames": [
+        "UNIT V DIGITAL COMMUNICATION.pdf",
+        "UNIT V DIGITAL COMMUNICATION.pdf",
+        "UNIT V DIGITAL COMMUNICATION.pdf",
+        "UNIT V DIGITAL COMMUNICATION.pdf",
+        "UNIT V DIGITAL COMMUNICATION.pdf"
+      ],
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 1,
+      "latencyMs": 1380,
+      "faithfulnessScore": 0.75,
+      "citedFile": true
+    },
+    {
+      "question": "What are the main drawbacks of using the 5 Whys technique?",
+      "subject": "PC",
+      "expectedFileName": "UNIT IV DECESION  MAKING.pdf",
+      "sourceChunkId": "6a6866e36ddf1c26379e6019",
+      "retrievedChunkIds": [
+        "6a6866e36ddf1c26379e6019",
+        "6a6866e36ddf1c26379e6018",
+        "6a6866e36ddf1c26379e6017",
+        "6a6879a3cb43327bc2dc83f6",
+        "6a6866e36ddf1c26379e601a"
+      ],
+      "retrievedFileNames": [
+        "UNIT IV DECESION  MAKING.pdf",
+        "UNIT IV DECESION  MAKING.pdf",
+        "UNIT IV DECESION  MAKING.pdf",
+        "PC -II MID QUESTION BANK.pdf",
+        "UNIT IV DECESION  MAKING.pdf"
+      ],
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 1,
+      "latencyMs": 1536,
+      "faithfulnessScore": 0.75,
+      "citedFile": true
+    },
+    {
+      "question": "How can I stay motivated and handle unexpected problems when trying to reach my goals?",
+      "subject": "PC",
+      "expectedFileName": "SOFTSKILLS 1.pdf",
+      "sourceChunkId": "6a6866246ddf1c26379e5f4c",
+      "retrievedChunkIds": [
+        "6a6866246ddf1c26379e5f4b",
+        "6a6866246ddf1c26379e5f4c",
+        "6a6866246ddf1c26379e5f47",
+        "6a6866246ddf1c26379e5f4a",
+        "6a6866246ddf1c26379e5f49"
+      ],
+      "retrievedFileNames": [
+        "SOFTSKILLS 1.pdf",
+        "SOFTSKILLS 1.pdf",
+        "SOFTSKILLS 1.pdf",
+        "SOFTSKILLS 1.pdf",
+        "SOFTSKILLS 1.pdf"
+      ],
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 1,
+      "latencyMs": 871,
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "what is the very first step in the decision making wheel according to the notes?",
+      "subject": "PC",
+      "expectedFileName": "PC -II MID QUESTION BANK.pdf",
+      "sourceChunkId": "6a6879a3cb43327bc2dc83f4",
+      "retrievedChunkIds": [
+        "6a6866e36ddf1c26379e6007",
+        "6a6866e36ddf1c26379e5fef",
+        "6a6866e36ddf1c26379e6008",
+        "6a6866e36ddf1c26379e5ff1",
+        "6a6866e36ddf1c26379e600e"
+      ],
+      "retrievedFileNames": [
+        "UNIT IV DECESION  MAKING.pdf",
+        "UNIT IV DECESION  MAKING.pdf",
+        "UNIT IV DECESION  MAKING.pdf",
+        "UNIT IV DECESION  MAKING.pdf",
+        "UNIT IV DECESION  MAKING.pdf"
+      ],
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": false,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 0,
+      "latencyMs": 750,
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How do modern news platforms use different media formats to report stories?",
+      "subject": "PC",
+      "expectedFileName": "UNIT V DIGITAL COMMUNICATION.pdf",
+      "sourceChunkId": "6a687981cb43327bc2dc8386",
+      "retrievedChunkIds": [
+        "6a686dc8cb43327bc2dc8306",
+        "6a686dc8cb43327bc2dc830e",
+        "6a686dc8cb43327bc2dc830c",
+        "6a686dc8cb43327bc2dc830b",
+        "6a686dc8cb43327bc2dc8312"
+      ],
+      "retrievedFileNames": [
+        "UNIT V DIGITAL COMMUNICATION.pdf",
+        "UNIT V DIGITAL COMMUNICATION.pdf",
+        "UNIT V DIGITAL COMMUNICATION.pdf",
+        "UNIT V DIGITAL COMMUNICATION.pdf",
+        "UNIT V DIGITAL COMMUNICATION.pdf"
+      ],
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 1,
+      "latencyMs": 842,
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "What are the key elements I should mention when I introduce myself in an interview?",
+      "subject": "PC",
+      "expectedFileName": "PC QUESTION BANK.pdf",
+      "sourceChunkId": "6a6879b0cb43327bc2dc8405",
+      "retrievedChunkIds": [
+        "6a6866246ddf1c26379e5f34",
+        "6a6866246ddf1c26379e5f36",
+        "6a6866246ddf1c26379e5f3a",
+        "6a6866246ddf1c26379e5f3c",
+        "6a6866246ddf1c26379e5f32"
+      ],
+      "retrievedFileNames": [
+        "SOFTSKILLS 1.pdf",
+        "SOFTSKILLS 1.pdf",
+        "SOFTSKILLS 1.pdf",
+        "SOFTSKILLS 1.pdf",
+        "SOFTSKILLS 1.pdf"
+      ],
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": false,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 0,
+      "latencyMs": 683,
+      "faithfulnessScore": 0.75,
+      "citedFile": true
+    },
+    {
+      "question": "How does critical thinking help in making better choices and solving complex problems?",
+      "subject": "PC",
+      "expectedFileName": "UNIT IV DECESION  MAKING.pdf",
+      "sourceChunkId": "6a6866e36ddf1c26379e6039",
+      "retrievedChunkIds": [
+        "6a6866e36ddf1c26379e603a",
+        "6a6866e36ddf1c26379e6033",
+        "6a6866e36ddf1c26379e6031",
+        "6a6866e36ddf1c26379e603c",
+        "6a6866e36ddf1c26379e6034"
+      ],
+      "retrievedFileNames": [
+        "UNIT IV DECESION  MAKING.pdf",
+        "UNIT IV DECESION  MAKING.pdf",
+        "UNIT IV DECESION  MAKING.pdf",
+        "UNIT IV DECESION  MAKING.pdf",
+        "UNIT IV DECESION  MAKING.pdf"
+      ],
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 1,
+      "latencyMs": 734,
+      "faithfulnessScore": 0.6,
+      "citedFile": true
+    },
+    {
+      "question": "How do businesses use multimedia to improve their marketing and sales?",
+      "subject": "PC",
+      "expectedFileName": "UNIT V DIGITAL COMMUNICATION.pdf",
+      "sourceChunkId": "6a687981cb43327bc2dc8385",
+      "retrievedChunkIds": [
+        "6a686dc8cb43327bc2dc8305",
+        "6a686dc8cb43327bc2dc8306",
+        "6a686dc8cb43327bc2dc8312",
+        "6a686dc8cb43327bc2dc8314",
+        "6a686dc8cb43327bc2dc8303"
+      ],
+      "retrievedFileNames": [
+        "UNIT V DIGITAL COMMUNICATION.pdf",
+        "UNIT V DIGITAL COMMUNICATION.pdf",
+        "UNIT V DIGITAL COMMUNICATION.pdf",
+        "UNIT V DIGITAL COMMUNICATION.pdf",
+        "UNIT V DIGITAL COMMUNICATION.pdf"
+      ],
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 1,
+      "latencyMs": 715,
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "Which type of workplace group handles day-to-day duties and routine tasks to keep things running smoothly?",
+      "subject": "PC",
+      "expectedFileName": "UNIT III. TEAM BUILDING.pdf",
+      "sourceChunkId": "6a68669e6ddf1c26379e5f8b",
+      "retrievedChunkIds": [
+        "6a68669e6ddf1c26379e5f8c",
+        "6a68669e6ddf1c26379e5f8b",
+        "6a68669e6ddf1c26379e5f8e",
+        "6a68669e6ddf1c26379e5f93",
+        "6a68669e6ddf1c26379e5f87"
+      ],
+      "retrievedFileNames": [
+        "UNIT III. TEAM BUILDING.pdf",
+        "UNIT III. TEAM BUILDING.pdf",
+        "UNIT III. TEAM BUILDING.pdf",
+        "UNIT III. TEAM BUILDING.pdf",
+        "UNIT III. TEAM BUILDING.pdf"
+      ],
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 1,
+      "latencyMs": 806,
+      "faithfulnessScore": 0.5,
+      "citedFile": true
+    },
+    {
+      "question": "what is digital communication and what format does it use to send data?",
+      "subject": "PC",
+      "expectedFileName": "UNIT V DIGITAL COMMUNICATION.pdf",
+      "sourceChunkId": "6a686dc8cb43327bc2dc82ef",
+      "retrievedChunkIds": [
+        "6a686dc8cb43327bc2dc82ef",
+        "6a686dc8cb43327bc2dc82f0",
+        "6a686dc8cb43327bc2dc82f1",
+        "6a686dc8cb43327bc2dc82f3",
+        "6a686dc8cb43327bc2dc82f2"
+      ],
+      "retrievedFileNames": [
+        "UNIT V DIGITAL COMMUNICATION.pdf",
+        "UNIT V DIGITAL COMMUNICATION.pdf",
+        "UNIT V DIGITAL COMMUNICATION.pdf",
+        "UNIT V DIGITAL COMMUNICATION.pdf",
+        "UNIT V DIGITAL COMMUNICATION.pdf"
+      ],
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 1,
+      "latencyMs": 714,
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "what skills do formal group discussions usually test people on?",
+      "subject": "PC",
+      "expectedFileName": "UNIT III. TEAM BUILDING.pdf",
+      "sourceChunkId": "6a68669e6ddf1c26379e5fbf",
+      "retrievedChunkIds": [
+        "6a68669e6ddf1c26379e5fc5",
+        "6a68669e6ddf1c26379e5fc4",
+        "6a68669e6ddf1c26379e5fb7",
+        "6a68669e6ddf1c26379e5fc7",
+        "6a68669e6ddf1c26379e5fc3"
+      ],
+      "retrievedFileNames": [
+        "UNIT III. TEAM BUILDING.pdf",
+        "UNIT III. TEAM BUILDING.pdf",
+        "UNIT III. TEAM BUILDING.pdf",
+        "UNIT III. TEAM BUILDING.pdf",
+        "UNIT III. TEAM BUILDING.pdf"
+      ],
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 1,
+      "latencyMs": 704,
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "what happens if you type messages in all caps online?",
+      "subject": "PC",
+      "expectedFileName": "PC QUESTION BANK.pdf",
+      "sourceChunkId": "6a6879b0cb43327bc2dc840a",
+      "retrievedChunkIds": [
+        "6a686dc8cb43327bc2dc832c",
+        "6a6866566ddf1c26379e5f56",
+        "6a6866566ddf1c26379e5f57",
+        "6a686dc8cb43327bc2dc830b",
+        "6a686dc8cb43327bc2dc830c"
+      ],
+      "retrievedFileNames": [
+        "UNIT V DIGITAL COMMUNICATION.pdf",
+        "UNIT II. PROFESSIONAL ETIQUETTE.pdf",
+        "UNIT II. PROFESSIONAL ETIQUETTE.pdf",
+        "UNIT V DIGITAL COMMUNICATION.pdf",
+        "UNIT V DIGITAL COMMUNICATION.pdf"
+      ],
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": false,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 0,
+      "latencyMs": 703,
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "what are some examples of skills that are not job-specific and can be transferred across different jobs?",
+      "subject": "PC",
+      "expectedFileName": "SOFTSKILLS 1.pdf",
+      "sourceChunkId": "6a6866246ddf1c26379e5f21",
+      "retrievedChunkIds": [
+        "6a6866246ddf1c26379e5f21",
+        "6a6866246ddf1c26379e5f2d",
+        "6a6866246ddf1c26379e5f27",
+        "6a6866246ddf1c26379e5f2b",
+        "6a6866246ddf1c26379e5f22"
+      ],
+      "retrievedFileNames": [
+        "SOFTSKILLS 1.pdf",
+        "SOFTSKILLS 1.pdf",
+        "SOFTSKILLS 1.pdf",
+        "SOFTSKILLS 1.pdf",
+        "SOFTSKILLS 1.pdf"
+      ],
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 1,
+      "latencyMs": 1046,
+      "faithfulnessScore": 0.75,
+      "citedFile": true
+    },
+    {
+      "question": "What is the purpose of the Graphics class in Java AWT and what are some methods it provides?",
+      "subject": "OOPs-Java",
+      "expectedFileName": "Java-Unit4-part1.docx",
+      "sourceChunkId": "6a6865296ddf1c26379e5dea",
+      "retrievedChunkIds": [
+        "6a6865296ddf1c26379e5deb",
+        "6a6865296ddf1c26379e5dea",
+        "6a6865296ddf1c26379e5de5",
+        "6a6866126ddf1c26379e5f16",
+        "6a684d189688f92f9ecdc445"
+      ],
+      "retrievedFileNames": [
+        "Java-Unit4-part1.docx",
+        "Java-Unit4-part1.docx",
+        "Java-Unit4-part1.docx",
+        "JP Question Bank IT (1).pdf",
+        "AWT-JAVA UNIT-IV.pdf"
+      ],
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 1,
+      "latencyMs": 738,
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How do synchronized blocks differ from synchronized methods in terms of performance and locking?",
+      "subject": "OOPs-Java",
+      "expectedFileName": "Java-Unit3 part2.docx",
+      "sourceChunkId": "6a6865136ddf1c26379e5dcb",
+      "retrievedChunkIds": [
+        "6a6865136ddf1c26379e5dcc",
+        "6a6865e26ddf1c26379e5ed3",
+        "6a6865e26ddf1c26379e5ed2",
+        "6a684d319688f92f9ecdc484",
+        "6a6865e26ddf1c26379e5ed6"
+      ],
+      "retrievedFileNames": [
+        "Java-Unit3 part2.docx",
+        "OOP Java - Unit-III.pdf",
+        "OOP Java - Unit-III.pdf",
+        "JAVA UNIT-3 THREADS& UTIL PACKAGES.pdf",
+        "OOP Java - Unit-III.pdf"
+      ],
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 1,
+      "latencyMs": 765,
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "what is the purpose of the finalize method and what are its drawbacks?",
+      "subject": "OOPs-Java",
+      "expectedFileName": "JP Question Bank IT (1).pdf",
+      "sourceChunkId": "6a6866126ddf1c26379e5f12",
+      "retrievedChunkIds": [
+        "6a6865956ddf1c26379e5e79",
+        "6a6864d86ddf1c26379e5d8a",
+        "6a6865ca6ddf1c26379e5e9c",
+        "6a6864cb6ddf1c26379e5d69",
+        "6a6864d86ddf1c26379e5d8b"
+      ],
+      "retrievedFileNames": [
+        "OOP Java - Unit-I.pdf",
+        "JAVA-Notes-Unit-2_Part 1.pdf",
+        "OOP Java - Unit-II.pdf",
+        "JAVA-Notes-Unit-1_Part 2.pdf",
+        "JAVA-Notes-Unit-2_Part 1.pdf"
+      ],
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": false,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 0,
+      "latencyMs": 1081,
+      "faithfulnessScore": 0.75,
+      "citedFile": true
+    },
+    {
+      "question": "How do I write a method that requires an object to be invoked in Java?",
+      "subject": "OOPs-Java",
+      "expectedFileName": "OOP Java - Unit-I.pdf",
+      "sourceChunkId": "6a6865956ddf1c26379e5e6e",
+      "retrievedChunkIds": [
+        "6a6865956ddf1c26379e5e6e",
+        "6a6865956ddf1c26379e5e74",
+        "6a6865956ddf1c26379e5e70",
+        "6a6864cb6ddf1c26379e5d4c",
+        "6a6865956ddf1c26379e5e6f"
+      ],
+      "retrievedFileNames": [
+        "OOP Java - Unit-I.pdf",
+        "OOP Java - Unit-I.pdf",
+        "OOP Java - Unit-I.pdf",
+        "JAVA-Notes-Unit-1_Part 2.pdf",
+        "OOP Java - Unit-I.pdf"
+      ],
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 1,
+      "latencyMs": 837,
+      "faithfulnessScore": 0.75,
+      "citedFile": true
+    },
+    {
+      "question": "How do I read text files in Java using character streams instead of bytes?",
+      "subject": "OOPs-Java",
+      "expectedFileName": "OOP Java - Unit-III.pdf",
+      "sourceChunkId": "6a6865e26ddf1c26379e5ec2",
+      "retrievedChunkIds": [
+        "6a68656b6ddf1c26379e5e49",
+        "6a6865e26ddf1c26379e5ec2",
+        "6a68656b6ddf1c26379e5e4a",
+        "6a6865e26ddf1c26379e5ec5",
+        "6a6865e26ddf1c26379e5ebf"
+      ],
+      "retrievedFileNames": [
+        "JP UNIT-III Files.pdf",
+        "OOP Java - Unit-III.pdf",
+        "JP UNIT-III Files.pdf",
+        "OOP Java - Unit-III.pdf",
+        "OOP Java - Unit-III.pdf"
+      ],
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 0.5,
+      "latencyMs": 673,
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How do you make a thread using the Runnable interface instead of extending the Thread class?",
+      "subject": "OOPs-Java",
+      "expectedFileName": "OOP Java - Unit-III.pdf",
+      "sourceChunkId": "6a6865e26ddf1c26379e5ecd",
+      "retrievedChunkIds": [
+        "6a6865136ddf1c26379e5dc8",
+        "6a6865136ddf1c26379e5dc7",
+        "6a6865e26ddf1c26379e5ecc",
+        "6a684d319688f92f9ecdc47f",
+        "6a6865e26ddf1c26379e5ecd"
+      ],
+      "retrievedFileNames": [
+        "Java-Unit3 part2.docx",
+        "Java-Unit3 part2.docx",
+        "OOP Java - Unit-III.pdf",
+        "JAVA UNIT-3 THREADS& UTIL PACKAGES.pdf",
+        "OOP Java - Unit-III.pdf"
+      ],
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 0.3333333333333333,
+      "latencyMs": 741,
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "What two requirements are needed to create an event listener in Java?",
+      "subject": "OOPs-Java",
+      "expectedFileName": "AWT-JAVA UNIT-IV.pdf",
+      "sourceChunkId": "6a684d189688f92f9ecdc441",
+      "retrievedChunkIds": [
+        "6a684d189688f92f9ecdc441",
+        "6a684d189688f92f9ecdc43c",
+        "6a684d189688f92f9ecdc440",
+        "6a684d189688f92f9ecdc43d",
+        "6a68654f6ddf1c26379e5e07"
+      ],
+      "retrievedFileNames": [
+        "AWT-JAVA UNIT-IV.pdf",
+        "AWT-JAVA UNIT-IV.pdf",
+        "AWT-JAVA UNIT-IV.pdf",
+        "AWT-JAVA UNIT-IV.pdf",
+        "Java-Unit4-Part2.docx"
+      ],
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 1,
+      "latencyMs": 967,
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How do we write the syntax to create a child class from a parent class in java?",
+      "subject": "OOPs-Java",
+      "expectedFileName": "OOP Java - Unit-II.pdf",
+      "sourceChunkId": "6a6865ca6ddf1c26379e5e8d",
+      "retrievedChunkIds": [
+        "6a6865636ddf1c26379e5e2e",
+        "6a6865ca6ddf1c26379e5e91",
+        "6a6864cb6ddf1c26379e5d41",
+        "6a6864d86ddf1c26379e5d6f",
+        "6a6864cb6ddf1c26379e5d40"
+      ],
+      "retrievedFileNames": [
+        "JP Unit II.pdf",
+        "OOP Java - Unit-II.pdf",
+        "JAVA-Notes-Unit-1_Part 2.pdf",
+        "JAVA-Notes-Unit-2_Part 1.pdf",
+        "JAVA-Notes-Unit-1_Part 2.pdf"
+      ],
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 0.5,
+      "latencyMs": 880,
+      "faithfulnessScore": 0.5,
+      "citedFile": true
+    },
+    {
+      "question": "How does Java handle things when none of the conditions in an if-else-if chain are met?",
+      "subject": "OOPs-Java",
+      "expectedFileName": "JAVA-Notes-Unit-1_Part 1.pdf",
+      "sourceChunkId": "6a684d999688f92f9ecdc4df",
+      "retrievedChunkIds": [
+        "6a684d999688f92f9ecdc4e0",
+        "6a684d999688f92f9ecdc4df",
+        "6a684d999688f92f9ecdc4e1",
+        "6a684d999688f92f9ecdc4e3",
+        "6a684d999688f92f9ecdc4dc"
+      ],
+      "retrievedFileNames": [
+        "JAVA-Notes-Unit-1_Part 1.pdf",
+        "JAVA-Notes-Unit-1_Part 1.pdf",
+        "JAVA-Notes-Unit-1_Part 1.pdf",
+        "JAVA-Notes-Unit-1_Part 1.pdf",
+        "JAVA-Notes-Unit-1_Part 1.pdf"
+      ],
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 1,
+      "latencyMs": 767,
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How do I change a String into a primitive int versus an Integer object in Java?",
+      "subject": "OOPs-Java",
+      "expectedFileName": "OOP Java - Unit-I.pdf",
+      "sourceChunkId": "6a6865956ddf1c26379e5e67",
+      "retrievedChunkIds": [
+        "6a6865956ddf1c26379e5e67",
+        "6a6865956ddf1c26379e5e58",
+        "6a6865e26ddf1c26379e5ef7",
+        "6a6865956ddf1c26379e5e7a",
+        "6a6865956ddf1c26379e5e85"
+      ],
+      "retrievedFileNames": [
+        "OOP Java - Unit-I.pdf",
+        "OOP Java - Unit-I.pdf",
+        "OOP Java - Unit-III.pdf",
+        "OOP Java - Unit-I.pdf",
+        "OOP Java - Unit-I.pdf"
+      ],
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 1,
+      "latencyMs": 678,
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How do I connect to a database in Java and when should I use each driver type?",
+      "subject": "OOPs-Java",
+      "expectedFileName": "JAVA UNIT-V LAYOUTS&APPLETS&JDBC.pdf",
+      "sourceChunkId": "6a684d3c9688f92f9ecdc4b4",
+      "retrievedChunkIds": [
+        "6a684d3c9688f92f9ecdc4b3",
+        "6a684d3c9688f92f9ecdc4b4",
+        "6a6865596ddf1c26379e5e21",
+        "6a6865596ddf1c26379e5e22",
+        "6a6865596ddf1c26379e5e24"
+      ],
+      "retrievedFileNames": [
+        "JAVA UNIT-V LAYOUTS&APPLETS&JDBC.pdf",
+        "JAVA UNIT-V LAYOUTS&APPLETS&JDBC.pdf",
+        "Java-Unit5.docx",
+        "Java-Unit5.docx",
+        "Java-Unit5.docx"
+      ],
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 1,
+      "latencyMs": 704,
+      "faithfulnessScore": 0.6,
+      "citedFile": true
+    },
+    {
+      "question": "What are the two different ways to make a thread in Java?",
+      "subject": "OOPs-Java",
+      "expectedFileName": "Java-Unit3 part2.docx",
+      "sourceChunkId": "6a68651a6ddf1c26379e5dd8",
+      "retrievedChunkIds": [
+        "6a6865e26ddf1c26379e5ecc",
+        "6a6865136ddf1c26379e5dc8",
+        "6a6865136ddf1c26379e5dc7",
+        "6a684d319688f92f9ecdc47e",
+        "6a6865e26ddf1c26379e5ecd"
+      ],
+      "retrievedFileNames": [
+        "OOP Java - Unit-III.pdf",
+        "Java-Unit3 part2.docx",
+        "Java-Unit3 part2.docx",
+        "JAVA UNIT-3 THREADS& UTIL PACKAGES.pdf",
+        "OOP Java - Unit-III.pdf"
+      ],
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 0.5,
+      "latencyMs": 1215,
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "What are the core classes and interfaces used for handling sessions, sending queries, and getting results in database connectivity?",
+      "subject": "OOPs-Java",
+      "expectedFileName": "JAVA UNIT-V LAYOUTS&APPLETS&JDBC.pdf",
+      "sourceChunkId": "6a684d3c9688f92f9ecdc4b0",
+      "retrievedChunkIds": [
+        "6a684d3c9688f92f9ecdc4b1",
+        "6a684d3c9688f92f9ecdc4b0",
+        "6a6865596ddf1c26379e5e24",
+        "6a6865596ddf1c26379e5e22",
+        "6a6865596ddf1c26379e5e25"
+      ],
+      "retrievedFileNames": [
+        "JAVA UNIT-V LAYOUTS&APPLETS&JDBC.pdf",
+        "JAVA UNIT-V LAYOUTS&APPLETS&JDBC.pdf",
+        "Java-Unit5.docx",
+        "Java-Unit5.docx",
+        "Java-Unit5.docx"
+      ],
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 1,
+      "latencyMs": 1087,
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How do I write a Java class that uses a vehicle interface with start, stop, and accelerate methods?",
+      "subject": "OOPs-Java",
+      "expectedFileName": "JAVA-Notes-Unit-2_Part 2.pdf",
+      "sourceChunkId": "6a6864e26ddf1c26379e5d91",
+      "retrievedChunkIds": [
+        "6a6864e26ddf1c26379e5d91",
+        "6a6865076ddf1c26379e5db9",
+        "6a6864e26ddf1c26379e5d92",
+        "6a6864e26ddf1c26379e5d96",
+        "6a6864e26ddf1c26379e5d93"
+      ],
+      "retrievedFileNames": [
+        "JAVA-Notes-Unit-2_Part 2.pdf",
+        "JAVA-Notes-Unit-2_Part 3.pdf",
+        "JAVA-Notes-Unit-2_Part 2.pdf",
+        "JAVA-Notes-Unit-2_Part 2.pdf",
+        "JAVA-Notes-Unit-2_Part 2.pdf"
+      ],
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 1,
+      "latencyMs": 878,
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How do I make a text input field show dots for a password in Java AWT?",
+      "subject": "OOPs-Java",
+      "expectedFileName": "Java-Unit4-part1.docx",
+      "sourceChunkId": "6a6865296ddf1c26379e5df9",
+      "retrievedChunkIds": [
+        "6a6865296ddf1c26379e5deb",
+        "6a6865296ddf1c26379e5dfb",
+        "6a684d189688f92f9ecdc448",
+        "6a6865296ddf1c26379e5df9",
+        "6a684d189688f92f9ecdc449"
+      ],
+      "retrievedFileNames": [
+        "Java-Unit4-part1.docx",
+        "Java-Unit4-part1.docx",
+        "AWT-JAVA UNIT-IV.pdf",
+        "Java-Unit4-part1.docx",
+        "AWT-JAVA UNIT-IV.pdf"
+      ],
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 1,
+      "latencyMs": 828,
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How many total marks are allocated for Part-A in this exam paper?",
+      "subject": "DBMS",
+      "expectedFileName": "DBMS  II-II SUPLY JULY 2024.pdf",
+      "sourceChunkId": "6a684bea9688f92f9ecdc2e1",
+      "retrievedChunkIds": [
+        "6a684bfb9688f92f9ecdc2f5",
+        "6a684bf39688f92f9ecdc2ed",
+        "6a684bfb9688f92f9ecdc2f4",
+        "6a684c029688f92f9ecdc2f9",
+        "6a684bf39688f92f9ecdc2ee"
+      ],
+      "retrievedFileNames": [
+        "DBMS II-II SUPPLY DEC-2023.pdf",
+        "DBMS II-II Regular JULY-2024.pdf",
+        "DBMS II-II SUPPLY DEC-2023.pdf",
+        "DBMS II-II SUPPLY JAN-FEB-2024.pdf",
+        "DBMS II-II Regular JULY-2024.pdf"
+      ],
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": false,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 0,
+      "latencyMs": 886,
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "what is the difference between force and steal policies in database recovery",
+      "subject": "DBMS",
+      "expectedFileName": "DBMS-Unit-5.pdf",
+      "sourceChunkId": "6a684bd99688f92f9ecdc297",
+      "retrievedChunkIds": [
+        "6a684bd99688f92f9ecdc297",
+        "6a6840cf4b4448ab07c6c300",
+        "6a6840cf4b4448ab07c6c301",
+        "6a684c139688f92f9ecdc317",
+        "6a684bd99688f92f9ecdc288"
+      ],
+      "retrievedFileNames": [
+        "DBMS-Unit-5.pdf",
+        "ARIES.pdf",
+        "ARIES.pdf",
+        "DBMS-Question Bank (I to V-UNITS).pdf",
+        "DBMS-Unit-5.pdf"
+      ],
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 1,
+      "latencyMs": 1703,
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "Why do database systems allow multiple transactions to run at the same time instead of just one by one?",
+      "subject": "DBMS",
+      "expectedFileName": "DBMS-Unit-4 (Part-1).pdf",
+      "sourceChunkId": "6a68411e4b4448ab07c6c442",
+      "retrievedChunkIds": [
+        "6a68411e4b4448ab07c6c443",
+        "6a68411e4b4448ab07c6c442",
+        "6a6841304b4448ab07c6c468",
+        "6a68411e4b4448ab07c6c439",
+        "6a6840d84b4448ab07c6c327"
+      ],
+      "retrievedFileNames": [
+        "DBMS-Unit-4 (Part-1).pdf",
+        "DBMS-Unit-4 (Part-1).pdf",
+        "DBMS-Unit-4 (Part-2).pdf",
+        "DBMS-Unit-4 (Part-1).pdf",
+        "DBMS-Unit-1 (Part-1).pdf"
+      ],
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 1,
+      "latencyMs": 1599,
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How does the redo pass in ARIES decide whether to skip or apply an update log record?",
+      "subject": "DBMS",
+      "expectedFileName": "DBMS-Unit-5.pdf",
+      "sourceChunkId": "6a684bd99688f92f9ecdc2aa",
+      "retrievedChunkIds": [
+        "6a684bd99688f92f9ecdc2aa",
+        "6a684bd99688f92f9ecdc2a9",
+        "6a684bd99688f92f9ecdc2a7",
+        "6a684bd99688f92f9ecdc2ab",
+        "6a684bd99688f92f9ecdc2a3"
+      ],
+      "retrievedFileNames": [
+        "DBMS-Unit-5.pdf",
+        "DBMS-Unit-5.pdf",
+        "DBMS-Unit-5.pdf",
+        "DBMS-Unit-5.pdf",
+        "DBMS-Unit-5.pdf"
+      ],
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 1,
+      "latencyMs": 1517,
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "Which data model allows different data items of the same type to possess varying sets of attributes, and what format is commonly used for it?",
+      "subject": "DBMS",
+      "expectedFileName": "DBMS-Unit-1 (Part-1).pdf",
+      "sourceChunkId": "6a6840d84b4448ab07c6c334",
+      "retrievedChunkIds": [
+        "6a6840d84b4448ab07c6c334",
+        "6a6840d84b4448ab07c6c330",
+        "6a6840d84b4448ab07c6c35f",
+        "6a6840d84b4448ab07c6c331",
+        "6a6844e1ddd4b9e729c43170"
+      ],
+      "retrievedFileNames": [
+        "DBMS-Unit-1 (Part-1).pdf",
+        "DBMS-Unit-1 (Part-1).pdf",
+        "DBMS-Unit-1 (Part-1).pdf",
+        "DBMS-Unit-1 (Part-1).pdf",
+        "DBMS-Unit-1 (Part-2).pdf"
+      ],
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 1,
+      "latencyMs": 1415,
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How do you figure out the attributes that make up a relationship's key when there are no extra attributes versus when there are descriptive attributes involved?",
+      "subject": "DBMS",
+      "expectedFileName": "DBMS-Unit-1 (Part-2).pdf",
+      "sourceChunkId": "6a6844e1ddd4b9e729c43153",
+      "retrievedChunkIds": [
+        "6a6844e1ddd4b9e729c43153",
+        "6a6844e1ddd4b9e729c4316a",
+        "6a6844e1ddd4b9e729c43152",
+        "6a6844e1ddd4b9e729c43169",
+        "6a6844e1ddd4b9e729c43160"
+      ],
+      "retrievedFileNames": [
+        "DBMS-Unit-1 (Part-2).pdf",
+        "DBMS-Unit-1 (Part-2).pdf",
+        "DBMS-Unit-1 (Part-2).pdf",
+        "DBMS-Unit-1 (Part-2).pdf",
+        "DBMS-Unit-1 (Part-2).pdf"
+      ],
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 1,
+      "latencyMs": 1489,
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "What are the different types of consistency constraints mentioned in the DDL notes?",
+      "subject": "DBMS",
+      "expectedFileName": "DBMS-Unit-1 (Part-1).pdf",
+      "sourceChunkId": "6a6840d84b4448ab07c6c337",
+      "retrievedChunkIds": [
+        "6a6840d84b4448ab07c6c337",
+        "6a684527ddd4b9e729c431a7",
+        "6a684563ddd4b9e729c43220",
+        "6a6840d84b4448ab07c6c339",
+        "6a684563ddd4b9e729c43224"
+      ],
+      "retrievedFileNames": [
+        "DBMS-Unit-1 (Part-1).pdf",
+        "DBMS-Unit-2 (Part-1).pdf",
+        "DBMS-Unit-2 (Part-2).pdf",
+        "DBMS-Unit-1 (Part-1).pdf",
+        "DBMS-Unit-2 (Part-2).pdf"
+      ],
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 1,
+      "latencyMs": 1200,
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "What issues happen when a table is un-normalized?",
+      "subject": "DBMS",
+      "expectedFileName": "DBMS II-II SUPPLY DEC-2023.pdf",
+      "sourceChunkId": "6a684bfb9688f92f9ecdc2f5",
+      "retrievedChunkIds": [
+        "6a684b88e522b9d1dbe11c6f",
+        "6a684b88e522b9d1dbe11c72",
+        "6a684b88e522b9d1dbe11c6e",
+        "6a6840d84b4448ab07c6c323",
+        "6a6840d84b4448ab07c6c325"
+      ],
+      "retrievedFileNames": [
+        "DBMS-Unit-3 (Part-2).pdf",
+        "DBMS-Unit-3 (Part-2).pdf",
+        "DBMS-Unit-3 (Part-2).pdf",
+        "DBMS-Unit-1 (Part-1).pdf",
+        "DBMS-Unit-1 (Part-1).pdf"
+      ],
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": false,
+      "fileRetrievedTop30": false,
+      "reciprocalRank": 0,
+      "latencyMs": 1181,
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How do primary keys connect to functional dependencies according to the study material?",
+      "subject": "DBMS",
+      "expectedFileName": "DBMS Question Bank MID-2.pdf",
+      "sourceChunkId": "6a684c099688f92f9ecdc301",
+      "retrievedChunkIds": [
+        "6a684b88e522b9d1dbe11c7f",
+        "6a684b88e522b9d1dbe11c82",
+        "6a684b88e522b9d1dbe11c79",
+        "6a684b88e522b9d1dbe11c70",
+        "6a684b88e522b9d1dbe11c84"
+      ],
+      "retrievedFileNames": [
+        "DBMS-Unit-3 (Part-2).pdf",
+        "DBMS-Unit-3 (Part-2).pdf",
+        "DBMS-Unit-3 (Part-2).pdf",
+        "DBMS-Unit-3 (Part-2).pdf",
+        "DBMS-Unit-3 (Part-2).pdf"
+      ],
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": false,
+      "fileRetrievedTop30": false,
+      "reciprocalRank": 0,
+      "latencyMs": 1392,
+      "faithfulnessScore": 0.75,
+      "citedFile": true
+    },
+    {
+      "question": "What are some practical uses of triggers in a database?",
+      "subject": "DBMS",
+      "expectedFileName": "DBMS-Unit-2 (Part-2).pdf",
+      "sourceChunkId": "6a684563ddd4b9e729c43249",
+      "retrievedChunkIds": [
+        "6a684563ddd4b9e729c43249",
+        "6a684563ddd4b9e729c4324f",
+        "6a684563ddd4b9e729c43250",
+        "6a684563ddd4b9e729c4324e",
+        "6a684563ddd4b9e729c4324c"
+      ],
+      "retrievedFileNames": [
+        "DBMS-Unit-2 (Part-2).pdf",
+        "DBMS-Unit-2 (Part-2).pdf",
+        "DBMS-Unit-2 (Part-2).pdf",
+        "DBMS-Unit-2 (Part-2).pdf",
+        "DBMS-Unit-2 (Part-2).pdf"
+      ],
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 1,
+      "latencyMs": 1769,
+      "faithfulnessScore": 0.75,
+      "citedFile": true
+    },
+    {
+      "question": "How do I write the query to find all bill numbers for July 1st, 2023 along with customer names and item IDs?",
+      "subject": "DBMS",
+      "expectedFileName": "DBMS Question Bank MID-I.pdf",
+      "sourceChunkId": "6a684c0e9688f92f9ecdc30a",
+      "retrievedChunkIds": [
+        "6a684c139688f92f9ecdc313",
+        "6a684c0e9688f92f9ecdc30a",
+        "6a684c139688f92f9ecdc314",
+        "6a684c0e9688f92f9ecdc30b",
+        "6a684b7ce522b9d1dbe11c57"
+      ],
+      "retrievedFileNames": [
+        "DBMS-Question Bank (I to V-UNITS).pdf",
+        "DBMS Question Bank MID-I.pdf",
+        "DBMS-Question Bank (I to V-UNITS).pdf",
+        "DBMS Question Bank MID-I.pdf",
+        "DBMS-Unit-3 (Part-1).pdf"
+      ],
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 0.5,
+      "latencyMs": 1367,
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How many total marks are allocated for Part A in the DBMS exam?",
+      "subject": "DBMS",
+      "expectedFileName": "DBMS II-II Regular JULY-2024.pdf",
+      "sourceChunkId": "6a684bf39688f92f9ecdc2ed",
+      "retrievedChunkIds": [
+        "6a684c029688f92f9ecdc2f9",
+        "6a684bed9688f92f9ecdc2e5",
+        "6a684bfb9688f92f9ecdc2f4",
+        "6a684bea9688f92f9ecdc2e1",
+        "6a684bf09688f92f9ecdc2e9"
+      ],
+      "retrievedFileNames": [
+        "DBMS II-II SUPPLY JAN-FEB-2024.pdf",
+        "DBMS DEC-JAN 22-23.pdf",
+        "DBMS II-II SUPPLY DEC-2023.pdf",
+        "DBMS  II-II SUPLY JULY 2024.pdf",
+        "DBMS FEB 2023.pdf"
+      ],
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": false,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 0,
+      "latencyMs": 1685,
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "How can I tell the difference between a weak and a strong entity set?",
+      "subject": "DBMS",
+      "expectedFileName": "DBMS-Unit-1 (Part-2).pdf",
+      "sourceChunkId": "6a6844e1ddd4b9e729c4315e",
+      "retrievedChunkIds": [
+        "6a6844e1ddd4b9e729c4315e",
+        "6a6844e1ddd4b9e729c43160",
+        "6a6844e1ddd4b9e729c43167",
+        "6a6844e1ddd4b9e729c4315f",
+        "6a6844e1ddd4b9e729c4316c"
+      ],
+      "retrievedFileNames": [
+        "DBMS-Unit-1 (Part-2).pdf",
+        "DBMS-Unit-1 (Part-2).pdf",
+        "DBMS-Unit-1 (Part-2).pdf",
+        "DBMS-Unit-1 (Part-2).pdf",
+        "DBMS-Unit-1 (Part-2).pdf"
+      ],
+      "selfRetrievedTop5": true,
+      "fileRetrievedTop5": true,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 1,
+      "latencyMs": 1536,
+      "faithfulnessScore": 1,
+      "citedFile": true
+    },
+    {
+      "question": "What topics are covered in Unit 2 of the DBMS syllabus?",
+      "subject": "DBMS",
+      "expectedFileName": "DBMS.pdf",
+      "sourceChunkId": "6a684c179688f92f9ecdc31a",
+      "retrievedChunkIds": [
+        "6a684563ddd4b9e729c43202",
+        "6a684527ddd4b9e729c4319d",
+        "6a684b88e522b9d1dbe11c69",
+        "6a6840d84b4448ab07c6c357",
+        "6a684c0e9688f92f9ecdc309"
+      ],
+      "retrievedFileNames": [
+        "DBMS-Unit-2 (Part-2).pdf",
+        "DBMS-Unit-2 (Part-1).pdf",
+        "DBMS-Unit-3 (Part-2).pdf",
+        "DBMS-Unit-1 (Part-1).pdf",
+        "DBMS Question Bank MID-I.pdf"
+      ],
+      "selfRetrievedTop5": false,
+      "fileRetrievedTop5": false,
+      "fileRetrievedTop30": true,
+      "reciprocalRank": 0,
+      "latencyMs": 2189,
+      "faithfulnessScore": 0.6,
+      "citedFile": true
+    }
+  ]
+}
