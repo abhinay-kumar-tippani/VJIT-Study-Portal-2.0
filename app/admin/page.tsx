@@ -534,21 +534,6 @@ export default function AdminPage() {
                                         ? <EyeOff className="w-3.5 h-3.5" />
                                         : <Eye className="w-3.5 h-3.5" />}
                                     </button>
-                                    <button
-                                      onClick={() => {
-                                        setEditPasswordUser({
-                                          userId: user._id,
-                                          rollNumber: user.rollNumber,
-                                          name: user.name,
-                                          currentPass: user.plainPassword,
-                                        });
-                                        setNewPasswordInput(user.plainPassword !== '—' ? user.plainPassword : '');
-                                      }}
-                                      className="p-1 rounded text-muted-custom hover:text-[rgb(var(--accent-hover))] transition-colors"
-                                      title="Edit Password"
-                                    >
-                                      <Pencil className="w-3.5 h-3.5" />
-                                    </button>
                                   </div>
                                 )}
                               </td>
@@ -579,13 +564,14 @@ export default function AdminPage() {
                                 <div className="flex items-center gap-2">
                                   <button
                                     onClick={() => toggleAdmin(user._id, !user.isAdmin)}
-                                    className="px-2.5 py-1 rounded-lg text-xs font-medium border border-custom text-secondary hover:text-primary hover:border-[rgb(var(--accent)_/_0.3)] transition-all"
+                                    className="px-2.5 py-1 rounded-lg text-xs font-medium border border-custom text-secondary hover:text-primary hover:border-[rgb(var(--accent)_/_0.3)] transition-all cursor-pointer"
                                   >
                                     {user.isAdmin ? 'Revoke Admin' : 'Make Admin'}
                                   </button>
                                   <button
                                     onClick={() => deleteUser(user._id)}
-                                    className="p-1.5 rounded-lg text-muted-custom hover:text-red-400 hover:bg-red-500/10 transition-all"
+                                    className="p-1.5 rounded-lg text-muted-custom hover:text-red-400 hover:bg-red-500/10 transition-all cursor-pointer"
+                                    title="Delete User"
                                   >
                                     <Trash2 className="w-3.5 h-3.5" />
                                   </button>
@@ -1327,68 +1313,6 @@ export default function AdminPage() {
         )}
       </AnimatePresence>
 
-      {/* ── Edit Password Modal ── */}
-      <AnimatePresence>
-        {editPasswordUser && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 12 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 12 }}
-              className="w-full max-w-sm glass-strong rounded-2xl p-6 border border-custom relative shadow-2xl space-y-4"
-            >
-              <button
-                onClick={() => setEditPasswordUser(null)}
-                className="absolute top-4 right-4 p-1 rounded-lg text-muted-custom hover:text-primary transition-colors"
-              >
-                <X className="w-4 h-4" />
-              </button>
-
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-[rgb(var(--accent)_/_0.1)] border border-[rgb(var(--accent)_/_0.2)] text-[rgb(var(--accent-hover))] flex items-center justify-center">
-                  <KeyRound className="w-5 h-5" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-primary text-base">Edit Password</h3>
-                  <p className="text-xs font-mono text-secondary">{editPasswordUser.rollNumber} ({editPasswordUser.name})</p>
-                </div>
-              </div>
-
-              <div>
-                <label className="text-xs font-semibold text-secondary uppercase tracking-wider mb-1 block">New Password</label>
-                <input
-                  type="text"
-                  value={newPasswordInput}
-                  onChange={(e) => setNewPasswordInput(e.target.value)}
-                  placeholder="Enter new password (min 6 chars)"
-                  className="w-full px-4 py-2.5 rounded-xl bg-card-custom border border-custom text-primary font-mono text-sm focus:outline-none focus:border-[rgb(var(--accent))]"
-                  autoFocus
-                />
-                <p className="text-[11px] text-muted-custom mt-1">Changes take effect immediately for the student.</p>
-              </div>
-
-              <div className="flex items-center justify-end gap-2 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setEditPasswordUser(null)}
-                  className="px-4 py-2 rounded-xl text-xs font-semibold border border-custom text-secondary hover:text-primary transition-all cursor-pointer"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="button"
-                  onClick={handleSavePassword}
-                  disabled={savingPassword || !newPasswordInput.trim()}
-                  className="px-4 py-2 rounded-xl text-xs font-bold gradient-accent text-white glow-accent disabled:opacity-50 flex items-center gap-2 cursor-pointer"
-                >
-                  {savingPassword ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5" />}
-                  {savingPassword ? 'Saving...' : 'Save Password'}
-                </button>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }
