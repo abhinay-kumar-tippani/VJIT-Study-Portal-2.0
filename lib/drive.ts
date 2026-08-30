@@ -1,4 +1,5 @@
 import { google } from 'googleapis';
+import { Readable } from 'stream';
 
 let auth: InstanceType<typeof google.auth.GoogleAuth> | null = null;
 
@@ -9,7 +10,11 @@ function getAuth() {
   const credentials = JSON.parse(Buffer.from(keyJson, 'base64').toString('utf8'));
   auth = new google.auth.GoogleAuth({
     credentials,
-    scopes: ['https://www.googleapis.com/auth/drive.readonly'],
+    scopes: [
+      'https://www.googleapis.com/auth/drive',
+      'https://www.googleapis.com/auth/drive.file',
+      'https://www.googleapis.com/auth/drive.readonly',
+    ],
   });
   return auth;
 }
@@ -42,7 +47,7 @@ export async function getFileMeta(fileId: string) {
   return res.data;
 }
 
-/** Stream a file's content — returns the axios response for piping */
+/** Stream a file's content — returns the response stream */
 export async function streamFile(fileId: string) {
   const drive = getDriveClient();
   const res = await drive.files.get(
@@ -52,7 +57,7 @@ export async function streamFile(fileId: string) {
   return res;
 }
 
-/** Read a text file's full content (for YouTube playlist .txt files) */
+/** Read a text file's full content */
 export async function readTextFile(fileId: string): Promise<string> {
   const drive = getDriveClient();
   const res = await drive.files.get(
@@ -60,6 +65,56 @@ export async function readTextFile(fileId: string): Promise<string> {
     { responseType: 'text' }
   ) as unknown as { data: string };
   return (res.data ?? '').trim();
+}
+
+/**
+ * Upload a file buffer directly to Google Drive (15GB Free Storage).
+ * Automatically sets file permissions to public viewable ("anyone" reader).
+ */
+export async function uploadFileToDrive(
+  buffer: Buffer,
+  fileName: string,
+  mimeType: string,
+  parentFolderId?: string
+): Promise<{ id: string; webViewLink: string; webContentLink: string }> {
+  const drive = getDriveClient();
+  const targetFolderId = parentFolderId || ROOT_FOLDER_ID;
+
+  const res = await drive.files.create({
+    requestBody: {
+      name: fileName,
+      parents: targetFolderId ? [targetFolderId] : undefined,
+    },
+    media: {
+      mimeType,
+      body: Readable.from(buffer),
+    },
+    fields: 'id, name, webViewLink, webContentLink',
+  });
+
+  const fileId = res.data.id!;
+
+  // Grant public read permission so anyone with the link can view/download
+  try {
+    await drive.permissions.create({
+      fileId,
+      requestBody: {
+        role: 'reader',
+        type: 'anyone',
+      },
+    });
+  } catch (permErr) {
+    console.warn('[uploadFileToDrive] Could not set public permissions automatically:', permErr);
+  }
+
+  const webViewLink = res.data.webViewLink || `https://drive.google.com/file/d/${fileId}/view`;
+  const webContentLink = res.data.webContentLink || webViewLink;
+
+  return {
+    id: fileId,
+    webViewLink,
+    webContentLink,
+  };
 }
 
 export const FOLDER_MIME = 'application/vnd.google-apps.folder';

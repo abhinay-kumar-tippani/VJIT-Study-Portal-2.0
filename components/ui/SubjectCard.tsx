@@ -4,15 +4,24 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 
+export type SubjectType = 'theory' | 'pe' | 'oe' | 'lab';
+
 interface SubjectCardProps {
   id: string;
   label: string;
   short: string;
   branch: string;
   semester: number;
-  type: 'theory' | 'lab';
+  type: SubjectType;
   index: number;
 }
+
+const EYEBROW_LABELS: Record<SubjectType, string> = {
+  theory: 'Theory',
+  pe:     'Prof. Elective',
+  oe:     'Open Elective',
+  lab:    'Lab',
+};
 
 const item = {
   hidden: { opacity: 0, y: 12 },
@@ -38,11 +47,10 @@ export function SubjectCardSkeleton() {
 
 /**
  * Shared subject card used on Dashboard and Semester pages.
- * 32px monogram badge, type eyebrow, subject name, browse link.
+ * Index badge, type eyebrow (Theory / Prof. Elective / Open Elective / Lab),
+ * subject short code, full label, and browse link.
  */
 export function SubjectCard({ id, label, short, branch, semester, type, index }: SubjectCardProps) {
-  const isLab = type === 'lab';
-
   return (
     <motion.div variants={item}>
       <Link
@@ -57,7 +65,7 @@ export function SubjectCard({ id, label, short, branch, semester, type, index }:
               {index}
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-eyebrow">{isLab ? 'Lab' : 'Theory'}</div>
+              <div className="text-eyebrow">{EYEBROW_LABELS[type]}</div>
               <div className="text-card-title truncate group-hover:text-[rgb(var(--accent-hover))] transition-colors">
                 {short}
               </div>

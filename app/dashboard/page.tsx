@@ -8,8 +8,8 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { getBranchFromRollNumber, getBranchLabel } from '@/lib/branch';
-import { getBranchSubjects, ACTIVE_SEM } from '@/lib/subjects';
-import { SubjectCard, SubjectCardSkeleton } from '@/components/ui/SubjectCard';
+import { getBranchSubjects, ACTIVE_SEM, type Subject } from '@/lib/subjects';
+import { SubjectCard, SubjectCardSkeleton, type SubjectType } from '@/components/ui/SubjectCard';
 
 interface Session {
   rollNumber: string;
@@ -218,50 +218,89 @@ export default function DashboardPage() {
         </div>
       </motion.div>
 
-      {/* Main Core Subjects */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between gap-2 flex-wrap">
-          <div className="flex items-center gap-2">
-            <BookMarked className="w-5 h-5 text-[rgb(var(--accent-hover))]" />
-            <h2 className="text-section">Your Subjects (Semester {ACTIVE_SEM})</h2>
-          </div>
-          <span className="text-xs text-muted-custom bg-card-custom px-2.5 py-1 rounded-full border border-custom font-semibold">
-            {subjects.theory.length + (subjects.lab?.length ?? 0)} Total
-          </span>
-        </div>
+      {/* Subjects — split into Core Theory / PE / OE / Lab */}
+      {(() => {
+        /** Classify a theory subject by its id prefix */
+        function classifySubject(s: Subject): SubjectType {
+          if (s.id.startsWith('PE-')) return 'pe';
+          if (s.id.startsWith('OE-')) return 'oe';
+          return 'theory';
+        }
 
-        <motion.div
-          variants={container}
-          initial="hidden"
-          animate="show"
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
-        >
-          {subjects.theory.map((s, i) => (
-            <SubjectCard
-              key={s.id}
-              id={s.id}
-              label={s.label}
-              short={s.short}
-              branch={branch}
-              semester={ACTIVE_SEM}
-              type="theory"
-              index={i + 1}
-            />
-          ))}
-          {subjects.lab?.map((s, i) => (
-            <SubjectCard
-              key={s.id}
-              id={s.id}
-              label={s.label}
-              short={s.short}
-              branch={branch}
-              semester={ACTIVE_SEM}
-              type="lab"
-              index={i + 1}
-            />
-          ))}
-        </motion.div>
-      </div>
+        const coreTheory = subjects.theory.filter((s) => classifySubject(s) === 'theory');
+        const peSubjects = subjects.theory.filter((s) => classifySubject(s) === 'pe');
+        const oeSubjects = subjects.theory.filter((s) => classifySubject(s) === 'oe');
+        const labSubjects = subjects.lab ?? [];
+
+        const totalCount = subjects.theory.length + labSubjects.length;
+
+        type SectionDef = {
+          key: string;
+          title: string;
+          icon: string;
+          items: Subject[];
+          type: SubjectType;
+        };
+
+        const sections: SectionDef[] = [
+          { key: 'theory', title: 'Theory',                  icon: '📖', items: coreTheory, type: 'theory' },
+          { key: 'pe',     title: 'Professional Electives',  icon: '🎯', items: peSubjects, type: 'pe'     },
+          { key: 'oe',     title: 'Open Electives',          icon: '🌐', items: oeSubjects, type: 'oe'     },
+          { key: 'lab',    title: 'Lab Subjects',            icon: '🧪', items: labSubjects, type: 'lab'   },
+        ].filter((s) => s.items.length > 0);
+
+        return (
+          <div className="space-y-6">
+            {/* Header */}
+            <div className="flex items-center justify-between gap-2 flex-wrap">
+              <div className="flex items-center gap-2">
+                <BookMarked className="w-5 h-5 text-[rgb(var(--accent-hover))]" />
+                <h2 className="text-section">Your Subjects (Semester {ACTIVE_SEM})</h2>
+              </div>
+              <span className="text-xs text-muted-custom bg-card-custom px-2.5 py-1 rounded-full border border-custom font-semibold">
+                {totalCount} Total
+              </span>
+            </div>
+
+            {/* Each section */}
+            {sections.map((section) => (
+              <div key={section.key} className="space-y-3">
+                {/* Section sub-header */}
+                <div className="flex items-center gap-2">
+                  <span className="text-base leading-none">{section.icon}</span>
+                  <h3 className="text-sm font-semibold text-secondary uppercase tracking-wider">
+                    {section.title}
+                  </h3>
+                  <span className="px-2 py-0.5 rounded-full bg-[rgb(var(--accent)_/_0.1)] text-[rgb(var(--accent-hover))] text-xs font-semibold">
+                    {section.items.length}
+                  </span>
+                </div>
+
+                {/* Grid */}
+                <motion.div
+                  variants={container}
+                  initial="hidden"
+                  animate="show"
+                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"
+                >
+                  {section.items.map((s, i) => (
+                    <SubjectCard
+                      key={s.id}
+                      id={s.id}
+                      label={s.label}
+                      short={s.short}
+                      branch={branch}
+                      semester={ACTIVE_SEM}
+                      type={section.type}
+                      index={i + 1}
+                    />
+                  ))}
+                </motion.div>
+              </div>
+            ))}
+          </div>
+        );
+      })()}
 
       {/* Top Batch Contributors */}
       {(statsLoading || topContributors.length > 0) && (

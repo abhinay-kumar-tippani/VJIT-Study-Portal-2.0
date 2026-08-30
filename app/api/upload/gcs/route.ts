@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Storage } from '@google-cloud/storage';
 import { verifyToken, COOKIE_NAME } from '@/lib/auth';
+import { uploadFileToDrive } from '@/lib/drive';
 
 export async function POST(req: NextRequest) {
   const token = req.cookies.get(COOKIE_NAME)?.value || req.cookies.get('__session')?.value;
@@ -16,50 +17,51 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });
     }
 
+    const buffer = Buffer.from(await file.arrayBuffer());
+    const fileName = `contributions/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
+
+    // 1. Try Google Cloud Storage if configured & active
     const keyJson = process.env.GCS_SERVICE_ACCOUNT_KEY_JSON;
     const bucketName = process.env.GCS_BUCKET_NAME;
 
-    if (!keyJson || !bucketName) {
-      return NextResponse.json({ error: 'GCS env variables are missing' }, { status: 500 });
+    if (keyJson && bucketName) {
+      try {
+        let credentials;
+        try {
+          credentials = JSON.parse(keyJson);
+        } catch {
+          const decoded = Buffer.from(keyJson, 'base64').toString('utf-8');
+          credentials = JSON.parse(decoded);
+        }
+
+        const storage = new Storage({ credentials });
+        const bucket = storage.bucket(bucketName);
+        const blob = bucket.file(fileName);
+
+        await blob.save(buffer, {
+          contentType: file.type || 'application/octet-stream',
+          resumable: false,
+        });
+
+        try {
+          await blob.makePublic();
+        } catch {}
+
+        const viewUrl = `https://storage.googleapis.com/${bucketName}/${fileName}`;
+        return NextResponse.json({ viewUrl });
+      } catch (gcsError) {
+        console.warn('[Upload Route] GCS Upload failed (trial expired or unconfigured). Falling back to Google Drive API...', gcsError);
+      }
     }
 
-    // Robust parsing for raw or base64 GCS credentials
-    let credentials;
-    try {
-      credentials = JSON.parse(keyJson);
-    } catch {
-      const decoded = Buffer.from(keyJson, 'base64').toString('utf-8');
-      credentials = JSON.parse(decoded);
-    }
+    // 2. Fallback to Google Drive API (15GB Free Storage)
+    const driveUpload = await uploadFileToDrive(buffer, file.name, file.type || 'application/octet-stream');
+    return NextResponse.json({ viewUrl: driveUpload.webViewLink });
 
-    // Initialize Google Cloud Storage Client
-    const storage = new Storage({ credentials });
-    const bucket = storage.bucket(bucketName);
-
-    // Prepare filename to avoid collisions
-    const fileName = `contributions/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
-    const blob = bucket.file(fileName);
-
-    // Upload buffer directly from server side
-    const buffer = Buffer.from(await file.arrayBuffer());
-    await blob.save(buffer, {
-      contentType: file.type,
-      resumable: false,
-    });
-
-    // Make public so students/admin can view it immediately
-    try {
-      await blob.makePublic();
-    } catch (makePublicError) {
-      console.warn('Could not make object public automatically. Ensure bucket has correct permissions:', makePublicError);
-    }
-
-    const viewUrl = `https://storage.googleapis.com/${bucketName}/${fileName}`;
-    return NextResponse.json({ viewUrl });
   } catch (error: any) {
-    console.error('GCS Server-Side Upload Error:', error);
-    return NextResponse.json({ 
-      error: error instanceof Error ? error.message : String(error) 
+    console.error('Server Upload Error:', error);
+    return NextResponse.json({
+      error: error instanceof Error ? error.message : String(error)
     }, { status: 500 });
   }
 }
