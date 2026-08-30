@@ -35,6 +35,30 @@ export const SEM5_SUBJECTS: Record<string, { theory: Subject[]; lab?: Subject[] 
       { id: 'ML-Lab',      label: 'Machine Learning Lab',   short: 'ML Lab',  driveFolder: 'ML Lab'      },
     ],
   },
+
+  // ── CSE (Semester 5) ─────────────────────────────────────────────
+  'CSE': {
+    theory: [
+      { id: 'CN', label: 'Computer Networks', short: 'CN', driveFolder: 'CN' },
+      // More subjects will be added as drive folders are ready
+    ],
+  },
+
+  // ── CSE-DS (Semester 5) ──────────────────────────────────────────
+  'CSE-DS': {
+    theory: [
+      { id: 'CN', label: 'Computer Networks', short: 'CN', driveFolder: 'CN' },
+      // More subjects will be added as drive folders are ready
+    ],
+  },
+
+  // ── IT (Semester 5) ──────────────────────────────────────────────
+  'IT': {
+    theory: [
+      { id: 'CN', label: 'Computer Networks', short: 'CN', driveFolder: 'CN' },
+      // More subjects will be added as drive folders are ready
+    ],
+  },
 };
 
 // ─── SEMESTER 4 SUBJECTS ──────────────────────────────────────────
