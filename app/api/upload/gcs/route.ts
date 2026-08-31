@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { Storage } from '@google-cloud/storage';
 import { verifyToken, COOKIE_NAME } from '@/lib/auth';
 import { uploadFileToDrive } from '@/lib/drive';
+import { connectDB } from '@/lib/db';
+import ContributionFile from '@/models/ContributionFile';
 
 export async function POST(req: NextRequest) {
   const token = req.cookies.get(COOKIE_NAME)?.value || req.cookies.get('__session')?.value;
@@ -50,13 +52,35 @@ export async function POST(req: NextRequest) {
         const viewUrl = `https://storage.googleapis.com/${bucketName}/${fileName}`;
         return NextResponse.json({ viewUrl });
       } catch (gcsError) {
-        console.warn('[Upload Route] GCS Upload failed (trial expired or unconfigured). Falling back to Google Drive API...', gcsError);
+        console.warn('[Upload Route] GCS Upload failed (trial expired or unconfigured). Trying Drive / DB fallbacks...', gcsError);
       }
     }
 
-    // 2. Fallback to Google Drive API (15GB Free Storage)
-    const driveUpload = await uploadFileToDrive(buffer, file.name, file.type || 'application/octet-stream');
-    return NextResponse.json({ viewUrl: driveUpload.webViewLink });
+    // 2. Try Google Drive API
+    try {
+      const driveUpload = await uploadFileToDrive(buffer, file.name, file.type || 'application/octet-stream');
+      if (driveUpload && driveUpload.webViewLink) {
+        return NextResponse.json({ viewUrl: driveUpload.webViewLink });
+      }
+    } catch (driveError) {
+      console.warn('[Upload Route] Google Drive API upload failed (Quota or Service Account restriction). Falling back to MongoDB storage...', driveError);
+    }
+
+    // 3. Guaranteed Fallback: MongoDB Atlas Storage (/api/file/[id])
+    await connectDB();
+    const savedFile = await ContributionFile.create({
+      filename: file.name,
+      contentType: file.type || 'application/octet-stream',
+      size: file.size,
+      data: buffer,
+    });
+
+    const host = req.headers.get('host') || 'localhost:3000';
+    const protocol = req.headers.get('x-forwarded-proto') || (host.includes('localhost') ? 'http' : 'https');
+    const viewUrl = `${protocol}://${host}/api/file/${savedFile._id}`;
+
+    console.log(`[Upload Route] File successfully stored in MongoDB Atlas! View URL: ${viewUrl}`);
+    return NextResponse.json({ viewUrl });
 
   } catch (error: any) {
     console.error('Server Upload Error:', error);

@@ -243,10 +243,10 @@ export default function DashboardPage() {
         };
 
         const sections: SectionDef[] = [
-          { key: 'theory', title: 'Theory',                  icon: '📖', items: coreTheory, type: 'theory' },
-          { key: 'pe',     title: 'Professional Electives',  icon: '🎯', items: peSubjects, type: 'pe'     },
-          { key: 'oe',     title: 'Open Electives',          icon: '🌐', items: oeSubjects, type: 'oe'     },
-          { key: 'lab',    title: 'Lab Subjects',            icon: '🧪', items: labSubjects, type: 'lab'   },
+          { key: 'theory', title: 'Theory',                  icon: '📖', items: coreTheory, type: 'theory' as SubjectType },
+          { key: 'pe',     title: 'Professional Electives',  icon: '🎯', items: peSubjects, type: 'pe' as SubjectType     },
+          { key: 'oe',     title: 'Open Electives',          icon: '🌐', items: oeSubjects, type: 'oe' as SubjectType     },
+          { key: 'lab',    title: 'Lab Subjects',            icon: '🧪', items: labSubjects, type: 'lab' as SubjectType   },
         ].filter((s) => s.items.length > 0);
 
         return (
